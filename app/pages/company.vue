@@ -74,7 +74,7 @@ function onSelect(row: TableRow<Company>) {
 }
 
 async function onSubmit() {
-    await $waitFetch("/api/session-company", {
+    await $waitFetch("/api/company-session", {
         method: "PUT",
         query: { comCode: rowSelection.value.comCode },
     })

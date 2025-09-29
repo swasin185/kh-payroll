@@ -6,13 +6,20 @@ const menuItems: NavigationMenuItem[][] = [
             label: "Setting",
             icon: "i-lucide-settings",
             children: [
-                { label: "Login / Out", to: "/login", icon: "i-lucide-lock", disabled: false },
-                { label: "ผู้ใช้", to: "/user", icon: "i-lucide-users", disabled: true },
+                {
+                    label: "Login / Out",
+                    to: "/login",
+                    icon: "i-lucide-lock",
+                    disabled: false,
+                    level: 0,
+                },
+                { label: "ผู้ใช้", to: "/user", icon: "i-lucide-users", disabled: true, level: 0 },
                 {
                     label: "บริษัท/แผนก",
                     to: "/company",
                     icon: "i-lucide-building-2",
                     disabled: true,
+                    level: 0,
                 },
                 { label: "ตำแหน่งงาน", to: "/position", icon: "i-lucide-boxes", disabled: true },
                 {
@@ -128,14 +135,35 @@ export async function setMenuByUserLevel(userLevel: number = -1): Promise<Naviga
     // console.log("setMenuByUserLevel ", userLevel, JSON.stringify(permission))
     let group = menuItems[0]!
     for (let item of group)
-        if (item.children) for (let child of item.children!) {
-            if (child.to === "/login") child.level = 0
-            else if (userLevel === 9 || child.to === "/user") child.level = userLevel
-            else if (userLevel > -1 && permission.length > 0) {
-                const perm = permission.find((p) => p.program === child.to)
-                child.level = perm ? perm.level : -1
-            } else child.level = -1
-            child.disabled = child.level < 0
-        }
+        if (item.children)
+            for (let child of item.children) {
+                child.badge = 0
+                if (child.to === "/login") child.level = 0
+                else if (userLevel === 9) child.level = userLevel
+                else if (userLevel > -1 && permission.length > 0) {
+                    const perm = permission.find((p) => p.program === child.to)
+                    if (perm) {
+                        child.level = perm.level
+                        child.badge = perm.used
+                    } else {
+                        child.level = child.to === "/user" || child.to === "/company" ? 0 : -1
+                    }
+                } else child.level = -1
+                child.disabled = child.level < 0
+            }
     return menuItems
+}
+
+export function getLevel(to: string): number {
+    let level = -1
+    let group = menuItems[0]!
+    for (let item of group)
+        if (item.children)
+            for (let child of item.children) {
+                if (child.to === to && !child.disables) {
+                    level = child.level
+                    return level
+                }
+            }
+    return level
 }

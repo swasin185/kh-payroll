@@ -5,7 +5,7 @@ import { SchemaTypes } from "~~/server/database/drizzle"
 
 export default authEventHandler(async (event) => {
     const query = getQuery(event)
-    let com = query.comCode as string
+    const com = query.comCode as string
     const session = await getUserSession(event)
     try {
         const company = await Company.select(com)
@@ -22,6 +22,7 @@ export default authEventHandler(async (event) => {
         })
         // update default company for this user too
         await Users.update({ id: (session.user as any).id, comCode: com } as SchemaTypes["users"])
+        return com
     } catch (error) {
         throw createError({
             statusCode: 500,

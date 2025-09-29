@@ -2,15 +2,15 @@
     <UApp title="PAYROLL">
         <header class="flex justify-between items-center p-2 border-b-1">
             <NuxtLink to="/" class="font-bold text-base cursor-pointer">
-                KEEHIN PAYROLL v {{ buildTime }}
+                KEEHIN PAYROLL v {{ version }}
             </NuxtLink>
             <NuxtLink to="/company" class="font-extrabold text-2xl cursor-pointer">
                 {{ user?.comName }}
-                [{{ user?.yrPayroll }}]
-                <UIcon name="i-lucide-calendar-range" class="size-5" />
-                [{{ user?.mnPayroll }}]
+                [{{ user?.yrPayroll || year }}]
+                <UIcon name="i-lucide-calendar-days" class="size-5" />
+                [{{ user?.mnPayroll || month }}]
             </NuxtLink>
-            <NuxtLink to="/login" class="text-large cursor-pointer" v-on:click="clear()">
+            <NuxtLink to="/login" class="text-large cursor-pointer" @click="clear()">
                 {{ user?.name }}
                 <UIcon name="i-lucide-users" class="size-4" />
                 [{{ counter }}] {{ user?.id }}
@@ -28,19 +28,16 @@
 </template>
 <script lang="ts" setup>
 import { setMenuByUserLevel } from "./menu.config"
-const { user, clear } = useUserSession()
-const isWaiting = useState("isWaiting")
-const fullProgress = ref(1)
-const counter = ref(await $fetch("/api/counter"))
-const menu: Ref<any[]> = ref(await setMenuByUserLevel(user.value?.level))
+import type { NavigationMenuItem } from "@nuxt/ui"
 
+const fullProgress = ref(1)
+const isWaiting = useState("isWaiting")
+const counter = ref(await $fetch("/api/counter"))
+const { user, clear } = useUserSession()
+const menu: Ref<NavigationMenuItem[]> = ref(await setMenuByUserLevel(user.value?.level))
 const config = useRuntimeConfig()
-const buildTime = computed(() => {
-    const date = new Date(config.public.buildTime)
-    const yearBase = 2025
-    const a = date.getFullYear() - yearBase
-    const b = date.getMonth() + 1
-    const c = date.getDate()
-    return `${a}.${b}.${c}`
-})
+const date = new Date(config.public.buildTime)
+const year = ref(date.getFullYear())
+const month = ref(date.getMonth() + 1)
+const version = `${year.value - 2025}.${month.value}.${date.getDate()}`
 </script>

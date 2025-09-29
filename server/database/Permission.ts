@@ -1,6 +1,6 @@
 import { useDrizzle, SchemaTypes } from "./drizzle"
 import { permission } from "./schema"
-import { eq, and } from "drizzle-orm"
+import { eq, and, sql } from "drizzle-orm"
 
 export class Permission {
     public static async select(company: string, userId: string): Promise<any[]> {
@@ -9,13 +9,15 @@ export class Permission {
             columns: {
                 program: true,
                 level: true,
+                used: true,
             },
             where: (permisTable) =>
                 and(eq(permisTable.userid, userId), eq(permisTable.comCode, company)),
             orderBy: (permisTable) => permisTable.program,
-        })
+        }) 
         return permission
     }
+
     public static async insert(perm: SchemaTypes["permission"]): Promise<boolean> {
         const db = useDrizzle()
         const result = await db.insert(permission).values(perm)
@@ -58,5 +60,22 @@ export class Permission {
             FROM permission 
             WHERE comCode= ${company} and userid = ${fromUser}`)
         return result[0].affectedRows || 0
+    }
+
+    public static async used(company: string, userId: string, program: string): Promise<number> {
+        const db = useDrizzle()
+        const result = await db
+            .update(permission)
+            .set({
+                used: sql`${permission.used} + 1`,
+            })
+            .where(
+                and(
+                    eq(permission.comCode, company),
+                    eq(permission.userid, userId),
+                    eq(permission.program, program),
+                ),
+            )
+        return result[0].affectedRows
     }
 }
