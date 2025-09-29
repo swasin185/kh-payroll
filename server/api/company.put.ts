@@ -11,5 +11,5 @@ export default authEventHandler(async (event) => {
             statusMessage: "company is required.",
         })
     }
-    const result = await Company.update(company)
+    return await Company.update(company)
 })
