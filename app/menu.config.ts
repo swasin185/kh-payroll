@@ -11,22 +11,27 @@ const menuItems: NavigationMenuItem[][] = [
                     to: "/login",
                     icon: "i-lucide-lock",
                     disabled: false,
-                    level: 0,
+                    default: true, // activated for all permission
                 },
-                { label: "ผู้ใช้", to: "/user", icon: "i-lucide-users", disabled: true, level: 0 },
+                {
+                    label: "ผู้ใช้",
+                    to: "/user",
+                    icon: "i-lucide-users",
+                    disabled: true,
+                    default: true,
+                },
                 {
                     label: "บริษัท/แผนก",
                     to: "/company",
                     icon: "i-lucide-building-2",
                     disabled: true,
-                    level: 0,
+                    default: true,
                 },
                 { label: "ตำแหน่งงาน", to: "/position", icon: "i-lucide-boxes", disabled: true },
                 {
                     label: "ประเภทเงินได้/หัก",
                     to: "/income",
                     icon: "i-lucide-dollar-sign",
-                    disabled: true,
                 },
                 { label: "วิธีคิดล่วงเวลา", to: "/ottype", icon: "i-lucide-clock", disabled: true },
             ],
@@ -133,20 +138,22 @@ export async function setMenuByUserLevel(userLevel: number = -1): Promise<Naviga
     let permission: any[] = []
     if (userLevel > -1 && userLevel < 9) permission = await $fetch("api/permission")
     // console.log("setMenuByUserLevel ", userLevel, JSON.stringify(permission))
-    let group = menuItems[0]!
-    for (let item of group)
+    const group = menuItems[0]!
+    for (const item of group)
         if (item.children)
-            for (let child of item.children) {
+            for (const child of item.children) {
                 child.badge = 0
-                if (child.to === "/login") child.level = 0
-                else if (userLevel === 9) child.level = userLevel
-                else if (userLevel > -1 && permission.length > 0) {
-                    const perm = permission.find((p) => p.program === child.to)
+                if (userLevel === 9) child.level = userLevel
+                else if (userLevel > -1) {
+                    const perm =
+                        permission.length > 0
+                            ? permission.find((p) => p.program === child.to)
+                            : false
                     if (perm) {
                         child.level = perm.level
                         child.badge = perm.used
                     } else {
-                        child.level = child.to === "/user" || child.to === "/company" ? 0 : -1
+                        child.level = child.default ? 0 : -1
                     }
                 } else child.level = -1
                 child.disabled = child.level < 0
@@ -155,15 +162,10 @@ export async function setMenuByUserLevel(userLevel: number = -1): Promise<Naviga
 }
 
 export function getLevel(to: string): number {
-    let level = -1
-    let group = menuItems[0]!
-    for (let item of group)
+    const group = menuItems[0]!
+    for (const item of group)
         if (item.children)
-            for (let child of item.children) {
-                if (child.to === to && !child.disables) {
-                    level = child.level
-                    return level
-                }
-            }
-    return level
+            for (const child of item.children)
+                if (child.to === to && !child.disables) return child.level
+    return -1
 }

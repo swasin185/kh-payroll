@@ -1,5 +1,8 @@
 <template>
     <UCard>
+        <template #header>
+            <h2 class="text-xl font-bold">บริษัท</h2>
+        </template>
         <UTable
             ref="table"
             sticky

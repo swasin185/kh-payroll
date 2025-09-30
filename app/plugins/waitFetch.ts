@@ -11,17 +11,18 @@ export default defineNuxtPlugin((nuxtApp) => {
         },
         onResponse() {
             activeRequests.value--
-            if (activeRequests.value <= 0) {
+            if (activeRequests.value <= 0)
                 isWaiting.value = false
-            }
         },
         onResponseError() {
             activeRequests.value--
-            if (activeRequests.value <= 0) {
+            if (activeRequests.value <= 0)
                 isWaiting.value = false
-            }
-            location.reload()
+            navigateTo("/error")
         },
+        onRequestError() {
+            console.log("Request Error")
+        }
     })
 
     nuxtApp.provide("waitFetch", customFetch)
