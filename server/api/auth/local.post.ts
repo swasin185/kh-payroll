@@ -9,8 +9,8 @@ export default eventHandler(async (event) => {
     const logLabel = "login: " + inputId + "\t/ " + inputPwd
     if (!inputId || !inputPwd) {
         throw createError({
-            statusCode: 400,
-            statusMessage: "User ID and Password are required.",
+            status: 400,
+            message: "User ID and Password are required.",
         })
     }
     try {
@@ -47,8 +47,8 @@ export default eventHandler(async (event) => {
         console.error("Authentication Error:", error)
         await clearUserSession(event)
         throw createError({
-            statusCode: 500,
-            statusMessage: "Authentication Error : " + error,
+            status: 500,
+            message: "Authentication Error : " + error,
         })
     }
 })

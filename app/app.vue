@@ -1,8 +1,8 @@
 <template>
-    <UApp title="PAYROLL">
+    <UApp :toaster="{ position: 'top-center' }">
         <header class="flex justify-between items-center p-2 border-b-1">
             <NuxtLink to="/" class="font-bold text-base cursor-pointer">
-                KEEHIN PAYROLL v {{ version }}
+                KH-PAYROLL v {{ version }}
             </NuxtLink>
             <NuxtLink to="/company" class="font-extrabold text-2xl cursor-pointer">
                 {{ user?.comName }}
@@ -33,8 +33,10 @@ import type { NavigationMenuItem } from "@nuxt/ui"
 const fullProgress = ref(1)
 const isWaiting = useState("isWaiting")
 const counter = ref(await $fetch("/api/counter"))
+
 const { user, clear } = useUserSession()
 const menu: Ref<NavigationMenuItem[]> = ref(await setMenuByUserLevel(user.value?.level))
+
 const config = useRuntimeConfig()
 const date = new Date(config.public.buildTime)
 const year = ref(date.getFullYear())

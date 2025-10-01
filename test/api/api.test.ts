@@ -46,7 +46,13 @@ describe("API endpoints", async () => {
     })
 
     it("PUT /api/users", async () => {
-        const updatedUser = { id: testUser.id, name: "Updated Name" }
+        const updatedUser = {
+            id: testUser.id,
+            name:  "Updated Name",
+            descript: "ทดสอบผู้ใช้ทั่วไป",
+            level: "1",
+            role: ""
+        }
         const res = await $fetch("/api/users", {
             method: "PUT",
             query: updatedUser,

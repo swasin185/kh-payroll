@@ -1,7 +1,7 @@
 import { getLevel } from "../menu.config"
 export default defineNuxtRouteMiddleware((to) => {
     const loginUrl = "/login"
-    if (to.path != loginUrl && to.path != "/error") {
+    if (to.path != loginUrl) {
         const { loggedIn } = useUserSession()
         if (!loggedIn.value || getLevel(to.path) == -1) {
             return navigateTo(loginUrl)

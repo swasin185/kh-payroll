@@ -21,16 +21,16 @@ export default defineNuxtConfig({
             },
         },
     },
-    app: {
-        head: {
-            titleTemplate: "%s - PAYROLL",
-            meta: [
-                { charset: "utf-8" },
-                {
-                    name: "viewport",
-                    content: "width=device-width, initial-scale=1",
-                },
-            ],
-        },
-    },
+    // app: {
+    //     head: {
+    //         titleTemplate: "%s - PAYROLL",
+    //         meta: [
+    //             { charset: "utf-8" },
+    //             {
+    //                 name: "viewport",
+    //                 content: "width=device-width, initial-scale=1",
+    //             },
+    //         ],
+    //     },
+    // },
 })

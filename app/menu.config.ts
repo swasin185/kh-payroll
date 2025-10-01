@@ -140,8 +140,7 @@ export async function setMenuByUserLevel(userLevel: number = -1): Promise<Naviga
     // console.log("setMenuByUserLevel ", userLevel, JSON.stringify(permission))
     const group = menuItems[0]!
     for (const item of group)
-        if (item.children)
-            for (const child of item.children) {
+        item.children?.forEach((child) => {
                 child.badge = 0
                 if (userLevel === 9) child.level = userLevel
                 else if (userLevel > -1) {
@@ -157,15 +156,15 @@ export async function setMenuByUserLevel(userLevel: number = -1): Promise<Naviga
                     }
                 } else child.level = -1
                 child.disabled = child.level < 0
-            }
+        })
     return menuItems
 }
 
 export function getLevel(to: string): number {
     const group = menuItems[0]!
-    for (const item of group)
-        if (item.children)
-            for (const child of item.children)
-                if (child.to === to && !child.disables) return child.level
-    return -1
+    for (const item of group) {
+        let menu = item.children?.find((i) => i.to === to)
+        if (menu) return menu.level
+    }
+    return 0
 }

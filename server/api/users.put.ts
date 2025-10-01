@@ -7,8 +7,8 @@ export default authEventHandler(async (event) => {
     const user = query as SchemaTypes["users"]
     if (!user) {
         throw createError({
-            statusCode: 400,
-            statusMessage: "User ID is required.",
+            status: 400,
+            message: "User ID is required.",
         })
     }
     try {
@@ -18,15 +18,15 @@ export default authEventHandler(async (event) => {
             return result
         } else {
             throw createError({
-                statusCode: 404,
-                statusMessage: `Update User with ID '${user.id}' not found.`,
+                status: 404,
+                message: `Update User with ID '${user.id}' not found.`,
             })
         }
     } catch (error) {
-        console.error(`Update error in users/[id].get.ts for ID '${user}':`, error)
+        console.error(`Update error in users/[id].get.ts for ID '${user.id}':`, error)
         throw createError({
-            statusCode: 500,
-            statusMessage: (error as Error).message,
+            status: 500,
+            message: (error as Error).message,
         })
     }
 })
