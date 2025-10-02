@@ -1,41 +1,51 @@
 <template>
     <UApp :toaster="{ position: 'top-center' }">
-        <header class="flex justify-between items-center p-2 border-b-1">
-            <NuxtLink to="/" class="font-bold text-base cursor-pointer">
+        <UHeader>
+            <template #title>
+                <NuxtLink to="/company">
+                    [{{ user?.yrPayroll || year }}]
+                    <UIcon name="i-lucide-calendar-days" class="size-5" />
+                    [{{ user?.mnPayroll || month }}] {{ user?.comName }}
+                </NuxtLink>
+            </template>
+            <h1 class="text-l font-bold">{{ title }}</h1>
+            <template #right>
+                <NuxtLink to="/login" class="text-large">
+                    {{ user?.name }}
+                    <UIcon name="i-lucide-users" class="size-4" />
+                    [{{ counter }}]
+                    {{ user?.id }}
+                </NuxtLink>
+            </template>
+            <template #body>
+                <UNavigationMenu orientation="vertical" :items="menu" />
+            </template>
+        </UHeader>
+        <UProgress v-if="isWaiting" animation="elastic" size="2xs" />
+        <UProgress v-else v-model="fullProgress" :max="fullProgress" size="2xs" />
+        <UMain class="flex">
+            <!-- show only if screen is desktop size -->
+            <div class="flex flex-col items-center hidden lg:flex">
                 KH-PAYROLL v {{ version }}
-            </NuxtLink>
-            <NuxtLink to="/company" class="font-extrabold text-2xl cursor-pointer">
-                {{ user?.comName }}
-                [{{ user?.yrPayroll || year }}]
-                <UIcon name="i-lucide-calendar-days" class="size-5" />
-                [{{ user?.mnPayroll || month }}]
-            </NuxtLink>
-            <NuxtLink to="/login" class="text-large cursor-pointer" @click="clear()">
-                {{ user?.name }}
-                <UIcon name="i-lucide-users" class="size-4" />
-                [{{ counter }}] {{ user?.id }}
-            </NuxtLink>
-        </header>
-        <div class="flex mt-2">
-            <div class="flex flex-col jusify-start items-center font-bold ml-2 mr-4 min-h-screen">
-                <UProgress v-if="isWaiting" animation="swing" />
-                <UProgress v-else v-model="fullProgress" :max="fullProgress" />
                 <UNavigationMenu orientation="vertical" :items="menu" class="w-60" />
+                <USeparator class="w-60" />
+                <UColorModeButton />
             </div>
-            <NuxtPage class="w-[1200px] h-[800px] overflow-auto" />
-        </div>
+            <NuxtLayout>
+                <NuxtPage />
+            </NuxtLayout>
+        </UMain>
     </UApp>
 </template>
 <script lang="ts" setup>
 import { setMenuByUserLevel } from "./menu.config"
-import type { NavigationMenuItem } from "@nuxt/ui"
-
+const title = useState("title")
 const fullProgress = ref(1)
 const isWaiting = useState("isWaiting")
 const counter = ref(await $fetch("/api/counter"))
 
-const { user, clear } = useUserSession()
-const menu: Ref<NavigationMenuItem[]> = ref(await setMenuByUserLevel(user.value?.level))
+const { user } = useUserSession()
+const menu = await setMenuByUserLevel(user.value?.level)
 
 const config = useRuntimeConfig()
 const date = new Date(config.public.buildTime)

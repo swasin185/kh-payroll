@@ -1,31 +1,10 @@
 <template>
-    <UCard>
-        <template #header>
-            <h2 class="text-xl font-bold">บริษัท</h2>
-        </template>
-        <UTable
-            ref="table"
-            sticky
-            @select="onSelect"
-            :row-selection="rowSelection"
-            :data="companies"
-            :columns="columns"
-        />
-        <template #footer>
-            <UButton
-                @click="onSubmit"
-                label="เลือก"
-                title="เปลี่ยนบริษัท เริ่มต้นทำงาน"
-                :disabled="rowSelection.comCode == user?.comCode"
-            />
-        </template>
-    </UCard>
+    <UTable ref="table" sticky @select="onSelect" :row-selection="rowSelection" :data="companies" :columns="columns" />
+    <UButton @click="onSubmit" label="เลือก" title="เปลี่ยนบริษัท เริ่มต้นทำงาน"
+        :disabled="rowSelection.comCode == user?.comCode" class="mt-4" />
 </template>
 
 <script lang="ts" setup>
-useHead({
-    title: "Company",
-})
 import type { SchemaTypes } from "~~/server/database/drizzle"
 import type { TableColumn, TableRow } from "@nuxt/ui"
 type Company = SchemaTypes["company"]

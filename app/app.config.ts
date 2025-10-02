@@ -1,6 +1,5 @@
 export default defineAppConfig({
     ui: {
-        colorMode: true,
         button: {
             slots: { base: "cursor-pointer" },
         },

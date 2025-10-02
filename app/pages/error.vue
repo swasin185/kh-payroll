@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col items-center justify-center min-h-screen text-center p-4">
+    <div class="flex flex-col items-center justify-center text-center p-4">
         <h1 class="text-7xl font-extrabold text-red-600 dark:text-red-400">
             {{ error?.statusCode || 500 }}
         </h1>

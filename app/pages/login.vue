@@ -1,28 +1,22 @@
 <template>
-    <UCard>
-        <UForm :validate="validate" :state="state" class="space-y-2" @submit="login" @reset="logout">
-            <UFormField label="User ID" name="userid">
-                <UInput v-model="state.userid" placeholder="ID ผู้ใช้" :disabled="loggedIn" />
-            </UFormField>
-            <UFormField label="Password" name="password">
-                <UInput v-model="state.password" placeholder="รหัสผ่าน" :disabled="loggedIn" toggleMask
-                    @keydown.enter="login" :type="showPwd ? 'text' : 'password'">
-                    <UButton color="neutral" variant="link" size="sm"
-                        :icon="showPwd ? 'i-lucide-eye-off' : 'i-lucide-eye'" @click="showPwd = !showPwd" />
-                </UInput>
-            </UFormField>
-            <div class="flex">
-                <UButton v-if="!loggedIn" type="submit" color="success" label="Login" />
-                <UButton v-else type="reset" color="error" label="Logout" />
-            </div>
-        </UForm>
-    </UCard>
+    <UForm :validate="validate" :state="state" class="space-y-2" @submit="login" @reset="logout">
+        <UFormField label="User ID" name="userid">
+            <UInput v-model="state.userid" placeholder="ID ผู้ใช้" :disabled="loggedIn" />
+        </UFormField>
+        <UFormField label="Password" name="password">
+            <UInput v-model="state.password" placeholder="รหัสผ่าน" :disabled="loggedIn" toggleMask
+                @keydown.enter="login" :type="showPwd ? 'text' : 'password'">
+                <UButton color="neutral" variant="link" size="sm" :icon="showPwd ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                    @click="showPwd = !showPwd" />
+            </UInput>
+        </UFormField>
+        <div class="flex">
+            <UButton v-if="!loggedIn" type="submit" color="success" label="Login" />
+            <UButton v-else type="reset" color="error" label="Logout" />
+        </div>
+    </UForm>
 </template>
-
 <script lang="ts" setup>
-useHead({
-    title: "Login KH-PAYROLL",
-})
 import CryptoJS from "crypto-js"
 const { $waitFetch } = useNuxtApp()
 const { loggedIn, user, clear, fetch: refreshSession } = useUserSession()

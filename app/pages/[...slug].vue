@@ -1,3 +1,3 @@
 <template>
-    <div>No page is created for this URL</div>
+    <h1>No page is created for this URL</h1>
 </template>

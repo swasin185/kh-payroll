@@ -16,6 +16,7 @@ export default eventHandler(async (event) => {
     try {
         console.time(logLabel)
         const authUser = await Users.select(inputId)
+        console.timeEnd(logLabel)
         if (authUser && (authUser.passwd == null || authUser.passwd === inputPwd)) {
             const company = await Company.select(authUser.comCode)
             await setUserSession(event, {
@@ -31,14 +32,12 @@ export default eventHandler(async (event) => {
                 },
             })
             await increaseActiveUsers()
-            console.timeEnd(logLabel)
             return {
                 message: "Login successful!",
                 user: { id: authUser.id, name: authUser.name },
             }
         } else {
             await clearUserSession(event)
-            console.timeEnd(logLabel)
             return {
                 message: "Invalid User ID or Password.",
             }
