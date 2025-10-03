@@ -8,7 +8,7 @@
                     [{{ user?.mnPayroll || month }}] {{ user?.comName }}
                 </NuxtLink>
             </template>
-            <h1 class="text-l font-bold">{{ title }}</h1>
+            <h1 class="text-l font-bold">{{ activeMenu.label }}</h1>
             <template #right>
                 <NuxtLink to="/login" class="text-large">
                     {{ user?.name }}
@@ -28,8 +28,8 @@
             <div class="flex flex-col items-center hidden lg:flex">
                 KH-PAYROLL v {{ version }}
                 <UNavigationMenu orientation="vertical" :items="menu" class="w-60" />
-                <USeparator class="w-60" />
-                <UColorModeButton />
+                <USeparator class="w-60 mb-4" />
+                <UColorModeSelect />
             </div>
             <NuxtLayout>
                 <NuxtPage />
@@ -38,11 +38,11 @@
     </UApp>
 </template>
 <script lang="ts" setup>
-import { setMenuByUserLevel } from "./menu.config"
-const title = useState("title")
+import { setMenuByUserLevel } from "./utils/menu"
+const activeMenu = useState("activeMenu") as any
 const fullProgress = ref(1)
 const isWaiting = useState("isWaiting")
-const counter = ref(await $fetch("/api/counter"))
+const counter = useState("counter")
 
 const { user } = useUserSession()
 const menu = await setMenuByUserLevel(user.value?.level)
@@ -52,4 +52,5 @@ const date = new Date(config.public.buildTime)
 const year = ref(date.getFullYear())
 const month = ref(date.getMonth() + 1)
 const version = `${year.value - 2025}.${month.value}.${date.getDate()}`
+
 </script>

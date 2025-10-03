@@ -3,26 +3,28 @@ import { ofetch } from "ofetch"
 export default defineNuxtPlugin((nuxtApp) => {
     const isWaiting = useState("isWaiting", () => false)
     const activeRequests = ref(0)
-
+    const clearWaiting = () => {
+        activeRequests.value--
+        if (activeRequests.value <= 0) isWaiting.value = false
+    }
     const customFetch = ofetch.create({
         onRequest() {
             activeRequests.value++
             isWaiting.value = true
         },
         onResponse() {
-            activeRequests.value--
-            if (activeRequests.value <= 0)
-                isWaiting.value = false
+            clearWaiting()
         },
         onResponseError() {
-            activeRequests.value--
-            if (activeRequests.value <= 0)
-                isWaiting.value = false
-            navigateTo("/error")
+            clearWaiting()
         },
         onRequestError() {
-            console.log("Request Error")
-        }
+            clearWaiting()
+            showError({
+                statusCode: 500,
+                message: "Request Error!!"
+            })
+        },
     })
 
     nuxtApp.provide("waitFetch", customFetch)

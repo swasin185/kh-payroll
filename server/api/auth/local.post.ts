@@ -4,23 +4,21 @@ import { increaseActiveUsers } from "~~/server/utils/userCount"
 
 export default eventHandler(async (event) => {
     const body = await readBody(event)
-    const inputId = body.id?.toString().toLowerCase()
-    const inputPwd = body.pwd?.toString()
-    const logLabel = "login: " + inputId + "\t/ " + inputPwd
-    if (!inputId || !inputPwd) {
+    const userid = body.id?.toString().toLowerCase()
+    const password = body.pwd?.toString()
+    console.log("login:", userid, "/", password)
+    if (!userid || !password) {
         throw createError({
             status: 400,
             message: "User ID and Password are required.",
         })
     }
     try {
-        console.time(logLabel)
-        const authUser = await Users.select(inputId)
-        console.timeEnd(logLabel)
-        if (authUser && (authUser.passwd == null || authUser.passwd === inputPwd)) {
+        const authUser = await Users.select(userid)
+        if (authUser && (authUser.passwd == null || authUser.passwd === password)) {
             const company = await Company.select(authUser.comCode)
             await setUserSession(event, {
-                // cookie size 4k
+                // beware cookie size 4k
                 user: {
                     id: authUser.id,
                     name: authUser.name,
@@ -32,15 +30,10 @@ export default eventHandler(async (event) => {
                 },
             })
             await increaseActiveUsers()
-            return {
-                message: "Login successful!",
-                user: { id: authUser.id, name: authUser.name },
-            }
+            return true
         } else {
             await clearUserSession(event)
-            return {
-                message: "Invalid User ID or Password.",
-            }
+            return false
         }
     } catch (error) {
         console.error("Authentication Error:", error)

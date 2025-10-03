@@ -1,5 +1,11 @@
 import type { NavigationMenuItem } from "@nuxt/ui"
 
+export const defaultMenu = {
+    label: "KH-PAYROLL",
+    to: "/login",
+    level: 0,
+}
+
 const menuItems: NavigationMenuItem[] = [
     {
         label: "Setting",

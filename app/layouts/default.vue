@@ -3,8 +3,9 @@
         <slot />
     </UCard>
 </template>
+
 <script setup>
 useHead({
-    title: useState("title")
+    title: useState("activeMenu").value.label
 })
 </script>

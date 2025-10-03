@@ -1,23 +1,21 @@
 <template>
-    <UForm :validate="validate" :state="state" class="space-y-2" @submit="login" @reset="logout">
+    <UForm :validate="validate" :state="state" class="p-4 space-y-4" @submit="login" @reset="logout">
         <UFormField label="User ID" name="userid">
             <UInput v-model="state.userid" placeholder="ID ผู้ใช้" :disabled="loggedIn" />
         </UFormField>
         <UFormField label="Password" name="password">
             <UInput v-model="state.password" placeholder="รหัสผ่าน" :disabled="loggedIn" toggleMask
                 @keydown.enter="login" :type="showPwd ? 'text' : 'password'">
-                <UButton color="neutral" variant="link" size="sm" :icon="showPwd ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                <UButton variant="link" size="sm" :icon="showPwd ? 'i-lucide-eye-off' : 'i-lucide-eye'"
                     @click="showPwd = !showPwd" />
             </UInput>
         </UFormField>
-        <div class="flex">
-            <UButton v-if="!loggedIn" type="submit" color="success" label="Login" />
-            <UButton v-else type="reset" color="error" label="Logout" />
-        </div>
+        <UButton v-if="!loggedIn" type="submit" color="primary" label="Login" />
+        <UButton v-else type="reset" color="secondary" label="Logout" />
     </UForm>
 </template>
+
 <script lang="ts" setup>
-import CryptoJS from "crypto-js"
 const { $waitFetch } = useNuxtApp()
 const { loggedIn, user, clear, fetch: refreshSession } = useUserSession()
 const showPwd = ref(false)
@@ -25,6 +23,7 @@ const state = reactive({
     userid: user.value?.id,
     password: "",
 })
+
 import type { FormError } from "@nuxt/ui"
 const validate = (state: any): FormError[] => {
     const errors = []
@@ -35,6 +34,7 @@ const validate = (state: any): FormError[] => {
 
 const toast = useToast()
 
+import CryptoJS from "crypto-js"
 async function login() {
     await $waitFetch("/api/auth/local", {
         method: "POST",
