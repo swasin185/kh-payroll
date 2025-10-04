@@ -2,7 +2,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     const fetchCounter = async () => {
         return await $fetch("/api/counter", { cache: "no-store" })
     }
-    const delayTime = 10;
+    const delayTime = 60;
     const counter = useState("counter", () => 0)
     counter.value = await fetchCounter()
     const intervalId = setInterval(async () => {
@@ -16,6 +16,5 @@ export default defineNuxtPlugin(async (nuxtApp) => {
             })
         }
     }, 1000 * delayTime)
-
     console.log("Counter Refresh", delayTime , "s")
 })

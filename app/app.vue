@@ -23,14 +23,14 @@
         </UHeader>
         <UProgress v-if="isWaiting" animation="elastic" size="2xs" />
         <UProgress v-else v-model="fullProgress" :max="fullProgress" size="2xs" />
-        <UMain class="flex">
+        <UMain class="flex justify-center">
             <!-- show only if screen is desktop size -->
-            <div class="flex flex-col items-center hidden lg:flex">
+            <UCard class="flex flex-col items-center hidden lg:flex h-[800px]">
                 KH-PAYROLL v {{ version }}
                 <UNavigationMenu orientation="vertical" :items="menu" class="w-60" />
                 <USeparator class="w-60 mb-4" />
                 <UColorModeSelect />
-            </div>
+            </UCard>
             <NuxtLayout>
                 <NuxtPage />
             </NuxtLayout>

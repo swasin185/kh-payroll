@@ -1,12 +1,12 @@
 import { Users } from "~~/server/database/Users"
 import { Company } from "~~/server/database/Company"
-import { increaseActiveUsers } from "~~/server/utils/userCount"
+import { increaseSessionCount } from "~~/server/utils/sessionCount"
 
 export default eventHandler(async (event) => {
     const body = await readBody(event)
     const userid = body.id?.toString().toLowerCase()
     const password = body.pwd?.toString()
-    console.log("login:", userid, "/", password)
+    console.log("login:", userid)
     if (!userid || !password) {
         throw createError({
             status: 400,
@@ -17,7 +17,7 @@ export default eventHandler(async (event) => {
         const authUser = await Users.select(userid)
         if (authUser && (authUser.passwd == null || authUser.passwd === password)) {
             const company = await Company.select(authUser.comCode)
-            await setUserSession(event, {
+            const sess = await setUserSession(event, {
                 // beware cookie size 4k
                 user: {
                     id: authUser.id,
@@ -29,7 +29,7 @@ export default eventHandler(async (event) => {
                     mnPayroll: company?.mnPayroll,
                 },
             })
-            await increaseActiveUsers()
+            await increaseSessionCount(event)
             return true
         } else {
             await clearUserSession(event)

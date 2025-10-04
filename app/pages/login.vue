@@ -5,7 +5,7 @@
         </UFormField>
         <UFormField label="Password" name="password">
             <UInput v-model="state.password" placeholder="รหัสผ่าน" :disabled="loggedIn" toggleMask
-                @keydown.enter="login" :type="showPwd ? 'text' : 'password'">
+                :type="showPwd ? 'text' : 'password'">
                 <UButton variant="link" size="sm" :icon="showPwd ? 'i-lucide-eye-off' : 'i-lucide-eye'"
                     @click="showPwd = !showPwd" />
             </UInput>

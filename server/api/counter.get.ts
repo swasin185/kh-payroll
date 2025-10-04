@@ -1,5 +1,5 @@
-import { getActiveUsers } from "../utils/userCount"
+import { getSessionCount } from "../utils/sessionCount"
 
-export default eventHandler(async () => {
-    return await getActiveUsers()
+export default eventHandler(async (event) => {
+    return await getSessionCount()
 })

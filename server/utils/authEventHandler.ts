@@ -1,6 +1,6 @@
-import { H3Event } from "h3"
+import { H3Event} from "h3"
 
-export function authEventHandler(handler: (event: H3Event) => Promise<any> | any) {
+export function authEventHandler(handler: (event: H3Event) => Promise<H3Event> | any) {
     return defineEventHandler(async (event) => {
         const session = await getUserSession(event)
         if (!session || !session.user) {
