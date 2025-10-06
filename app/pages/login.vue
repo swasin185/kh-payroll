@@ -18,6 +18,7 @@
 <script lang="ts" setup>
 const { $waitFetch } = useNuxtApp()
 const { loggedIn, user, clear, fetch: refreshSession } = useUserSession()
+const { updateMenuPermission } = usePayrollMenu()
 const showPwd = ref(false)
 const state = reactive({
     userid: user.value?.id,
@@ -33,20 +34,23 @@ const validate = (state: any): FormError[] => {
 }
 
 const toast = useToast()
+// const { fetchCount } = useCounter()
 
 import CryptoJS from "crypto-js"
 async function login() {
-    await $waitFetch("/api/auth/local", {
+    const loginOk = await $waitFetch("/api/auth/local", {
         method: "POST",
         body: {
             id: state.userid,
             pwd: CryptoJS.MD5(state.password).toString(),
         },
     })
-    await refreshSession()
-    if (loggedIn.value) {
-        await navigateTo("/")
+    if (loginOk) {
         location.reload()
+        // await refreshSession()
+        // await updateMenuPermission(user.value?.level)
+        // await fetchCount()
+        // await navigateTo("/")
     } else
         toast.add({
             title: `[${new Date()}] Login Error`,

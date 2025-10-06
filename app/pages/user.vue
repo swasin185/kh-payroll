@@ -34,7 +34,7 @@
 <script lang="ts" setup>
 const { $waitFetch } = useNuxtApp()
 const { user } = useUserSession()
-// v-model:searchKey= "user.id"
+
 const record: Ref<any> = ref({})
 const toast = useToast()
 

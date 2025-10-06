@@ -4,5 +4,5 @@
 </template>
 
 <script lang="ts" setup>
-const isWaiting = useState("isWaiting")
+const isWaiting = useWaiting()
 </script>

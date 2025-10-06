@@ -1,11 +1,3 @@
-<script setup lang="ts">
-import type { NuxtError } from "#app"
-
-const props = defineProps({
-    error: Object as () => NuxtError,
-})
-</script>
-
 <template>
     <UError :error="error" :clear="{
         color: 'error',
@@ -14,3 +6,10 @@ const props = defineProps({
         class: 'rounded-full',
     }" />
 </template>
+<script setup lang="ts">
+import type { NuxtError } from "#app"
+
+const props = defineProps({
+    error: Object as () => NuxtError,
+})
+</script>

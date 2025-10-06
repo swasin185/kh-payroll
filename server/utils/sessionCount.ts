@@ -15,7 +15,6 @@ export async function increaseSessionCount(event: H3Event) {
 export async function decreaseSessionCount(event: H3Event) {
     const session = await getUserSession(event)
     await serverStorage.removeItem(session.id)
-    cleanExpireSession()
 }
 
 async function cleanExpireSession() {

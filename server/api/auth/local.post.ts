@@ -17,7 +17,7 @@ export default eventHandler(async (event) => {
         const authUser = await Users.select(userid)
         if (authUser && (authUser.passwd == null || authUser.passwd === password)) {
             const company = await Company.select(authUser.comCode)
-            const sess = await setUserSession(event, {
+            await setUserSession(event, {
                 // beware cookie size 4k
                 user: {
                     id: authUser.id,
