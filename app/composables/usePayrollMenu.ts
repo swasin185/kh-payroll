@@ -127,7 +127,8 @@ const updateMenuPermission = async (userLevel: number = -1) => {
         permission = await $fetch<any[]>("api/permission", { cache: "no-store" })
 
     for (const item of menuState.value) {
-        item.children?.forEach((child) => {
+        // item.children?.forEach((child) => {
+        for (const child of item.children!) {
             child.badge = 0
             if (userLevel === 9) {
                 child.level = userLevel
@@ -143,7 +144,7 @@ const updateMenuPermission = async (userLevel: number = -1) => {
                 child.level = -1
             }
             child.disabled = child.level < 0
-        })
+        }
     }
 }
 
@@ -159,7 +160,7 @@ const getMenuItemByRoute = (to: string): NavigationMenuItem | undefined => {
     return undefined
 }
 
-export default () => {
+export default function usePayrollMenu() {
     return {
         activeMenuItem,
         menuState,

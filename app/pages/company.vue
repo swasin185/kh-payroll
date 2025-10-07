@@ -42,9 +42,15 @@ const columns: TableColumn<Company>[] = [
 ]
 const { $waitFetch } = useNuxtApp()
 const { user } = useUserSession()
-const companies: Ref<Company[]> = ref(await $waitFetch("/api/companyList"))
-const i = companies.value.findIndex((com) => com.comCode === user?.value.comCode)
-const rowSelection: Ref<any> = ref({ [i]: true, comCode: user?.value.comCode })
+const companies: Ref<Company[]> = ref([])
+const rowSelection: Ref<any> = ref({})
+try {
+    companies.value = await $waitFetch("/api/companyList")
+    const i = companies.value.findIndex((com) => com.comCode === user?.value.comCode)
+    rowSelection.value = { [i]: true, comCode: user?.value.comCode }
+} catch (error) {
+    showError(error!)
+}
 
 function onSelect(row: TableRow<Company>) {
     if (!rowSelection.value[row.index]) {

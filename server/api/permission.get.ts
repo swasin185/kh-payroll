@@ -1,7 +1,6 @@
 import { Permission } from "~~/server/database/Permission"
-import { authEventHandler } from "~~/server/utils/authEventHandler"
 
-export default authEventHandler(async (event) => {
+export default eventHandler(async (event) => {
     const session = await getUserSession(event)
     const userId = (session.user as any).id
     const comCode = (session.user as any).comCode
@@ -12,8 +11,7 @@ export default authEventHandler(async (event) => {
         })
     }
     try {
-        const permission = await Permission.select(comCode, userId)
-        return permission
+        return await Permission.select(comCode, userId)
     } catch (error) {
         console.error("Database query error :", error)
         setResponseStatus(event, 500)

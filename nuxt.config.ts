@@ -8,15 +8,20 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             buildTime: Date.now(),
+            // idle time limit for session disconnect
+            idleLimit: process.env.MAX_AGE ? Number.parseInt(process.env.MAX_AGE) / 10 : 3_600,
+            // schedule time in seconds use for client & server make a schedule task
+            schedule: 60 
         },
         session: {
-            maxAge: 60 * 5, // 5 minutes
+            // max age for session nitro expired
+            maxAge: process.env.MAX_AGE ? Number.parseInt(process.env.MAX_AGE) : 36_000, 
             password: process.env.NUXT_SESSION_PASSWORD || "1234567_1234567_1234567_12345678",
         },
     },
     nitro: {
         storage: {
-            data: {
+            sessions: {
                 driver: "memory",
             },
         },

@@ -1,4 +1,5 @@
 import { H3Event} from "h3"
+import { addOrRenewSession } from "./session"
 
 export function authEventHandler(handler: (event: H3Event) => Promise<H3Event> | any) {
     return defineEventHandler(async (event) => {
@@ -13,6 +14,7 @@ export function authEventHandler(handler: (event: H3Event) => Promise<H3Event> |
                 message: "Access denied. You must be logged in to access this resource.",
             })
         }
+        await addOrRenewSession(session?.id)
         return handler(event)
     })
 }

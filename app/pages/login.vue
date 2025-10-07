@@ -17,8 +17,7 @@
 
 <script lang="ts" setup>
 const { $waitFetch } = useNuxtApp()
-const { loggedIn, user, clear, fetch: refreshSession } = useUserSession()
-const { updateMenuPermission } = usePayrollMenu()
+const { loggedIn, user, clear } = useUserSession()
 const showPwd = ref(false)
 const state = reactive({
     userid: user.value?.id,

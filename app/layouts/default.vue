@@ -31,7 +31,7 @@
     </UMain>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const fullProgress = ref(1)
 const isWaiting = useWaiting()
 const { counter, setScheduleCount } = useCounter()

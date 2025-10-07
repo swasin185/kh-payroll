@@ -1,14 +1,29 @@
-const delaySecond = 60
-const sessionCount = ref<number>(0)
+const counter = ref<number>(0)
+const { loggedIn, fetch: refreshSession } = useUserSession()
+const toast = useToast()
+const { activeMenuItem } = usePayrollMenu()
+const config = useRuntimeConfig()
+const idleLimit = config.public.idleLimit
+const scheduleTime = config.public.schedule as number
 
-const fetchCount = async () => {
-    sessionCount.value = await $fetch("/api/counter", { cache: "no-store" })
-}
-const setScheduleCount = () => {
-    fetchCount()
+const setScheduleCount = async () => {
+    counter.value = await $fetch("/api/counter", { cache: "no-store" })
     const intervalId = setInterval(async () => {
         try {
-            fetchCount()
+            console.log("connect server")
+            counter.value = await $fetch("/api/counter", { cache: "no-store" })
+            if (loggedIn.value) {
+                await refreshSession()
+                if (!loggedIn.value && activeMenuItem.value.label! !== "/login") {
+                    toast.add({
+                        title: `[${new Date()}] Session's Expired`,
+                        description: `Idel Time Limited ${idleLimit / 60} minute`,
+                        color: "error",
+                        duration: 10_000,
+                    })
+                    await navigateTo("/login")
+                }
+            }
         } catch {
             clearInterval(intervalId)
             showError({
@@ -16,14 +31,13 @@ const setScheduleCount = () => {
                 message: "Server Disconnected !",
             })
         }
-    }, 1000 * delaySecond)
-    console.log("Counter Schedule", delaySecond, "s")
+    }, scheduleTime * 1000)
+    console.log("Counter Schedule", scheduleTime, "s")
 }
 
-export default () => {
+export default function useCounter() {
     return {
-        counter: sessionCount,
-        fetchCount,
+        counter,
         setScheduleCount,
     }
 }

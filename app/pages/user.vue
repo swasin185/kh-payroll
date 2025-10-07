@@ -1,17 +1,8 @@
 <template>
-    <ToolbarCRUID
-        :searchKey= "user.id"
-        :onLookupClick="handleLookup"
-        :onSelectClick="handleSelect"
-        :onInsertClick="handleInsert"
-        :onUpdateClick="handleUpdate"
-        :onDeleteClick="handleDelete"
-        :isLookupDisabled="true"
-        :isInsertDisabled="true"
-        :isUpdateDisabled="false"
-        :isDeleteDisabled="true"
-    />
-    
+    <ToolbarCRUID :searchKey="user?.id" :onLookupClick="handleLookup" :onSelectClick="handleSelect"
+        :onInsertClick="handleInsert" :onUpdateClick="handleUpdate" :onDeleteClick="handleDelete"
+        :isLookupDisabled="true" :isInsertDisabled="true" :isUpdateDisabled="false" :isDeleteDisabled="true" />
+
     <UForm :state="record" class="flex flex-col gap-4">
         <UFormField label="User ID" name="userid">
             <UInput v-model="record.id" placeholder="ID ผู้ใช้" class="w-30" disabled />
@@ -23,10 +14,10 @@
             <UInput v-model="record.descript" class="w-100" />
         </UFormField>
         <UFormField label="LEVEL" name="level">
-            <UInputNumber v-model="record.level" class="w-25" :disabled="user.level < 9" :min="1" :max="9" />
+            <UInputNumber v-model="record.level" class="w-25" :disabled="user?.level < 9" :min="1" :max="9" />
         </UFormField>
         <UFormField label="ROLE" name="role">
-            <USelect v-model="record.role" class="w-40" :disabled="user.level < 9" />
+            <USelect v-model="record.role" class="w-40" :disabled="user?.level < 9" />
         </UFormField>
     </UForm>
 </template>
@@ -39,10 +30,14 @@ const record: Ref<any> = ref({})
 const toast = useToast()
 
 const handleSelect = async () => {
-    record.value = await $waitFetch("/api/users", { method: "GET", query: { id: user.value.id } })
+    try {
+        record.value = await $waitFetch("/api/users", { method: "GET", query: { id: user.value?.id } })
+    } catch (error) {
+        showError(error!)
+    }
 }
 
-const handleInsert = () => {}
+const handleInsert = () => { }
 
 const handleUpdate = async () => {
     await $waitFetch("/api/users", {
@@ -58,8 +53,8 @@ const handleUpdate = async () => {
     toast.add({ title: `[${new Date()}] Save`, description: "บันทึกเรียบร้อย", color: "success" })
 }
 
-const handleDelete = () => {}
-const handleLookup = () => {}
+const handleDelete = () => { }
+const handleLookup = () => { }
 
 handleSelect()
 </script>

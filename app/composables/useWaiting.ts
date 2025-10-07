@@ -1,5 +1,5 @@
 const isWaiting = ref<boolean>(false)
 
-export default () => {
+export default function useWaiting() {
     return isWaiting
 }

@@ -5,6 +5,8 @@ create database payroll;
 -- create user 'pr-report'@'%' identified by 'A1b2C3d4#';
 -- grant select, execute, create temporary tables on *.* to 'pr-report'@'%';
 
-drop user if exists 'pr-user'@'%';
-create user 'pr-user'@'%' identified by 'A1b2C3d4#';
-grant select, execute, insert, delete, update, create temporary tables on payroll.* to 'pr-user'@'%';
+set @user = 'pr-user'@'%'
+drop user if exists @user;
+create user @user identified by 'A1b2C3d4#';
+grant select, execute, insert, delete, update,
+create temporary tables on payroll.* to @user;

@@ -1,6 +1,6 @@
 import { Users } from "~~/server/database/Users"
 import { Company } from "~~/server/database/Company"
-import { increaseSessionCount } from "~~/server/utils/sessionCount"
+import { addOrRenewSession } from "~~/server/utils/session"
 
 export default eventHandler(async (event) => {
     const body = await readBody(event)
@@ -26,10 +26,11 @@ export default eventHandler(async (event) => {
                     comCode: authUser.comCode,
                     comName: company?.comName,
                     yrPayroll: company?.yrPayroll,
-                    mnPayroll: company?.mnPayroll,
+                    mnPayroll: company?.mnPayroll
                 },
             })
-            await increaseSessionCount(event)
+            const sess = await getUserSession(event)
+            await addOrRenewSession(sess?.id)
             return true
         } else {
             await clearUserSession(event)
