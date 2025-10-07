@@ -22,20 +22,22 @@ export default defineNuxtConfig({
     nitro: {
         storage: {
             sessions: {
-                driver: "memory",
+                driver: "memory"
+            },
+            redis: {
+                driver: "redis",
+                port: process.env.REDIS_PORT,
+                host: process.env.REDIS_HOST,
+                username: process.env.REDIS_USER || "default",
+                password: process.env.REDIS_PASSWORD,
+                db: 0,
+            },
+   					     vercel: {
+                driver: "vercel-kv",
+                // these are automatically available when deployed on Vercel
+                url: process.env.KV_REST_API_URL,
+                token: process.env.KV_REST_API_TOKEN
             },
         },
     },
-    // app: {
-    //     head: {
-    //         titleTemplate: "%s - PAYROLL",
-    //         meta: [
-    //             { charset: "utf-8" },
-    //             {
-    //                 name: "viewport",
-    //                 content: "width=device-width, initial-scale=1",
-    //             },
-    //         ],
-    //     },
-    // },
 })
