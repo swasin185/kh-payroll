@@ -1,5 +1,4 @@
 // import { Users } from "../database/Users"
-import { scheduleCleanSession } from "../utils/session"
 export default defineNitroPlugin((nitroApp) => {
     console.log("Server initialized at startup")
     Date.prototype.toJSON = function () {
@@ -7,5 +6,4 @@ export default defineNitroPlugin((nitroApp) => {
             ? this.toLocaleDateString("sv-SE")
             : this.toLocaleString("sv-SE")
     }
-    scheduleCleanSession()
 })

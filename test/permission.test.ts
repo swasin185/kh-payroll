@@ -1,7 +1,7 @@
 import { describe, it, expect, afterAll } from "vitest"
 import { useDrizzle, closeDrizzle } from "../server/database/drizzle"
 import { Permission } from "../server/database/Permission"
-import { setMenuByUserLevel } from "../app/menu.config"
+import usePayrollMenu from "../app/composables/usePayrollMenu"
 
 afterAll(async () => {
     closeDrizzle()
@@ -17,9 +17,8 @@ describe("Permission", async () => {
     it("insert() admin permission", async () => {
         await Permission.deleteAll(testCompany, testUser)
         const permission = await Permission.select(testCompany, testUser)
-        const menu = await setMenuByUserLevel(9, [])
-        let group = menu[0]
-        for (let item of group)
+        const { menuState: menu } = usePayrollMenu()
+        for (let item of menu.value)
             if (item.children)
                 for (let child of item.children!)
                     if (!permission.some((p) => p.program === child.to)) {

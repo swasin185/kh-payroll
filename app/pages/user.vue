@@ -30,11 +30,7 @@ const record: Ref<any> = ref({})
 const toast = useToast()
 
 const handleSelect = async () => {
-    try {
-        record.value = await $waitFetch("/api/users", { method: "GET", query: { id: user.value?.id } })
-    } catch (error) {
-        showError(error!)
-    }
+    record.value = await $waitFetch("/api/users", { method: "GET", query: { id: user.value?.id } })
 }
 
 const handleInsert = () => { }

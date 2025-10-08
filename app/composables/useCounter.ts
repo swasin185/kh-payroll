@@ -19,7 +19,7 @@ const setScheduleCount = async () => {
                         title: `[${new Date()}] Session's Expired`,
                         description: `Idel Time Limited ${idleLimit / 60} minute`,
                         color: "error",
-                        duration: 10_000,
+                        duration: 30000,
                     })
                     await navigateTo("/login")
                 }

@@ -9,34 +9,21 @@ export default defineNuxtConfig({
         public: {
             buildTime: Date.now(),
             // idle time limit for session disconnect
-            idleLimit: process.env.MAX_AGE ? Number.parseInt(process.env.MAX_AGE) / 10 : 3_600,
-            // schedule time in seconds use for client & server make a schedule task
-            schedule: 60 
+            idleLimit: process.env.MAX_AGE ? Number.parseInt(process.env.MAX_AGE) / 10 : 3600,
+            // schedule time in seconds use for client make a schedule task
+            schedule: 60,
         },
         session: {
             // max age for session nitro expired
-            maxAge: process.env.MAX_AGE ? Number.parseInt(process.env.MAX_AGE) : 36_000, 
+            maxAge: process.env.MAX_AGE ? Number.parseInt(process.env.MAX_AGE) : 36000,
             password: process.env.NUXT_SESSION_PASSWORD || "1234567_1234567_1234567_12345678",
         },
     },
     nitro: {
         storage: {
             sessions: {
-                driver: "memory"
-            },
-            redis: {
-                driver: "redis",
-                port: process.env.REDIS_PORT,
-                host: process.env.REDIS_HOST,
-                username: process.env.REDIS_USER || "default",
-                password: process.env.REDIS_PASSWORD,
-                db: 0,
-            },
-   					     vercel: {
-                driver: "vercel-kv",
-                // these are automatically available when deployed on Vercel
-                url: process.env.KV_REST_API_URL,
-                token: process.env.KV_REST_API_TOKEN
+                driver: process.env.REDIS_URL? "redis" : "memory",
+                url: process.env.REDIS_URL || "",
             },
         },
     },

@@ -17,15 +17,13 @@ export default defineNuxtPlugin((nuxtApp) => {
         onResponse() {
             isWaiting.value = false
         },
-        onResponseError() {
+        onResponseError(event) {
             isWaiting.value = false
+            showError(event.error!)
         },
-        onRequestError() {
+        onRequestError(event) {
             isWaiting.value = false
-            showError({
-                statusCode: 500,
-                message: "Request Error!!",
-            })
+            showError(event.error)
         },
     })
 
