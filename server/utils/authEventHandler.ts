@@ -1,11 +1,11 @@
 import { H3Event} from "h3"
-import { addOrRenewSession } from "./session"
+import { renewSession } from "./sessions"
 
 export function authEventHandler(handler: (event: H3Event) => Promise<H3Event> | any) {
     return defineEventHandler(async (event) => {
         const session = await validateSession(event)
         if (session?.user) 
-            await addOrRenewSession(session?.id)
+            await renewSession(session.id, session.user?.id)
         else {
             const testUserJson = getHeader(event, "x-test-user")
             // bypass user authenticated for vitest

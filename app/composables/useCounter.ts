@@ -10,7 +10,6 @@ const setScheduleCount = async () => {
     counter.value = await $fetch("/api/counter", { cache: "no-store" })
     const intervalId = setInterval(async () => {
         try {
-            console.log("connect server")
             counter.value = await $fetch("/api/counter", { cache: "no-store" })
             if (loggedIn.value) {
                 await refreshSession()
@@ -19,7 +18,7 @@ const setScheduleCount = async () => {
                         title: `[${new Date()}] Session's Expired`,
                         description: `Idel Time Limited ${idleLimit / 60} minute`,
                         color: "error",
-                        duration: 30000,
+                        duration: 10_000,
                     })
                     await navigateTo("/login")
                 }
