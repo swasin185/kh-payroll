@@ -1,7 +1,7 @@
 const counter = ref<number>(0)
 const { loggedIn, fetch: refreshSession } = useUserSession()
 const toast = useToast()
-const { activeMenuItem } = usePayrollMenu()
+const { activeMenu, loginUrl } = usePayrollMenu()
 const config = useRuntimeConfig()
 const idleLimit = config.public.idleLimit
 const scheduleTime = config.public.schedule as number
@@ -13,7 +13,7 @@ const setScheduleCount = async () => {
             counter.value = await $fetch("/api/counter", { cache: "no-store" })
             if (loggedIn.value) {
                 await refreshSession()
-                if (!loggedIn.value && activeMenuItem.value.label! !== "/login") {
+                if (!loggedIn.value && activeMenu.value.label! !== loginUrl) {
                     toast.add({
                         title: `[${new Date()}] Session's Expired`,
                         description: `Idel Time Limited ${idleLimit / 60} minute`,

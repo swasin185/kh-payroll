@@ -1,6 +1,9 @@
-import { useDrizzle, SchemaTypes } from "./drizzle"
+import { useDrizzle } from "./drizzle"
+import type { SchemaTypes } from "~~/shared/utils"
 import { company } from "./schema"
 import { eq } from "drizzle-orm"
+import type { LookupItem } from "~~/shared/types"
+
 export class Company {
     public static async select(comCode: string): Promise<SchemaTypes["company"] | null> {
         const db = useDrizzle()
@@ -18,11 +21,19 @@ export class Company {
     }
     public static async update(com: SchemaTypes["company"]): Promise<boolean> {
         const db = useDrizzle()
-        try {
-            const result = await db.update(company).set(com).where(eq(company.comCode, com.comCode))
-            return result[0].affectedRows == 1
-        } catch (error) {
-            throw new Error(`Failed to update company: ${(error as Error).message}`)
-        }
+        const result = await db.update(company).set(com).where(eq(company.comCode, com.comCode))
+        return result[0].affectedRows == 1
+    }
+    
+    public static async lookup(): Promise<LookupItem[]> {
+        const db = useDrizzle()
+        const result = await db
+            .select({
+                id: company.comCode,
+                label: company.comName,
+            })
+            .from(company)
+            .orderBy(company.comCode)
+        return result
     }
 }

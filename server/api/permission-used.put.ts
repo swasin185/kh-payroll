@@ -6,13 +6,5 @@ export default eventHandler(async (event) => {
     const userId = (session.user as any).id
     const comCode = (session.user as any).comCode
     const program = query.program?.toString()
-    try {
-        return await Permission.used(comCode, userId, program!)
-    } catch (error) {
-        setResponseStatus(event, 500)
-        return {
-            error: "An internal server error.",
-            details: (error as Error).message,
-        }
-    }
+    return await Permission.used(comCode, userId, program!)
 })

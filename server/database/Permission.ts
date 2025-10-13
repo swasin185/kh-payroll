@@ -1,4 +1,5 @@
-import { useDrizzle, SchemaTypes } from "./drizzle"
+import type { SchemaTypes } from "~~/shared/utils"
+import { useDrizzle } from "./drizzle"
 import { permission } from "./schema"
 import { eq, and, sql } from "drizzle-orm"
 
@@ -12,7 +13,7 @@ export class Permission {
                 used: true,
             },
             where: (permisTable) =>
-                and(eq(permisTable.userid, userId), eq(permisTable.comCode, company)),
+                and(eq(permisTable.userId, userId), eq(permisTable.comCode, company)),
             orderBy: (permisTable) => permisTable.program,
         }) 
         return permission
@@ -31,7 +32,7 @@ export class Permission {
             .where(
                 and(
                     eq(permission.comCode, company),
-                    eq(permission.userid, userId),
+                    eq(permission.userId, userId),
                     eq(permission.program, program),
                 ),
             )
@@ -42,7 +43,7 @@ export class Permission {
         const db = useDrizzle()
         const result = await db
             .delete(permission)
-            .where(and(eq(permission.comCode, company), eq(permission.userid, userId)))
+            .where(and(eq(permission.comCode, company), eq(permission.userId, userId)))
         return result[0].affectedRows > 0
     }
 
@@ -53,12 +54,12 @@ export class Permission {
     ): Promise<number> {
         if (fromUser === toUser) return 0
         const db = useDrizzle()
-        db.execute(`delete from permission where userid = ${toUser}`)
+        db.execute(`delete from permission where userId = ${toUser}`)
         const result = await db.execute(`
             INSERT INTO permission
             SELECT comCode, ${toUser}, program, level 
             FROM permission 
-            WHERE comCode= ${company} and userid = ${fromUser}`)
+            WHERE comCode= ${company} and userId = ${fromUser}`)
         return result[0].affectedRows || 0
     }
 
@@ -72,7 +73,7 @@ export class Permission {
             .where(
                 and(
                     eq(permission.comCode, company),
-                    eq(permission.userid, userId),
+                    eq(permission.userId, userId),
                     eq(permission.program, program),
                 ),
             )

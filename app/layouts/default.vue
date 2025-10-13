@@ -7,7 +7,7 @@
                 [{{ user?.mnPayroll || month }}] {{ user?.comName }}
             </NuxtLink>
         </template>
-        <h1 class="text-l font-bold">{{ activeMenuItem.label }}</h1>
+        <h1 class="text-l font-bold">{{ activeMenu.label }}</h1>
         <template #right>
             <NuxtLink to="/login" class="text-large">
                 {{ user?.name }}
@@ -38,7 +38,7 @@ const { counter, setScheduleCount } = useCounter()
 setScheduleCount()
 
 const { user } = useUserSession()
-const { menuState, activeMenuItem, updateMenuPermission } = usePayrollMenu()
+const { menuState, activeMenu, updateMenuPermission } = usePayrollMenu()
 updateMenuPermission(user.value?.level)
 
 const config = useRuntimeConfig()
@@ -48,6 +48,6 @@ const month = ref(date.getMonth() + 1)
 const version = `${year.value - 2025}.${month.value}.${date.getDate()}`
 
 useHead({
-    title: activeMenuItem.value?.label
+    title: activeMenu.value?.label
 })
 </script>

@@ -105,7 +105,7 @@ export const logs = mysqlTable("logs", {
 	logNr: int().autoincrement().notNull(),
 	logTime: timestamp({ mode: 'string' }).default('current_timestamp()').notNull(),
 	logType: varchar({ length: 8 }),
-	userid: varchar({ length: 16 }),
+	userId: varchar({ length: 16 }),
 	program: varchar({ length: 16 }),
 	tableName: varchar({ length: 20 }),
 	changed: varchar({ length: 256 }),
@@ -132,7 +132,7 @@ export const payroll = mysqlTable("payroll", {
 
 export const permission = mysqlTable("permission", {
 	comCode: varchar({ length: 2 }).notNull().references(() => company.comCode, { onDelete: "restrict", onUpdate: "restrict" }),
-	userid: varchar({ length: 16 }).notNull().references(() => users.id, { onDelete: "cascade", onUpdate: "restrict" }),
+	userId: varchar({ length: 16 }).notNull().references(() => users.id, { onDelete: "cascade", onUpdate: "restrict" }),
 	program: varchar({ length: 16 }).notNull(),
 	level: tinyint().default(0).notNull(),
 	used: int().default(0).notNull(),

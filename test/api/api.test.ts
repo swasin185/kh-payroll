@@ -27,7 +27,7 @@ describe("API endpoints", async () => {
     it("POST /api/users", async () => {
         const res = await $fetch("/api/users", {
             method: "POST",
-            query: testUser,
+            body: testUser,
             headers: {
                 "x-test-user": "vitest", // bypass authEventHandler()
             },
@@ -55,7 +55,7 @@ describe("API endpoints", async () => {
         }
         const res = await $fetch("/api/users", {
             method: "PUT",
-            query: updatedUser,
+            body: updatedUser,
             headers: {
                 "x-test-user": "vitest", // bypass authEventHandler()
             },

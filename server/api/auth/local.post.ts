@@ -26,7 +26,7 @@ export default eventHandler(async (event) => {
                     comCode: authUser.comCode,
                     comName: company?.comName,
                     yrPayroll: company?.yrPayroll,
-                    mnPayroll: company?.mnPayroll
+                    mnPayroll: company?.mnPayroll,
                 },
             })
             const sess = await getUserSession(event)
@@ -36,9 +36,6 @@ export default eventHandler(async (event) => {
             return false
         }
     } catch (error) {
-        throw createError({
-            status: 500,
-            message: "Authentication Error : " + error,
-        })
+        throw createError(error as Error)
     }
 })

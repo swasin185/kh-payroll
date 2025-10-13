@@ -1,21 +1,20 @@
 import { describe, it, expect, afterAll } from "vitest"
 import { useDrizzle, closeDrizzle } from "../server/database/drizzle"
 import { Users } from "../server/database/Users"
-
+import { LookupItem } from "../shared/types"
 afterAll(async () => {
     closeDrizzle()
     console.log("Database connection closed")
 })
 
 describe("Payroll MariaDB", async () => {
-    useDrizzle()
+    const db = useDrizzle()
     console.log("Database connected")
 
     const TEST_USER_ID = "testuser"
     const testUser = { id: TEST_USER_ID, name: "Integration Test" } as any
 
     it("Database is payroll", async () => {
-        const db = useDrizzle()
         const [rows] = await db.execute("SELECT DATABASE() AS db")
         expect((rows as any)[0].db).toBe("payroll")
     })
@@ -31,10 +30,13 @@ describe("Payroll MariaDB", async () => {
         expect(user?.id).toBe(TEST_USER_ID)
     })
 
-    it("selectAll() returns users excluding admin", async () => {
-        const users = await Users.selectAll()
-        expect(Array.isArray(users)).toBe(true)
-        expect(users.find((u) => u.id === "admin")).toBeUndefined()
+    it("lookup() returns users excluding admin", async () => {
+        for (let i=0; i < 10; i++) {
+            // await db.execute("select sleep(5)") // for debugging
+            const users: LookupItem[] = await Users.lookup()
+            expect(Array.isArray(users)).toBe(true)
+            expect(users.find((u) => u.id === "admin")).toBeUndefined()
+        }
     })
 
     it("update() returns true for existing user", async () => {

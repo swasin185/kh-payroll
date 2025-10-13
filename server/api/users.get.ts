@@ -10,21 +10,5 @@ export default authEventHandler(async (event) => {
             statusMessage: "User ID is required.",
         })
     }
-    try {
-        const user = await Users.select(userId)
-        if (user) {
-            return user
-        } else {
-            throw createError({
-                statusCode: 404,
-                statusMessage: `User with ID '${userId}' not found.`,
-            })
-        }
-    } catch (error) {
-        console.error(`Database query error in user.get.ts for ID '${userId}':`, error)
-        throw createError({
-            statusCode: 500,
-            statusMessage: (error as Error).message,
-        })
-    }
+    return await Users.select(userId)
 })

@@ -1,6 +1,8 @@
-import { useDrizzle, SchemaTypes } from "./drizzle"
+import { useDrizzle } from "./drizzle"
 import { users } from "./schema"
-import { eq, ne } from "drizzle-orm" // Assuming these are from drizzle-orm
+import { eq, ne, sql } from "drizzle-orm"
+import type { SchemaTypes } from "~~/shared/utils"
+import type { LookupItem } from "~~/shared/types"
 
 /**
  * Manages user-related database operations as a static utility.
@@ -17,33 +19,27 @@ export class Users {
      */
     public static async select(userId: string): Promise<SchemaTypes["users"] | null> {
         const db = useDrizzle()
-        try {
-            const user = await db.query.users.findFirst({
-                where: (usersTable) => eq(usersTable.id, userId),
-            })
-            return user || null
-        } catch (error) {
-            console.error(`Database query error in User.selectUserBy for ID '${userId}':`, error)
-            throw new Error(`Failed to fetch user: ${(error as Error).message}`)
-        }
+        const user = await db.query.users.findFirst({
+            where: (usersTable) => eq(usersTable.id, userId),
+        })
+        return user || null
     }
 
     /**
-     * Selects all users, excluding the 'admin' user.
+     * Lookup users list, excluding the 'admin' user.
      * @returns An array of user objects.
      */
-    public static async selectAll(): Promise<SchemaTypes["users"][]> {
+    public static async lookup(): Promise<LookupItem[]> {
         const db = useDrizzle()
-        try {
-            const users = await db.query.users.findMany({
-                where: (usersTable) => ne(usersTable.id, "admin"),
-                orderBy: (usersTable) => usersTable.id,
+        const result = await db
+            .select({
+                id: users.id,
+                label: sql`concat(${users.id}, " : ", ${users.name})`,
             })
-            return users
-        } catch (error) {
-            console.error(`Database query error in User.select:`, error)
-            throw new Error(`Failed to fetch user list: ${(error as Error).message}`)
-        }
+            .from(users)
+            .where(ne(users.id, "admin"))
+            .orderBy(users.id)
+        return result
     }
 
     /**
@@ -54,15 +50,8 @@ export class Users {
     public static async insert(user: SchemaTypes["users"]): Promise<boolean> {
         const db = useDrizzle()
         user.id = user.id.toLowerCase().trim()
-        try {
-            const result = await db.insert(users).values(user)
-            return result[0].affectedRows == 1
-        } catch (error) {
-            if ((error as any).code === "ER_DUP_ENTRY") {
-                throw new Error(`User with ID '${user.id}' already exists.`)
-            }
-            throw new Error(`Failed to insert user: ${(error as Error).message}`)
-        }
+        const result = await db.insert(users).values(user)
+        return result[0].affectedRows == 1
     }
 
     /**
@@ -72,12 +61,8 @@ export class Users {
      */
     public static async delete(userId: string): Promise<boolean> {
         const db = useDrizzle()
-        try {
-            const result = await db.delete(users).where(eq(users.id, userId))
-            return result[0].affectedRows == 1
-        } catch (error) {
-            throw new Error(`Failed to delete user: ${(error as Error).message}`)
-        }
+        const result = await db.delete(users).where(eq(users.id, userId))
+        return result[0].affectedRows == 1
     }
 
     /**
@@ -87,14 +72,7 @@ export class Users {
      */
     public static async update(user: SchemaTypes["users"]): Promise<boolean> {
         const db = useDrizzle()
-        try {
-            const result = await db
-                .update(users)
-                .set(user)
-                .where(eq(users.id, user.id))
-            return result[0].affectedRows == 1
-        } catch (error) {
-            throw new Error(`Failed to update user: ${(error as Error).message}`)
-        }
+        const result = await db.update(users).set(user).where(eq(users.id, user.id))
+        return result[0].affectedRows == 1
     }
 }

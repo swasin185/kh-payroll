@@ -10,22 +10,5 @@ export default authEventHandler(async (event) => {
             statusMessage: "User ID is required.",
         })
     }
-    try {
-        const result = await Users.delete(userId)
-        if (result) {
-            setResponseStatus(event, 200)
-            return result
-        } else {
-            throw createError({
-                statusCode: 404,
-                statusMessage: `Update User with ID '${userId}' not found.`,
-            })
-        }
-    } catch (error) {
-        console.error(`Update error in users/[id].get.ts for ID '${userId}':`, error)
-        throw createError({
-            statusCode: 500,
-            statusMessage: (error as Error).message,
-        })
-    }
+    return await Users.delete(userId)
 })

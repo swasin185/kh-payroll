@@ -1,10 +1,10 @@
 import { Company } from "~~/server/database/Company"
 import { authEventHandler } from "~~/server/utils/authEventHandler"
-import { SchemaTypes } from "~~/server/database/drizzle"
+import { SchemaTypes } from "~~/shared/utils"
 
 export default authEventHandler(async (event) => {
-    const query = getQuery(event)
-    const company = query as SchemaTypes["company"]
+    const body = await readBody(event)
+    const company = body as SchemaTypes["company"]
     if (!company) {
         throw createError({
             statusCode: 400,

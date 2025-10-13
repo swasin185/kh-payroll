@@ -13,7 +13,7 @@ describe("Permission", async () => {
     console.log("Database connected")
 
     const testCompany = "00"
-    const testUser = "admin"
+    const testUser = "tom"
     it("insert() admin permission", async () => {
         await Permission.deleteAll(testCompany, testUser)
         const permission = await Permission.select(testCompany, testUser)
@@ -24,9 +24,9 @@ describe("Permission", async () => {
                     if (!permission.some((p) => p.program === child.to)) {
                         const result = await Permission.insert({
                             comCode: testCompany,
-                            userid: testUser,
+                            userId: testUser,
                             program: child.to,
-                            level: 9,
+                            level: 5,
                             used: 0,
                         })
                         expect(result).toBe(true)

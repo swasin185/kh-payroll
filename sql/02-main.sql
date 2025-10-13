@@ -19,8 +19,9 @@ create table company (
 insert into 
   company(comCode, comName) 
 values
-  ('00', "บริษัททดสอบ จำกัด"),
-  ('01', "บริษัทเริ่มต้น จำกัด");
+  ('00', "บจ.ทดสอบ KEEHIN Software"),
+  ('01', "บจ กี่หิ้นการไฟฟ้าภูเก็ต"),
+  ('02', "บจ บ้านสุขภัณฑ์และวัสดุ");
 
 drop table if exists users;
 create table users (
@@ -42,19 +43,21 @@ create table users (
 insert into users
   (id, name, descript, level)
 values 
-  ('admin', 'แอดมินไงจะใครละ', 'ผู้ดูแลระบบ', 9),
-  ('tom', 'ทอม', 'ทดสอบผู้ใช้ทั่วไป', 1);  
+  ('admin', 'แอดมินไงจะใครละ', 'ผู้สร้างระบบ', 9),
+  ('tom', 'วศิน เสงี่ยมกุล', 'ทดสอบผู้ใช้หัวหน้า', 5),
+  ('jerry', 'จิรายุทธ ใจดี', 'ทดสอบผู้ใช้พนักงาน', 3),
+  ('guest', 'แขกผู้มีเกียรติ', 'ทดสอบผู้ใช้ทั่วไป', 0);  
 
 drop table if exists permission;
 create table permission (
   comCode       varchar(2),
-  userid        varchar(16),
+  userId        varchar(16),
   program       varchar(16),
   level         tinyint unsigned not null default 0 comment 'ระดับการใช้งาน 0 - 9',
   used          int unsigned not null default 0 comment 'จำนวนครั้งที่ใช้',
   foreign key (comCode) references company(comCode),
-  foreign key (userid) references users(id) on delete cascade,
-  primary key (comCode, userid, program)
+  foreign key (userId) references users(id) on delete cascade,
+  primary key (comCode, userId, program)
 ) comment = 'สิทธิการใช้โปรแกรม';
 
 drop table if exists logs;
@@ -62,7 +65,7 @@ create table logs (
   logNr         int unsigned auto_increment,
   logTime       timestamp not null default current_timestamp,
   logType       varchar(8) comment 'insert delete update query rollback login logfail execute',   
-  userid        varchar(16) comment 'user ที่ส่งคำสั่งทำงาน',
+  userId        varchar(16) comment 'user ที่ส่งคำสั่งทำงาน',
   program       varchar(16) comment 'ชื่อโปรแกรม',
   tableName     varchar(20) comment 'ไฟล์ ที่มีผลกระทบ',
   changed       varchar(256) comment 'ข้อมูลการเปลี่ยนแปลง',

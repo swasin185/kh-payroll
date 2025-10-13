@@ -1,21 +1,16 @@
 import { ref } from "vue"
 import type { NavigationMenuItem } from "@nuxt/ui"
 
-// --- 1. CORE MENU DEFINITIONS (Initial State) ---
+const loginUrl = "/login"
 
-/**
- * The default menu item used before login or as a fallback.
- */
 const defaultMenu: NavigationMenuItem = {
     label: "KH-PAYROLL",
-    to: "/login",
-    level: 0,
+    to: loginUrl,
+    level: LEVELS.Viewer,
 }
 
-const activeMenuItem = ref(defaultMenu)
+const activeMenu = ref(defaultMenu)
 
-// --- 2. REACTIVE STATE (The single source of truth) ---
-// We use ref() to make the entire array reactive.
 const menuState = ref<NavigationMenuItem[]>([
     {
         label: "Setting",
@@ -23,7 +18,7 @@ const menuState = ref<NavigationMenuItem[]>([
         children: [
             {
                 label: "Login / Out",
-                to: "/login",
+                to: loginUrl,
                 icon: "i-lucide-lock",
                 disabled: false,
                 default: true,
@@ -118,32 +113,31 @@ const menuState = ref<NavigationMenuItem[]>([
     },
 ])
 
-// --- 3. COMPOSABLE LOGIC ---
+import { LEVELS } from "../../shared/utils"
 
-const updateMenuPermission = async (userLevel: number = -1) => {
+const updateMenuPermission = async (userLevel: number = LEVELS.Disabled) => {
     let permission: any[] = []
 
-    if (userLevel > -1 && userLevel < 9)
+    if (userLevel >= LEVELS.Viewer && userLevel <= LEVELS.Developer)
         permission = await $fetch<any[]>("api/permission", { cache: "no-store" })
 
     for (const item of menuState.value) {
-        // item.children?.forEach((child) => {
         for (const child of item.children!) {
             child.badge = 0
-            if (userLevel === 9) {
+            if (userLevel >= LEVELS.Developer) {
                 child.level = userLevel
-            } else if (userLevel > -1) {
+            } else if (userLevel > LEVELS.Disabled) {
                 const perm = permission.find((p) => p.program === child.to)
                 if (perm) {
                     child.level = perm.level
                     child.badge = perm.used
                 } else {
-                    child.level = (child as any).default ? 0 : -1
+                    child.level = (child as any).default ? LEVELS.Viewer : LEVELS.Disabled
                 }
             } else {
-                child.level = -1
+                child.level = LEVELS.Disabled
             }
-            child.disabled = child.level < 0
+            child.disabled = child.level === LEVELS.Disabled
         }
     }
 }
@@ -152,17 +146,18 @@ const getMenuItemByRoute = (to: string): NavigationMenuItem | undefined => {
     for (const item of menuState.value) {
         const menuItem = item.children?.find((i) => i.to === to)
         if (menuItem) {
-            activeMenuItem.value = menuItem
+            activeMenu.value = menuItem
             return menuItem as NavigationMenuItem
         }
     }
-    activeMenuItem.value = defaultMenu
-    return undefined
+    activeMenu.value = defaultMenu
+    return defaultMenu
 }
 
 export default function usePayrollMenu() {
     return {
-        activeMenuItem,
+        loginUrl,
+        activeMenu,
         menuState,
         updateMenuPermission,
         getMenuItemByRoute,

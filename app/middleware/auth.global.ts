@@ -1,16 +1,15 @@
-
+import { LEVELS } from "~~/shared/utils"
 export default defineNuxtRouteMiddleware(async (to) => {
-    const loginUrl = "/login"
+    const { loginUrl } = usePayrollMenu()
     if (to.path != loginUrl) {
         const { loggedIn, fetch:refreshUserSession } = useUserSession()
         await refreshUserSession()
         if (!loggedIn.value) return navigateTo(loginUrl)
         const { getMenuItemByRoute } = usePayrollMenu()
         const menuSelected = getMenuItemByRoute(to.path)
-        const menuLevel = menuSelected ? menuSelected.level : 0
-        if (menuLevel == -1) return navigateTo(loginUrl)
-        // count number of used program when permission 1-8
-        if (menuLevel >= 1 && menuLevel <= 8)
+        const menuLevel = menuSelected!.level 
+        if (menuLevel < LEVELS.Viewer) return navigateTo(loginUrl)
+        if (menuLevel >= LEVELS.Entry && menuLevel <= LEVELS.Admin)
             $fetch("/api/permission-used", { method: "PUT", query: { program: to.path } })
     }
 })

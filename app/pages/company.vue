@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { SchemaTypes } from "~~/server/database/drizzle"
+import type { SchemaTypes } from "~~/shared/utils"
 import type { TableColumn, TableRow } from "@nuxt/ui"
 type Company = SchemaTypes["company"]
 const UCheckbox = resolveComponent("UCheckbox")

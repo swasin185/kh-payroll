@@ -2,7 +2,6 @@ import { PoolOptions } from "mysql2"
 import { drizzle } from "drizzle-orm/mysql2"
 import mysql from "mysql2/promise"
 import * as schema from "./schema"
-// export const table = schema
 
 const config: PoolOptions = {
     host: process.env.DB_HOST || "localhost",
@@ -29,10 +28,12 @@ const poolConnection = mysql.createPool(config)
 export function useDrizzle() {
     return drizzle(poolConnection, { schema: schema, mode: "default" })
 }
+
 export function closeDrizzle() {
     poolConnection.end()
 }
 
-export type SchemaTypes = {
-    [K in keyof typeof schema]: (typeof schema)[K] extends { $inferSelect: infer T } ? T : never
-}
+// Move to /shared/utils.ts
+// export type SchemaTypes = {
+//     [K in keyof typeof schema]: (typeof schema)[K] extends { $inferSelect: infer T } ? T : never
+// }

@@ -13,11 +13,6 @@ export default eventHandler(async (event) => {
     try {
         return await Permission.select(comCode, userId)
     } catch (error) {
-        console.error("Database query error :", error)
-        setResponseStatus(event, 500)
-        return {
-            error: "An internal server error.",
-            details: (error as Error).message,
-        }
+        throw createError(error as Error)
     }
 })

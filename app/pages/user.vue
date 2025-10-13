@@ -1,44 +1,84 @@
 <template>
-    <ToolbarCRUID :searchKey="user?.id" :onLookupClick="handleLookup" :onSelectClick="handleSelect"
-        :onInsertClick="handleInsert" :onUpdateClick="handleUpdate" :onDeleteClick="handleDelete"
-        :isLookupDisabled="true" :isInsertDisabled="true" :isUpdateDisabled="false" :isDeleteDisabled="true" />
-
-    <UForm :state="record" class="flex flex-col gap-4">
+    <ToolbarData
+        lookupName="user"
+        v-model:searchKey="searchKey"
+        v-model:mode="mode"
+        :level="menu.level"
+        :newRecord="newRecord"
+        :onSelect="onSelect"
+        :onInsert="onInsert"
+        :onUpdate="onUpdate"
+        :onDelete="onDelete"
+        :onLookup="onLookup"
+        :onPrint="onPrint"
+    />
+    <UForm
+        :state="record"
+        class="flex flex-col gap-4"
+        :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
+    >
         <UFormField label="User ID" name="userid">
-            <UInput v-model="record.id" placeholder="ID ผู้ใช้" class="w-30" disabled />
+            <UInput v-model="record.id" class="w-30" :disabled="mode !== DBMODE.Insert" />
         </UFormField>
         <UFormField label="ชื่อจริง" name="name">
-            <UInput v-model="record.name" class="w-75" />
+            <UInput v-model="record.name" class="w-54" />
         </UFormField>
         <UFormField label="อธิบาย" name="descript">
             <UInput v-model="record.descript" class="w-100" />
         </UFormField>
         <UFormField label="LEVEL" name="level">
-            <UInputNumber v-model="record.level" class="w-25" :disabled="user?.level < 9" :min="1" :max="9" />
+            <USelect
+                v-model="record.level"
+                class="w-36"
+                :disabled="isNotAdmin"
+                :items="LEVEL_ITEMS"
+            />
         </UFormField>
         <UFormField label="ROLE" name="role">
-            <USelect v-model="record.role" class="w-40" :disabled="user?.level < 9" />
+            <DBLookup v-model:lookupKey="record.role" name="" />
         </UFormField>
     </UForm>
 </template>
 
 <script lang="ts" setup>
+import { DBMODE, LEVEL_ITEMS } from "~~/shared/utils"
+
 const { $waitFetch } = useNuxtApp()
 const { user } = useUserSession()
-
+const { activeMenu: menu } = usePayrollMenu()
+const isNotAdmin = computed(() => menu.value.level < 9)
+const searchKey: Ref<string> = ref(user.value.id)
+const mode = ref(DBMODE.Idle)
 const record: Ref<any> = ref({})
 const toast = useToast()
 
-const handleSelect = async () => {
-    record.value = await $waitFetch("/api/users", { method: "GET", query: { id: user.value?.id } })
+const newRecord = () => {
+    searchKey.value = ""
+    record.value = { id: "", name: "", descript: "", level: 1, role: "" }
 }
 
-const handleInsert = () => { }
+const onSelect = async () => {
+    if (!searchKey.value) searchKey.value = user.value.id
+    record.value = await $waitFetch("/api/users", {
+        method: "GET",
+        query: { id: searchKey.value },
+    })
+    if (!record.value) {
+        newRecord()
+        toast.add({
+            title: `[${new Date()}] Not Found`,
+            description: "ไม่พบข้อมูล",
+            color: "warning",
+            duration: 1000,
+        })
+    }
+}
 
-const handleUpdate = async () => {
-    await $waitFetch("/api/users", {
+const onUpdate = async () => {
+    // console.log("Update record: ", record.value)
+    return await $waitFetch("/api/users", {
         method: "PUT",
-        query: {
+        body: {
             id: record.value.id,
             name: record.value.name,
             descript: record.value.descript,
@@ -46,11 +86,34 @@ const handleUpdate = async () => {
             role: record.value.role,
         },
     })
-    toast.add({ title: `[${new Date()}] Save`, description: "บันทึกเรียบร้อย", color: "success" })
 }
 
-const handleDelete = () => { }
-const handleLookup = () => { }
+const onDelete = async () => {
+    return await $waitFetch("/api/users", { method: "DELETE", query: { id: record.value.id } })
+}
 
-handleSelect()
+const onInsert = async () => {
+    // console.log("Inserting", record.value)
+    return await $waitFetch("/api/users", {
+        method: "POST",
+        body: {
+            id: record.value.id,
+            name: record.value.name,
+            descript: record.value.descript,
+            level: record.value.level,
+            role: record.value.role,
+        },
+    })
+}
+
+// import useLookupDialog from "../composables/useLookupDialog"
+// import DBLookup from "~/components/DBLookup.vue"
+
+const onLookup = async () => {
+    // searchKey.value = await useLookupDialog("", searchKey.value) || searchKey.value
+}
+
+const onPrint = async () => {}
+
+await onSelect()
 </script>
