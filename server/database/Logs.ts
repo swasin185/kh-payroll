@@ -1,4 +1,4 @@
-import type { SchemaTypes } from "~~/shared/utils"
+import type { SchemaTypes } from "~~/shared/types"
 import { useDrizzle } from "./drizzle"
 import { logs } from "./schema"
 import { eq } from "drizzle-orm"

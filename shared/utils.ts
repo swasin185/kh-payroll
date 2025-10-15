@@ -1,8 +1,3 @@
-import * as schema from "../server/database/schema"
-export type SchemaTypes = {
-    [K in keyof typeof schema]: (typeof schema)[K] extends { $inferSelect: infer T } ? T : never
-}
-
 export const DBMODE = {
     Idle: 0,
     Select: 1,

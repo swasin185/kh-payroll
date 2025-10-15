@@ -7,7 +7,7 @@
                 [{{ user?.mnPayroll || month }}] {{ user?.comName }}
             </NuxtLink>
         </template>
-        <h1 class="text-l font-bold">{{ activeMenu.label }}</h1>
+        <h1 class="text-l font-bold">{{ activeMenu.label }}ww</h1>
         <template #right>
             <NuxtLink to="/login" class="text-large">
                 {{ user?.name }}

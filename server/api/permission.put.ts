@@ -1,4 +1,4 @@
-import type { SchemaTypes } from "~~/shared/utils"
+import type { SchemaTypes } from "~~/shared/types"
 import { Permission } from "~~/server/database/Permission"
 import { authEventHandler } from "~~/server/utils/authEventHandler"
 

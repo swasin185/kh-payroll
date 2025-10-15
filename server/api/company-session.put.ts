@@ -1,7 +1,7 @@
 import { authEventHandler } from "~~/server/utils/authEventHandler"
 import { Company } from "~~/server/database/Company"
 import { Users } from "~~/server/database/Users"
-import { SchemaTypes } from "~~/shared/utils"
+import { SchemaTypes } from "~~/shared/types"
 
 export default authEventHandler(async (event) => {
     const query = getQuery(event)

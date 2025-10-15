@@ -1,6 +1,6 @@
 import { Company } from "~~/server/database/Company"
 import { authEventHandler } from "~~/server/utils/authEventHandler"
-import type { SchemaTypes } from "~~/shared/utils"
+import type { SchemaTypes } from "~~/shared/types"
 
 export default authEventHandler(async (event) => {
     const body = await readBody(event)

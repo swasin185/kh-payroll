@@ -169,7 +169,7 @@ const isSetPermission = (level: number, def: boolean): boolean => {
     return level > LEVELS.Viewer || (level === LEVELS.Viewer && !def)
 }
 
-import type { SchemaTypes } from "../../shared/utils"
+import type { SchemaTypes } from "../../shared/types"
 const permissionsFromMenu = (
     comCode: string,
     userId: string,
@@ -180,8 +180,8 @@ const permissionsFromMenu = (
         for (const child of item.children!)
             if (isSetPermission(child.level, child.default))
                 perms.push({
-                    comCode: comCode,
-                    userId: userId,
+                    // comCode: comCode,
+                    // userId: userId,
                     program: child.to,
                     level: child.level,
                 })

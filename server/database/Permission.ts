@@ -1,4 +1,4 @@
-import type { SchemaTypes } from "~~/shared/utils"
+import type { SchemaTypes } from "~~/shared/types"
 import { useDrizzle } from "./drizzle"
 import { permission } from "./schema"
 import { eq, and, sql } from "drizzle-orm"
@@ -85,23 +85,23 @@ export class Permission {
         userId: string,
         permiss: SchemaTypes["permission"][],
     ): Promise<boolean> {
+        permiss.forEach((item) => {
+            item.userId = userId
+            item.comCode = comCode
+        })
         const db = useDrizzle()
         let result = null
         let rowEffected = 0
         result = await db
             .update(permission)
-            .set({
-                level: -1,
-            })
+            .set({ level: -1 })
             .where(and(eq(permission.comCode, comCode), eq(permission.userId, userId)))
         rowEffected = result[0].affectedRows
         if (permiss.length > 0) {
             result = await db
                 .insert(permission)
                 .values(permiss)
-                .onDuplicateKeyUpdate({
-                    set: { level: sql`VALUES(level)` },
-                })
+                .onDuplicateKeyUpdate({ set: { level: sql`VALUES(level)` } })
             rowEffected += result[0].affectedRows
         }
         result = await db

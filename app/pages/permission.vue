@@ -20,22 +20,20 @@
         @update:model-value="onSelect"
     />
     <UBadge class="justify-center w-8 m-4" :label="count" />
-    <UTree
-        class="w-100"
-        :items="permissions"
-        v-model="menuItem"
-        selectionBehavior="replace"
-        :disabled="mode !== DBMODE.Update"
-    >
+    <UTree class="w-100" :items="permissions" v-model="menuItem" selectionBehavior="replace">
         <template #item-trailing="{ item }">
-            <UBadge v-if="!item.children" class="w-8 m-0 p-1" :label="item.badge as any" />
+            <UBadge
+                v-if="!item.children && mode == DBMODE.Select && item.badge as number > 0"
+                class="justify-center w-8 m-0 p-1 bg-yellow-500"
+                :label="item.badge as string"
+            />
             <USelect
                 v-if="!item.children"
                 class="w-32 m-0 p-1"
                 :model-value="item.level"
                 :items="LEVEL_ITEMS"
                 @update:model-value="updateLevel"
-                :disabled="item.to != menuItem.to"
+                :disabled="item.to != menuItem.to || mode != DBMODE.Update"
             />
         </template>
     </UTree>

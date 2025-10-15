@@ -1,5 +1,5 @@
 import { useDrizzle } from "./drizzle"
-import type { SchemaTypes } from "~~/shared/utils"
+import type { SchemaTypes } from "~~/shared/types"
 import { company } from "./schema"
 import { eq, sql } from "drizzle-orm"
 import type { LookupItem } from "~~/shared/types"

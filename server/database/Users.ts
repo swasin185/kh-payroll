@@ -1,8 +1,7 @@
 import { useDrizzle } from "./drizzle"
 import { users } from "./schema"
 import { eq, ne, sql } from "drizzle-orm"
-import type { SchemaTypes } from "~~/shared/utils"
-import type { LookupItem } from "~~/shared/types"
+import type { LookupItem, SchemaTypes } from "~~/shared/types"
 
 /**
  * Manages user-related database operations as a static utility.
