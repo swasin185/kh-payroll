@@ -14,6 +14,7 @@
     />
     <UForm
         :state="record"
+        :validate="validate"
         class="flex flex-col gap-4"
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
     >
@@ -41,6 +42,13 @@
 </template>
 
 <script lang="ts" setup>
+import type { FormError } from "@nuxt/ui"
+const validate = (state: any): FormError[] => {
+    const errors = []
+    if (state.level > user.level) errors.push({ name: "level", message: "limit" })
+    return errors
+}
+
 import { DBMODE, LEVEL_ITEMS } from "~~/shared/utils"
 
 const { $waitFetch } = useNuxtApp()
@@ -75,7 +83,6 @@ const onSelect = async () => {
 }
 
 const onUpdate = async () => {
-    // console.log("Update record: ", record.value)
     return await $waitFetch("/api/users", {
         method: "PUT",
         body: {
@@ -93,7 +100,6 @@ const onDelete = async () => {
 }
 
 const onInsert = async () => {
-    // console.log("Inserting", record.value)
     return await $waitFetch("/api/users", {
         method: "POST",
         body: {

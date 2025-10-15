@@ -6,7 +6,7 @@ export default eventHandler(async (event) => {
     const body = await readBody(event)
     const userid = body.id?.toString().toLowerCase()
     const password = body.pwd?.toString()
-    console.log("login:", userid)
+    console.log("LOGIN:", userid)
     if (!userid || !password) {
         throw createError({
             status: 400,

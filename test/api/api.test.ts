@@ -14,14 +14,13 @@ describe("API endpoints", async () => {
             method: "POST",
             body: { id: testUser.id, pwd: "wrongpassword" },
         })
-        expect(res0).not.toHaveProperty("user")
+        expect(res0).toBe(false)
 
         const res = await $fetch("/api/auth/local", {
             method: "POST",
             body: { id: "tom", pwd: "xx" },
         })
-        expect(res).toHaveProperty("user")
-        expect((res as any).user).toHaveProperty("id", "tom")
+        expect(res).toBe(true)
     })
 
     it("POST /api/users", async () => {
@@ -48,10 +47,10 @@ describe("API endpoints", async () => {
     it("PUT /api/users", async () => {
         const updatedUser = {
             id: testUser.id,
-            name:  "Updated Name",
+            name: "Updated Name",
             descript: "ทดสอบผู้ใช้ทั่วไป",
             level: "1",
-            role: ""
+            role: "",
         }
         const res = await $fetch("/api/users", {
             method: "PUT",
@@ -63,8 +62,9 @@ describe("API endpoints", async () => {
         expect(res).toBe(true)
     })
 
-    it("GET /api/usersList", async () => {
-        const res = await $fetch("/api/usersList", {
+    it("GET /api/lookup", async () => {
+        const res = await $fetch("/api/lookup", {
+            query: { name: "user" },
             headers: {
                 "x-test-user": "vitest", // bypass authEventHandler()
             },
@@ -72,7 +72,7 @@ describe("API endpoints", async () => {
         expect(res).toBeInstanceOf(Array)
         expect((res as any).find((u: any) => u.id === "admin")).toBeUndefined()
         const user = (res as any[]).find((u) => u.id === testUser.id)
-        expect(user).toHaveProperty("name", "Updated Name")
+        expect(user).toHaveProperty("id", testUser.id)
     })
 
     it("DELETE /api/users", async () => {

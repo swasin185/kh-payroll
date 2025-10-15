@@ -1,15 +1,17 @@
 import type { SchemaTypes } from "~~/shared/utils"
-import { Users } from "~~/server/database/Users"
+import { Permission } from "~~/server/database/Permission"
 import { authEventHandler } from "~~/server/utils/authEventHandler"
 
 export default authEventHandler(async (event) => {
     const body = await readBody(event)
-    const user = body as SchemaTypes["users"]
-    if (!user) {
+    const userId = body.userId
+    const comCode = body.comCode
+    const permissions = body.permissions as SchemaTypes["permission"][]
+    if (!permissions || !userId || !comCode ) {
         throw createError({
             status: 400,
             message: "User ID is required.",
         })
     }
-    return await Users.update(user)
+    return Permission.updateAll(comCode, userId, permissions)
 })

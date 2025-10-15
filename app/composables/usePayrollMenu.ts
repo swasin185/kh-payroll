@@ -11,7 +11,7 @@ const defaultMenu: NavigationMenuItem = {
 
 const activeMenu = ref(defaultMenu)
 
-const menuState = ref<NavigationMenuItem[]>([
+const mainMenu: NavigationMenuItem[] = [
     {
         label: "Setting",
         icon: "i-lucide-settings",
@@ -30,6 +30,12 @@ const menuState = ref<NavigationMenuItem[]>([
                 icon: "i-lucide-building-2",
                 disabled: true,
                 default: true,
+            },
+            {
+                label: "สิทธิการใช้เมนู",
+                to: "/permission",
+                icon: "i-lucide-blinds",
+                disabled: true,
             },
             { label: "ตำแหน่งงาน", to: "/position", icon: "i-lucide-boxes", disabled: true },
             { label: "ประเภทเงินได้/หัก", to: "/income", icon: "i-lucide-dollar-sign" },
@@ -111,38 +117,85 @@ const menuState = ref<NavigationMenuItem[]>([
             },
         ],
     },
-])
+]
+
+const menuState = ref<NavigationMenuItem[]>(mainMenu)
+const setMenuSession = async () => {
+    const { user } = useUserSession()
+    await getMenuPermissionBy(mainMenu, user.value?.comCode, user.value?.id, user.value?.level)
+}
 
 import { LEVELS } from "../../shared/utils"
 
-const updateMenuPermission = async (userLevel: number = LEVELS.Disabled) => {
+const getMenuPermissionBy = async (
+    menu: NavigationMenuItem[],
+    comCode: string,
+    userId: string,
+    userLevel: number = LEVELS.Disabled,
+): Promise<void> => {
     let permission: any[] = []
-
-    if (userLevel >= LEVELS.Viewer && userLevel <= LEVELS.Developer)
-        permission = await $fetch<any[]>("api/permission", { cache: "no-store" })
-
-    for (const item of menuState.value) {
+    if (userId && comCode && userLevel >= LEVELS.Viewer && userLevel <= LEVELS.Admin)
+        permission = await $fetch<any[]>("api/permission", {
+            query: { userId, comCode },
+            cache: "no-store",
+        })
+    // console.log(userId, comCode, permission)
+    for (const item of menu)
         for (const child of item.children!) {
             child.badge = 0
-            if (userLevel >= LEVELS.Developer) {
-                child.level = userLevel
-            } else if (userLevel > LEVELS.Disabled) {
+            if (userLevel >= LEVELS.Developer) child.level = userLevel
+            else if (userLevel > LEVELS.Disabled) {
                 const perm = permission.find((p) => p.program === child.to)
                 if (perm) {
                     child.level = perm.level
                     child.badge = perm.used
-                } else {
-                    child.level = (child as any).default ? LEVELS.Viewer : LEVELS.Disabled
-                }
-            } else {
-                child.level = LEVELS.Disabled
-            }
-            child.disabled = child.level === LEVELS.Disabled
+                } else child.level = (child as any).default ? LEVELS.Viewer : LEVELS.Disabled
+            } else child.level = LEVELS.Disabled
+            child.disabled = menu == mainMenu ? child.level === LEVELS.Disabled : false
         }
-    }
 }
 
-const getMenuItemByRoute = (to: string): NavigationMenuItem | undefined => {
+const permissionsToMenu = async (
+    comCode: string,
+    userId: string,
+    userLevel: number = LEVELS.Disabled,
+): Promise<NavigationMenuItem[]> => {
+    const cloneMenu = JSON.parse(JSON.stringify(mainMenu))
+    await getMenuPermissionBy(cloneMenu, comCode, userId, userLevel)
+    return cloneMenu
+}
+
+const isSetPermission = (level: number, def: boolean): boolean => {
+    return level > LEVELS.Viewer || (level === LEVELS.Viewer && !def)
+}
+
+import type { SchemaTypes } from "../../shared/utils"
+const permissionsFromMenu = (
+    comCode: string,
+    userId: string,
+    menu: NavigationMenuItem[],
+): SchemaTypes["permission"][] => {
+    const perms: any[] = []
+    for (const item of menu)
+        for (const child of item.children!)
+            if (isSetPermission(child.level, child.default))
+                perms.push({
+                    comCode: comCode,
+                    userId: userId,
+                    program: child.to,
+                    level: child.level,
+                })
+    return perms
+}
+
+const countPermissions = (menu: NavigationMenuItem[]): number => {
+    let count = 0
+    for (const item of menu)
+        for (const child of item.children!) if (isSetPermission(child.level, child.default)) count++
+    return count
+}
+
+const getMenuItemByRoute = (to: string): NavigationMenuItem => {
     for (const item of menuState.value) {
         const menuItem = item.children?.find((i) => i.to === to)
         if (menuItem) {
@@ -159,7 +212,10 @@ export default function usePayrollMenu() {
         loginUrl,
         activeMenu,
         menuState,
-        updateMenuPermission,
+        setMenuSession,
+        permissionsToMenu,
+        permissionsFromMenu,
+        countPermissions,
         getMenuItemByRoute,
     }
 }

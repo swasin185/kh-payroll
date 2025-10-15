@@ -2,6 +2,7 @@ import { describe, it, expect, afterAll } from "vitest"
 import { useDrizzle, closeDrizzle } from "../server/database/drizzle"
 import { Permission } from "../server/database/Permission"
 import usePayrollMenu from "../app/composables/usePayrollMenu"
+import { LEVELS } from "../shared/utils"
 
 afterAll(async () => {
     closeDrizzle()
@@ -16,21 +17,18 @@ describe("Permission", async () => {
     const testUser = "tom"
     it("insert() admin permission", async () => {
         await Permission.deleteAll(testCompany, testUser)
+        const clear = await Permission.select(testCompany, testUser)
+        expect(clear.length).toBe(0)
+        const { permissionsFromMenu, permissionsToMenu } = usePayrollMenu()
+        const menu = await permissionsToMenu(testUser, testCompany, LEVELS.Developer)
+        const result = await Permission.updateAll(
+            testCompany,
+            testUser,
+            permissionsFromMenu(testUser, testCompany, menu),
+        )
+        expect(result).toBe(true)
         const permission = await Permission.select(testCompany, testUser)
-        const { menuState: menu } = usePayrollMenu()
-        for (let item of menu.value)
-            if (item.children)
-                for (let child of item.children!)
-                    if (!permission.some((p) => p.program === child.to)) {
-                        const result = await Permission.insert({
-                            comCode: testCompany,
-                            userId: testUser,
-                            program: child.to,
-                            level: 5,
-                            used: 0,
-                        })
-                        expect(result).toBe(true)
-                    }
+        expect(permission.length).toBeGreaterThan(0)
     })
 
     it("used count", async () => {

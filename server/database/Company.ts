@@ -1,7 +1,7 @@
 import { useDrizzle } from "./drizzle"
 import type { SchemaTypes } from "~~/shared/utils"
 import { company } from "./schema"
-import { eq } from "drizzle-orm"
+import { eq, sql } from "drizzle-orm"
 import type { LookupItem } from "~~/shared/types"
 
 export class Company {
@@ -30,7 +30,7 @@ export class Company {
         const result = await db
             .select({
                 id: company.comCode,
-                label: company.comName,
+                label: sql`concat(${company.comCode}, " : ", ${company.comName})`,
             })
             .from(company)
             .orderBy(company.comCode)

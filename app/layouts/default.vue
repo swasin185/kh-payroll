@@ -38,9 +38,8 @@ const { counter, setScheduleCount } = useCounter()
 setScheduleCount()
 
 const { user } = useUserSession()
-const { menuState, activeMenu, updateMenuPermission } = usePayrollMenu()
-updateMenuPermission(user.value?.level)
-
+const { menuState, activeMenu, setMenuSession } = usePayrollMenu()
+await setMenuSession()
 const config = useRuntimeConfig()
 const date = new Date(config.public.buildTime)
 const year = ref(date.getFullYear())

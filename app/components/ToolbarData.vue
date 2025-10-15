@@ -42,7 +42,7 @@
         />
         <USeparator orientation="vertical" class="h-8" />
         <template v-if="isModeActive">
-            <UButton label="Save" class="bg-sky-500" icon="i-lucide-database" @click="saveClick" />
+            <UButton label="Save" class="bg-sky-500" icon="i-lucide-database-zap" @click="saveClick" />
             <UButton
                 label="Cancel"
                 class="bg-gray-500"
@@ -100,7 +100,7 @@ const updateSearch = (item: string | null) => {
 const setMode = async (newMode: number) => {
     emit("update:mode", newMode)
     if (newMode === DBMODE.Select) await props.onSelect()
-    else if (newMode === DBMODE.Insert || newMode === DBMODE.Delete) props.newRecord()
+    else if (newMode === DBMODE.Insert) props.newRecord()
 }
 
 const isModeActive = computed(

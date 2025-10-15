@@ -3,13 +3,13 @@ use payroll;
 set foreign_key_checks = 0;
 drop table if exists deduction;
 create table deduction (
-    costPercent    decimal(4,2) comment 'หักค่าใช้จ่าย %',
-    costLimit      mediumint unsigned default 0 comment 'หักค่าใช้จ่ายไม่เกิน',
-    deductSelf     mediumint unsigned default 0 comment 'ค่าลดหย่อนส่วนตัว',
-    deductSpouse   mediumint unsigned default 0 comment 'ค่าลดหย่อนคู่สมรส',
-    deductChild    mediumint unsigned default 0 comment 'ค่าลดหย่อนบุตรธิดา',
-    deductChildEdu mediumint unsigned default 0 comment 'ค่าลดหย่อนบุตรธิดา กำลังศึกษา'
-) comment = 'ประเภทเงินหักลดหย่อน ของกรมสรรพากร';
+    costPercent    decimal(4,2) comment "หักค่าใช้จ่าย %",
+    costLimit      mediumint unsigned default 0 comment "หักค่าใช้จ่ายไม่เกิน",
+    deductSelf     mediumint unsigned default 0 comment "ค่าลดหย่อนส่วนตัว",
+    deductSpouse   mediumint unsigned default 0 comment "ค่าลดหย่อนคู่สมรส",
+    deductChild    mediumint unsigned default 0 comment "ค่าลดหย่อนบุตรธิดา",
+    deductChildEdu mediumint unsigned default 0 comment "ค่าลดหย่อนบุตรธิดา กำลังศึกษา"
+) comment = "ประเภทเงินหักลดหย่อน ของกรมสรรพากร";
 insert into deduction values (50.0, 100000, 60000, 60000, 30000, 30000);
 
 drop table if exists timetype;
