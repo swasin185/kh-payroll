@@ -20,9 +20,7 @@ const props = defineProps<{
 const model = defineModel<string>("lookupKey")
 
 const data = ref<LookupItem[]>(
-    props.name && props.name > ""
-        ? await $fetch("/api/lookup", { method: "GET", query: { name: props.name } })
-        : [],
+    props.name ? await $fetch("/api/lookup", { method: "GET", query: { name: props.name } }) : [],
 )
 
 const emit = defineEmits(["update:lookupKey"])

@@ -38,6 +38,9 @@
         <UFormField label="ROLE" name="role">
             <DBLookup v-model:lookupKey="record.role" name="" />
         </UFormField>
+        <UFormField label="Company" name="company">
+            <DBLookup v-model:lookupKey="record.comCode" name="company" class="w-64"/>
+        </UFormField>
     </UForm>
 </template>
 
@@ -91,6 +94,7 @@ const onUpdate = async () => {
             descript: record.value.descript,
             level: record.value.level,
             role: record.value.role,
+            comCode: record.value.comCode,
         },
     })
 }

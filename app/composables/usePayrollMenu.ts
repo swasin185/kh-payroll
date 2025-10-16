@@ -135,7 +135,7 @@ const getMenuPermissionBy = async (
 ): Promise<void> => {
     let permission: any[] = []
     if (userId && comCode && userLevel >= LEVELS.Viewer && userLevel <= LEVELS.Admin)
-        permission = await $fetch<any[]>("api/permission", {
+        permission = await $fetch("api/permission", {
             query: { userId, comCode },
             cache: "no-store",
         })
@@ -180,8 +180,6 @@ const permissionsFromMenu = (
         for (const child of item.children!)
             if (isSetPermission(child.level, child.default))
                 perms.push({
-                    // comCode: comCode,
-                    // userId: userId,
                     program: child.to,
                     level: child.level,
                 })

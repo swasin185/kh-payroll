@@ -4,7 +4,7 @@ import { permission } from "./schema"
 import { eq, and, sql } from "drizzle-orm"
 
 export class Permission {
-    public static async select(company: string, userId: string): Promise<any[]> {
+    public static async select(company: string, userId: string) {
         const db = useDrizzle()
         const permission = await db.query.permission.findMany({
             columns: {
@@ -60,10 +60,10 @@ export class Permission {
             SELECT comCode, ${toUser}, program, level 
             FROM permission 
             WHERE comCode= ${company} and userId = ${fromUser}`)
-        return result[0].affectedRows || 0
+        return result[0].affectedRows ?? 0
     }
 
-    public static async used(comCode: string, userId: string, program: string): Promise<number> {
+    public static async used(comCode: string, userId: string, program: string): Promise<boolean> {
         const db = useDrizzle()
         const result = await db
             .update(permission)
@@ -77,7 +77,7 @@ export class Permission {
                     eq(permission.program, program),
                 ),
             )
-        return result[0].affectedRows
+        return result[0].affectedRows > 0
     }
 
     public static async updateAll(

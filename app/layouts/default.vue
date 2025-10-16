@@ -1,13 +1,13 @@
 <template>
     <UHeader mode="drawer">
         <template #title>
-            <NuxtLink to="/company">
-                [{{ user?.yrPayroll || year }}]
-                <UIcon name="i-lucide-calendar-days" class="size-5" />
-                [{{ user?.mnPayroll || month }}] {{ user?.comName }}
-            </NuxtLink>
+            [{{ user?.yrPayroll || year }}]
+            <UIcon name="i-lucide-calendar-days" class="size-5" />
+            [{{ user?.mnPayroll || month }}]
+            {{ user?.comName }}
+            
         </template>
-        <h1 class="text-l font-bold">{{ activeMenu.label }}ww</h1>
+        <h1 class="text-l font-bold">{{ activeMenu.label }}</h1>
         <template #right>
             <NuxtLink to="/login" class="text-large">
                 {{ user?.name }}
@@ -28,6 +28,7 @@
         <UCard class="w-[1200px] h-[800px] overflow-auto">
             <slot />
         </UCard>
+        <ModalDialog />
     </UMain>
 </template>
 
@@ -38,6 +39,7 @@ const { counter, setScheduleCount } = useCounter()
 setScheduleCount()
 
 const { user } = useUserSession()
+const selectComCode = ref(user?.value.comCode ?? "")
 const { menuState, activeMenu, setMenuSession } = usePayrollMenu()
 await setMenuSession()
 const config = useRuntimeConfig()
@@ -47,6 +49,6 @@ const month = ref(date.getMonth() + 1)
 const version = `${year.value - 2025}.${month.value}.${date.getDate()}`
 
 useHead({
-    title: activeMenu.value?.label
+    title: activeMenu.value?.label,
 })
 </script>

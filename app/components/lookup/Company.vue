@@ -1,10 +1,19 @@
 <template>
-    <UTable sticky @select="onSelect" :row-selection="rowSelection" :data="companies" :columns="columns" />
-    <UButton @click="onSubmit" label="เลือก" title="เปลี่ยนบริษัท เริ่มต้นทำงาน"
-        :disabled="rowSelection.comCode == user?.comCode" class="mt-4" />
+    <UTable
+        sticky
+        @select="onSelect"
+        :row-selection="rowSelection"
+        :data="companies"
+        :columns="columns"
+    />
 </template>
 
 <script lang="ts" setup>
+const props = defineProps<{
+    lookupKey: string
+}>()
+const emit = defineEmits(["update:lookupKey"])
+
 import type { SchemaTypes } from "~~/shared/types"
 import type { TableColumn, TableRow } from "@nuxt/ui"
 type Company = SchemaTypes["company"]
@@ -15,7 +24,8 @@ const columns: TableColumn<Company>[] = [
         cell: ({ row }) =>
             h(UCheckbox, {
                 modelValue: row.getIsSelected(),
-                onClick: () => rowSelection.value = { [row.index]: true, comCode: row.getValue("comCode") },
+                onClick: () =>
+                    (rowSelection.value = { [row.index]: true, comCode: row.getValue("comCode") }),
             }),
     },
     {
@@ -41,15 +51,15 @@ const columns: TableColumn<Company>[] = [
     },
 ]
 const { $waitFetch } = useNuxtApp()
-const { user } = useUserSession()
 const companies: Ref<Company[]> = ref(await $waitFetch("/api/companyList"))
-const i = companies.value.findIndex((com) => com.comCode === user?.value.comCode)
-const rowSelection: Ref<any> = ref({ [i]: true, comCode: user?.value.comCode })
+const i = companies.value.findIndex((com) => com.comCode === props.lookupKey)
+const rowSelection: Ref<any> = ref({ [i]: true, comCode: props.lookupKey })
 
 function onSelect(row: TableRow<Company>) {
     if (!rowSelection.value[row.index]) {
         // don't nessecary to delete old attribute, just leave it as garbage
         rowSelection.value = { [row.index]: true, comCode: row.getValue("comCode") }
+        emit("update:lookupKey", row.getValue("comCode"))
     }
 }
 

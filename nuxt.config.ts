@@ -16,14 +16,14 @@ export default defineNuxtConfig({
         session: {
             // max age for session nitro expired
             maxAge: process.env.MAX_AGE ? Number.parseInt(process.env.MAX_AGE) : 36000,
-            password: process.env.NUXT_SESSION_PASSWORD || "1234567_1234567_1234567_12345678",
+            password: process.env.NUXT_SESSION_PASSWORD ?? "1234567_1234567_1234567_12345678",
         },
     },
     nitro: {
         storage: {
             sessions: {
                 driver: process.env.REDIS_URL? "redis" : "memory",
-                url: process.env.REDIS_URL || "",
+                url: process.env.REDIS_URL ?? "",
             },
         },
     },

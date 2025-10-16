@@ -1,8 +1,30 @@
 <template>
-    <UButton class="m-2" label="Waiting" v-on:click="isWaiting = true" :disabled="isWaiting == true" />
-    <UButton class="m-2" label="Stop" v-on:click="isWaiting = false" :disabled="!isWaiting" />
+    <UButton class="m-4" label="Waiting" @click="isWaiting = true" :disabled="isWaiting == true" />
+    <UButton class="m-4" label="Stop" @click="isWaiting = false" :disabled="!isWaiting" />
+    <USeparator />
+    <UButton class="m-4" label="Confirm" @click="askUser" />
+    <UButton class="m-4" label="Lookup Company" @click="lookupCompany" />
 </template>
 
 <script lang="ts" setup>
 const isWaiting = useWaiting()
+const confirm = useDialog()
+const askUser = async () => {
+    const ok = await confirm({
+        title: "Hello",
+        message: "Do you want to continues?",
+        isConfirm: true,
+    })
+    if (ok) alert("Let's go!!")
+}
+
+const lookupCompany = async () => {
+    const { user } = useUserSession()
+    const code = await confirm({
+        isConfirm: false,
+        lookupName: "Company",
+        lookupCode: user.value.comCode,
+    })
+    if (code) alert("Lookup = " + code)
+}
 </script>

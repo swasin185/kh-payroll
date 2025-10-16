@@ -1,5 +1,10 @@
 export default defineAppConfig({
     ui: {
+        modal: {
+            slots: {
+                body: ""
+            }
+        },
         colors: {
             primary: "blue",
             secondary: "purple",

@@ -20,7 +20,7 @@ export async function removeSession(sessId: string) {
 
 export async function getSessionCount(): Promise<number> {
     const keys = await storage.keys()
-    return keys?.length || 0
+    return keys?.length ?? 0
 }
 
 export async function validateSession(event: H3Event): Promise<any> {
