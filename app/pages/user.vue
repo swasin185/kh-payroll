@@ -9,7 +9,6 @@
         :onInsert="onInsert"
         :onUpdate="onUpdate"
         :onDelete="onDelete"
-        :onLookup="onLookup"
         :onPrint="onPrint"
     />
     <UForm
@@ -31,15 +30,15 @@
             <USelect
                 v-model="record.level"
                 class="w-36"
-                :disabled="isNotAdmin"
+                :disabled="!isAdmin"
                 :items="LEVEL_ITEMS"
             />
         </UFormField>
         <UFormField label="ROLE" name="role">
-            <DBLookup v-model:lookupKey="record.role" name="" />
+            <DBLookup v-model:lookupKey="record.role" name="role" :disabled="!isAdmin" />
         </UFormField>
         <UFormField label="Company" name="company">
-            <DBLookup v-model:lookupKey="record.comCode" name="company" class="w-64"/>
+            <DBLookup v-model:lookupKey="record.comCode" name="company" class="w-64" />
         </UFormField>
     </UForm>
 </template>
@@ -48,6 +47,7 @@
 import type { FormError } from "@nuxt/ui"
 const validate = (state: any): FormError[] => {
     const errors = []
+    if (!state.id) errors.push({ name: "userid", message: "ID is empty" })
     if (state.level > user.level) errors.push({ name: "level", message: "limit" })
     return errors
 }
@@ -56,8 +56,7 @@ import { DBMODE, LEVEL_ITEMS } from "~~/shared/utils"
 
 const { $waitFetch } = useNuxtApp()
 const { user } = useUserSession()
-const { activeMenu: menu } = usePayrollMenu()
-const isNotAdmin = computed(() => menu.value.level < 9)
+const { activeMenu: menu, isAdmin } = usePayrollMenu()
 const searchKey: Ref<string> = ref(user.value.id)
 const mode = ref(DBMODE.Idle)
 const record: Ref<any> = ref({})
@@ -116,14 +115,11 @@ const onInsert = async () => {
     })
 }
 
-// import useLookupDialog from "../composables/useLookupDialog"
-// import DBLookup from "~/components/DBLookup.vue"
-
-const onLookup = async () => {
-    // searchKey.value = await useLookupDialog("", searchKey.value) || searchKey.value
-}
-
 const onPrint = async () => {}
+
+async function submit() {
+    console.log("SUBMIT")
+}
 
 await onSelect()
 </script>

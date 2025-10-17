@@ -1,7 +1,9 @@
 <template>
+    Test Waiting bar
     <UButton class="m-4" label="Waiting" @click="isWaiting = true" :disabled="isWaiting == true" />
     <UButton class="m-4" label="Stop" @click="isWaiting = false" :disabled="!isWaiting" />
     <USeparator />
+    Test Dialog
     <UButton class="m-4" label="Confirm" @click="askUser" />
     <UButton class="m-4" label="Lookup Company" @click="lookupCompany" />
 </template>
@@ -21,7 +23,6 @@ const askUser = async () => {
 const lookupCompany = async () => {
     const { user } = useUserSession()
     const code = await confirm({
-        isConfirm: false,
         lookupName: "Company",
         lookupCode: user.value.comCode,
     })

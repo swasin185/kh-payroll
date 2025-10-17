@@ -170,19 +170,20 @@ const isSetPermission = (level: number, def: boolean): boolean => {
 }
 
 import type { SchemaTypes } from "../../shared/types"
+type TypePermission = SchemaTypes["permission"]
 const permissionsFromMenu = (
     comCode: string,
     userId: string,
     menu: NavigationMenuItem[],
-): SchemaTypes["permission"][] => {
-    const perms: any[] = []
+): TypePermission[] => {
+    const perms: TypePermission[] = []
     for (const item of menu)
         for (const child of item.children!)
             if (isSetPermission(child.level, child.default))
                 perms.push({
                     program: child.to,
                     level: child.level,
-                })
+                } as TypePermission)
     return perms
 }
 
@@ -209,6 +210,7 @@ export default function usePayrollMenu() {
     return {
         loginUrl,
         activeMenu,
+        isAdmin: activeMenu.value.level >= LEVELS.Admin,
         menuState,
         setMenuSession,
         permissionsToMenu,

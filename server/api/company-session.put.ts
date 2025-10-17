@@ -1,7 +1,5 @@
 import { authEventHandler } from "~~/server/utils/authEventHandler"
 import { Company } from "~~/server/database/Company"
-import { Users } from "~~/server/database/Users"
-import { SchemaTypes } from "~~/shared/types"
 
 export default authEventHandler(async (event) => {
     const query = getQuery(event)
@@ -19,7 +17,5 @@ export default authEventHandler(async (event) => {
             mnPayroll: company?.mnPayroll,
         },
     })
-    // update default company for this user too
-    await Users.update({ id: (session.user as any).id, comCode: com } as SchemaTypes["users"])
     return com
 })

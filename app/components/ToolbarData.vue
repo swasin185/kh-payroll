@@ -1,51 +1,55 @@
 <template>
     <div class="flex space-x-2 border-b-1 pb-2 mb-2">
         <DBLookup
-            v-model="model"
-            :lookupKey="searchKey"
+            v-model:lookupKey="model"
             :name="lookupName"
-            @update:model-value="updateSearch"
+            :dialogName="dialogName"
             :disabled="isModeActive || level < LEVELS.Officer"
         />
         <USeparator orientation="vertical" class="h-8" />
         <UButton
             label="New"
             icon="i-lucide-plus-circle"
-            class="bg-green-500"
+            class="bg-green-500 w-24"
             @click="setMode(DBMODE.Insert)"
             :variant="isModeActive ? (mode == DBMODE.Insert ? 'outline' : 'ghost') : 'solid'"
-            :disabled="isModeActive || level < LEVELS.Entry"
+            :disabled="isModeActive || level < LEVELS.Entry || onInsert == undefined"
         />
         <UButton
             label="Edit"
             icon="i-lucide-pencil"
-            class="bg-yellow-500"
+            class="bg-yellow-500 w-24"
             @click="setMode(DBMODE.Update)"
             :variant="isModeActive ? (mode == DBMODE.Update ? 'outline' : 'ghost') : 'solid'"
-            :disabled="isModeActive || level < LEVELS.Officer"
+            :disabled="isModeActive || level < LEVELS.Officer || onUpdate == undefined"
         />
         <UButton
             label="Delete"
             icon="i-lucide-trash-2"
-            class="bg-red-500"
+            class="bg-red-500 w-24"
             @click="setMode(DBMODE.Delete)"
             :variant="isModeActive ? (mode == DBMODE.Delete ? 'outline' : 'ghost') : 'solid'"
-            :disabled="isModeActive || level < LEVELS.Supervisor"
+            :disabled="isModeActive || level < LEVELS.Supervisor || onDelete == undefined"
         />
-
         <UButton
             label="Print"
             icon="i-lucide-printer"
-            @click="onPrint()"
+            class="w-24"
+            @click="onPrint!()"
             :variant="isModeActive ? 'ghost' : 'solid'"
-            :disabled="isModeActive"
+            :disabled="isModeActive || onPrint == undefined"
         />
         <USeparator orientation="vertical" class="h-8" />
         <template v-if="isModeActive">
-            <UButton label="Save" class="bg-sky-500" icon="i-lucide-database-zap" @click="saveClick" />
+            <UButton
+                label="Save"
+                class="bg-sky-500 w-24"
+                icon="i-lucide-database-zap"
+                @click="saveClick"
+            />
             <UButton
                 label="Cancel"
-                class="bg-gray-500"
+                class="bg-gray-500 w-24"
                 icon="i-lucide-x-circle"
                 @click="setMode(DBMODE.Select)"
             />
@@ -59,48 +63,44 @@ import { DBMODE, LEVELS } from "~~/shared/utils"
 const props = defineProps({
     lookupName: {
         type: String,
-        required: true,
     },
     searchKey: {
         type: String,
-        default: "..",
         // validator: (value) => value !== null && value.length >= 0,
     },
-
+    dialogName: {
+        type: String,
+    },
     mode: {
         type: Number,
         default: DBMODE.Idle,
     },
-
     level: {
         type: Number,
         default: LEVELS.Viewer,
         // validator: (value) => Object.values(LEVELS).includes(value),
     },
-
     newRecord: { type: Function, required: true },
     onSelect: { type: Function, required: true },
-    onPrint: { type: Function, required: true },
-    onInsert: { type: Function, required: true },
-    onUpdate: { type: Function, required: true },
-    onDelete: { type: Function, required: true },
-    onLookup: { type: Function, required: true },
+    onPrint: { type: Function, required: false },
+    onInsert: { type: Function, required: false },
+    onUpdate: { type: Function, required: false },
+    onDelete: { type: Function, required: false },
 })
 
 const model = defineModel<string>("searchKey")
+const modelMode = defineModel<number>("mode")
 
-const emit = defineEmits(["update:searchKey", "update:mode"])
-
-const updateSearch = (item: string | null) => {
-    if (model.value === item) item = null // allow cleared if same item selected
-    emit("update:searchKey", item)
-    setMode(DBMODE.Select)
-}
+watch(model, async (value) => {
+    if (value && (props.mode === DBMODE.Select || props.mode === DBMODE.Idle) && props.onSelect) 
+        await props.onSelect()
+})
 
 const setMode = async (newMode: number) => {
-    emit("update:mode", newMode)
-    if (newMode === DBMODE.Select) await props.onSelect()
-    else if (newMode === DBMODE.Insert) props.newRecord()
+    console.log("setMode", newMode)
+    modelMode.value = newMode
+    if (newMode === DBMODE.Insert) props.newRecord()
+    // else if (newMode === DBMODE.Select) await props.onSelect()
 }
 
 const isModeActive = computed(
@@ -111,9 +111,9 @@ const toast = useToast()
 
 const saveClick = async () => {
     let success = false
-    if (props.mode === DBMODE.Insert) success = await props.onInsert()
-    else if (props.mode === DBMODE.Update) success = await props.onUpdate()
-    else if (props.mode === DBMODE.Delete) success = await props.onDelete()
+    if (props.onInsert && props.mode === DBMODE.Insert) success = await props.onInsert()
+    else if (props.onUpdate && props.mode === DBMODE.Update) success = await props.onUpdate()
+    else if (props.onDelete && props.mode === DBMODE.Delete) success = await props.onDelete()
     if (success)
         toast.add({
             title: `[${new Date()}] Save`,
@@ -129,4 +129,5 @@ const saveClick = async () => {
         })
     setMode(DBMODE.Select)
 }
+
 </script>

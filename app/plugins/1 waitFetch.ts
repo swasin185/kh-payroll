@@ -2,16 +2,9 @@ import { ofetch } from "ofetch"
 
 export default defineNuxtPlugin((nuxtApp) => {
     const isWaiting = useWaiting()
-    const toast = useToast()
     const customFetch = ofetch.create({
-        onRequest() {
-            if (isWaiting.value) {
-                toast.add({
-                    title: `[${new Date()}] Request Error`,
-                    description: "กำลังรอเซิฟเวอร์ทำงาน",
-                    color: "error",
-                })
-            }
+        onRequest(event) {
+            console.log("onRequest", event)
             isWaiting.value = true
         },
         onResponse() {

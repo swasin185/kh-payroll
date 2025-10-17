@@ -1,11 +1,12 @@
 <template>
     <UHeader mode="drawer">
         <template #title>
-            [{{ user?.yrPayroll || year }}]
-            <UIcon name="i-lucide-calendar-days" class="size-5" />
-            [{{ user?.mnPayroll || month }}]
-            {{ user?.comName }}
-            
+            <UButton @click="onSelectCom">
+                [{{ user?.yrPayroll || year }}]
+                <UIcon name="i-lucide-calendar-days" class="size-5" />
+                [{{ user?.mnPayroll || month }}]
+                {{ user?.comName }}
+            </UButton>
         </template>
         <h1 class="text-l font-bold">{{ activeMenu.label }}</h1>
         <template #right>
@@ -39,7 +40,6 @@ const { counter, setScheduleCount } = useCounter()
 setScheduleCount()
 
 const { user } = useUserSession()
-const selectComCode = ref(user?.value.comCode ?? "")
 const { menuState, activeMenu, setMenuSession } = usePayrollMenu()
 await setMenuSession()
 const config = useRuntimeConfig()
@@ -47,6 +47,21 @@ const date = new Date(config.public.buildTime)
 const year = ref(date.getFullYear())
 const month = ref(date.getMonth() + 1)
 const version = `${year.value - 2025}.${month.value}.${date.getDate()}`
+
+const confirm = useDialog()
+const { $waitFetch } = useNuxtApp()
+const onSelectCom = () =>
+    confirm({
+        lookupName: "Company",
+        lookupCode: user.value.comCode,
+    }).then(async (code) => {
+        if (!code) return
+        await $waitFetch("/api/company-session", {
+            method: "PUT",
+            query: { comCode: code },
+        })
+        location.reload()
+    })
 
 useHead({
     title: activeMenu.value?.label,

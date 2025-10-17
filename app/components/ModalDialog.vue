@@ -18,11 +18,11 @@
             <div class="flex justify-center w-full space-x-4">
                 <UButton
                     color="warning"
-                    class="font-bold"
+                    class="p-2 font-bold"
                     @click="onConfirm"
-                    label="&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;"
+                    label="&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;"
                 />
-                <UButton v-if="state.isConfirm" @click="onCancel" label="Cancel" />
+                <UButton v-if="state.isConfirm" class="p-2" @click="onCancel" label="&nbsp;Cancel&nbsp;" />
             </div>
         </template>
     </UModal>

@@ -1,32 +1,47 @@
 <template>
     <USelectMenu
         v-model="model"
-        :value="lookupKey"
+        v-model:open="isOpen"
         value-key="id"
-        class="w-50"
+        :class="name ? 'w-50' : 'w-30'"
         :items="data"
-        @update:model-value="updateValue"
+        @update:model-value="(item:string) => { if (props.name && model === item) model = null }"
+        @update:open="openLookupDialog"
     />
 </template>
 
 <script setup lang="ts">
+const isOpen = ref(false)
+const dialog = useDialog()
+const openLookupDialog = async (open: boolean) => {
+    if (open && data.value.length === 0) {
+        isOpen.value = false
+        if (props.dialogName) {
+            const result = await dialog({
+                lookupName: props.dialogName,
+                lookupCode: props.lookupKey,
+            })
+            model.value = result
+        } else
+            await dialog({
+                title: "No Lookup Dialog",
+                message: "ไม่มีการค้นหา",
+            })
+    }
+}
+
 import type { LookupItem } from "~~/shared/types"
 
 const props = defineProps<{
-    lookupKey: string
-    name: string
+    lookupKey?: string
+    name?: string
+    dialogName?: string
 }>()
 
-const model = defineModel<string>("lookupKey")
+const model = defineModel<string | null>("lookupKey")
 
 const data = ref<LookupItem[]>(
     props.name ? await $fetch("/api/lookup", { method: "GET", query: { name: props.name } }) : [],
 )
 
-const emit = defineEmits(["update:lookupKey"])
-
-const updateValue = (item: string | null) => {
-    if (model.value === item) item = null // allow cleared if same item selected
-    emit("update:lookupKey", item)
-}
 </script>

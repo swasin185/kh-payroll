@@ -1,13 +1,28 @@
 <template>
-    <UForm :validate="validate" :state="state" class="p-4 space-y-4" @submit="login" @reset="logout">
+    <UForm
+        :validate="validate"
+        :state="state"
+        class="p-4 space-y-4"
+        @submit="login"
+        @reset="logout"
+    >
         <UFormField label="User ID" name="userid">
             <UInput v-model="state.userid" placeholder="ID ผู้ใช้" :disabled="loggedIn" />
         </UFormField>
         <UFormField label="Password" name="password">
-            <UInput v-model="state.password" placeholder="รหัสผ่าน" :disabled="loggedIn" toggleMask
-                :type="showPwd ? 'text' : 'password'">
-                <UButton variant="link" size="sm" :icon="showPwd ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-                    @click="showPwd = !showPwd" />
+            <UInput
+                v-model="state.password"
+                placeholder="รหัสผ่าน"
+                :disabled="loggedIn"
+                toggleMask
+                :type="showPwd ? 'text' : 'password'"
+            >
+                <UButton
+                    variant="link"
+                    size="sm"
+                    :icon="showPwd ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                    @click="showPwd = !showPwd"
+                />
             </UInput>
         </UFormField>
         <UButton v-if="!loggedIn" type="submit" color="primary" label="Login" />
@@ -33,8 +48,6 @@ const validate = (state: any): FormError[] => {
 }
 
 const toast = useToast()
-// const { fetchCount } = useCounter()
-
 import CryptoJS from "crypto-js"
 async function login() {
     const loginOk = await $waitFetch("/api/auth/local", {
@@ -44,13 +57,9 @@ async function login() {
             pwd: CryptoJS.MD5(state.password).toString(),
         },
     })
-    if (loginOk) {
-        location.reload()
-        // await refreshSession()
-        // await updateMenuPermission(user.value?.level)
-        // await fetchCount()
-        // await navigateTo("/")
-    } else
+    if (loginOk)
+        location.replace("/")
+    else
         toast.add({
             title: `[${new Date()}] Login Error`,
             description: "ผู้ใช้ id/password ผิดพลาด",
@@ -60,6 +69,6 @@ async function login() {
 
 async function logout() {
     await clear()
-    location.reload()
+    location.replace("/login")
 }
 </script>

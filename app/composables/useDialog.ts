@@ -30,7 +30,7 @@ export function useDialogState() {
 
 export function useDialog() {
     return (options?: ConfirmOptions) => {
-        state.title = options?.title ?? options?.lookupName ?? ""
+        state.title = options?.title ?? options?.lookupName ?? " "
         state.message = options?.message ?? " "
         state.show = true
         state.isConfirm = options?.isConfirm ?? false
