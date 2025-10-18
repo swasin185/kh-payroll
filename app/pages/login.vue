@@ -1,21 +1,21 @@
 <template>
-    <UForm
-        :validate="validate"
-        :state="state"
-        class="p-4 space-y-4"
-        @submit="login"
-        @reset="logout"
-    >
-        <UFormField label="User ID" name="userid">
-            <UInput v-model="state.userid" placeholder="ID ผู้ใช้" :disabled="loggedIn" />
+    <UForm :validate="validate" :state="state" class="space-y-4" @submit="login" @reset="logout">
+        <UFormField label="User ID" name="userid" class="w-40">
+            <UInput
+                v-model="state.userid"
+                placeholder="ID ผู้ใช้"
+                :disabled="loggedIn"
+                maxLength="16"
+            />
         </UFormField>
-        <UFormField label="Password" name="password">
+        <UFormField label="Password" name="password" class="w-46">
             <UInput
                 v-model="state.password"
                 placeholder="รหัสผ่าน"
                 :disabled="loggedIn"
                 toggleMask
                 :type="showPwd ? 'text' : 'password'"
+                maxLength="16"
             >
                 <UButton
                     variant="link"
@@ -57,8 +57,7 @@ async function login() {
             pwd: CryptoJS.MD5(state.password).toString(),
         },
     })
-    if (loginOk)
-        location.replace("/")
+    if (loginOk) location.replace("/")
     else
         toast.add({
             title: `[${new Date()}] Login Error`,

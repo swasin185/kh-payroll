@@ -4,7 +4,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     const isWaiting = useWaiting()
     const customFetch = ofetch.create({
         onRequest(event) {
-            console.log("onRequest", event)
+            // console.log("onRequest", event)
             isWaiting.value = true
         },
         onResponse() {

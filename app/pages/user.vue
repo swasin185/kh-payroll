@@ -3,42 +3,38 @@
         lookupName="user"
         v-model:searchKey="searchKey"
         v-model:mode="mode"
-        :level="menu.level"
         :newRecord="newRecord"
         :onSelect="onSelect"
         :onInsert="onInsert"
         :onUpdate="onUpdate"
         :onDelete="onDelete"
         :onPrint="onPrint"
+        :form="form!"
     />
     <UForm
+        ref="form"
         :state="record"
         :validate="validate"
-        class="flex flex-col gap-4"
+        class="space-y-4"
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
     >
-        <UFormField label="User ID" name="userid">
-            <UInput v-model="record.id" class="w-30" :disabled="mode !== DBMODE.Insert" />
+        <UFormField label="User ID" name="userid" class="w-30">
+            <UInput v-model="record.id" :disabled="mode !== DBMODE.Insert" maxLength="16" />
         </UFormField>
-        <UFormField label="ชื่อจริง" name="name">
-            <UInput v-model="record.name" class="w-54" />
+        <UFormField label="ชื่อจริง" name="name" class="w-54">
+            <UInput v-model="record.name" maxLength="40" />
         </UFormField>
-        <UFormField label="อธิบาย" name="descript">
-            <UInput v-model="record.descript" class="w-100" />
+        <UFormField label="อธิบาย" name="descript" class="w-100">
+            <UInput v-model="record.descript" maxLength="100" />
         </UFormField>
-        <UFormField label="LEVEL" name="level">
-            <USelect
-                v-model="record.level"
-                class="w-36"
-                :disabled="!isAdmin"
-                :items="LEVEL_ITEMS"
-            />
+        <UFormField label="LEVEL" name="level" class="w-36">
+            <USelect v-model="record.level" :disabled="!isAdmin" :items="LEVEL_ITEMS" />
         </UFormField>
         <UFormField label="ROLE" name="role">
             <DBLookup v-model:lookupKey="record.role" name="role" :disabled="!isAdmin" />
         </UFormField>
         <UFormField label="Company" name="company">
-            <DBLookup v-model:lookupKey="record.comCode" name="company" class="w-64" />
+            <DBLookup v-model:lookupKey="record.comCode" name="company" />
         </UFormField>
     </UForm>
 </template>
@@ -54,16 +50,16 @@ const validate = (state: any): FormError[] => {
 
 import { DBMODE, LEVEL_ITEMS } from "~~/shared/utils"
 
+const form = useTemplateRef("form")
 const { $waitFetch } = useNuxtApp()
 const { user } = useUserSession()
-const { activeMenu: menu, isAdmin } = usePayrollMenu()
+const { isAdmin } = usePayrollMenu()
 const searchKey: Ref<string> = ref(user.value.id)
 const mode = ref(DBMODE.Idle)
-const record: Ref<any> = ref({})
+const record = ref<any>({})
 const toast = useToast()
 
 const newRecord = () => {
-    searchKey.value = ""
     record.value = { id: "", name: "", descript: "", level: 1, role: "" }
 }
 
@@ -73,15 +69,15 @@ const onSelect = async () => {
         method: "GET",
         query: { id: searchKey.value },
     })
-    if (!record.value) {
-        newRecord()
-        toast.add({
-            title: `[${new Date()}] Not Found`,
-            description: "ไม่พบข้อมูล",
-            color: "warning",
-            duration: 1000,
-        })
-    }
+    // if (!record.value) {
+    //     newRecord()
+    //     toast.add({
+    //         title: `[${new Date()}] Not Found`,
+    //         description: "ไม่พบข้อมูล",
+    //         color: "warning",
+    //         duration: 1000,
+    //     })
+    // }
 }
 
 const onUpdate = async () => {
@@ -99,7 +95,8 @@ const onUpdate = async () => {
 }
 
 const onDelete = async () => {
-    return await $waitFetch("/api/users", { method: "DELETE", query: { id: record.value.id } })
+    return false
+    // return await $waitFetch("/api/users", { method: "DELETE", query: { id: record.value.id } })
 }
 
 const onInsert = async () => {
@@ -111,15 +108,12 @@ const onInsert = async () => {
             descript: record.value.descript,
             level: record.value.level,
             role: record.value.role,
+            comCode: record.value.comCOde,
         },
     })
 }
 
 const onPrint = async () => {}
-
-async function submit() {
-    console.log("SUBMIT")
-}
 
 await onSelect()
 </script>

@@ -5,7 +5,7 @@ set foreign_key_checks = 0;
 drop table if exists company;
 create table company (
   comCode       varchar(2),
-  comName       varchar(64) not null comment "บริษัท ชื่อ",
+  comName       varchar(90) not null comment "บริษัท ชื่อ",
   taxid         varchar(13) comment "เลขประจำตัวผู้เสียภาษี",
   address       varchar(200) comment "ที่อยู่",
   phone         varchar(100) comment "เบอร์โทรศัพท์ FAX มือถือ",

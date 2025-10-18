@@ -11,6 +11,8 @@
                     :is="dynamicLookupComponent"
                     :key="state.lookupName"
                     v-model:lookupKey="state.lookupCode"
+                    @dblclick="onConfirm"
+                    @keydown.enter="onConfirm"
                 />
             </KeepAlive>
         </template>
@@ -22,7 +24,12 @@
                     @click="onConfirm"
                     label="&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;"
                 />
-                <UButton v-if="state.isConfirm" class="p-2" @click="onCancel" label="&nbsp;Cancel&nbsp;" />
+                <UButton
+                    v-if="state.isConfirm"
+                    class="p-2"
+                    @click="onCancel"
+                    label="&nbsp;Cancel&nbsp;"
+                />
             </div>
         </template>
     </UModal>

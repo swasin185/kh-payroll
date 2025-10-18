@@ -1,7 +1,9 @@
 <template>
     <UTable
+        ref="table"
         sticky
         @select="onSelect"
+        @key.enter="onSelect"
         :row-selection="rowSelection"
         :data="companies"
         :columns="columns"
@@ -9,11 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps<{
-    lookupKey: string
-}>()
-const emit = defineEmits(["update:lookupKey"])
-
+const table = useTemplateRef("table")
 import type { SchemaTypes } from "~~/shared/types"
 import type { TableColumn, TableRow } from "@nuxt/ui"
 type Company = SchemaTypes["company"]
@@ -51,23 +49,32 @@ const columns: TableColumn<Company>[] = [
     },
 ]
 const { $waitFetch } = useNuxtApp()
+const lookupKey = defineModel<string>("lookupKey")
 const companies: Ref<Company[]> = ref(await $waitFetch("/api/companyList"))
-const i = companies.value.findIndex((com) => com.comCode === props.lookupKey)
-const rowSelection: Ref<any> = ref({ [i]: true, comCode: props.lookupKey })
-
+const i = companies.value.findIndex((com) => com.comCode == lookupKey.value)
+const rowSelection: Ref<any> = ref({ [i]: true, comCode: lookupKey.value })
+const rowIdx = ref(i)
 function onSelect(row: TableRow<Company>) {
     if (!rowSelection.value[row.index]) {
+        rowIdx.value = row.index
+        lookupKey.value = row.getValue("comCode")
         // don't nessecary to delete old attribute, just leave it as garbage
-        rowSelection.value = { [row.index]: true, comCode: row.getValue("comCode") }
-        emit("update:lookupKey", row.getValue("comCode"))
+        rowSelection.value = { [row.index]: true, comCode: lookupKey.value }
     }
 }
 
-async function onSubmit() {
-    await $waitFetch("/api/company-session", {
-        method: "PUT",
-        query: { comCode: rowSelection.value.comCode },
-    })
-    location.reload()
-}
+defineShortcuts({
+    arrowup: (event) => {
+        // event.preventDefault()
+        if (rowIdx.value > 0) rowIdx.value--
+        lookupKey.value = companies.value[rowIdx.value]?.comCode
+        rowSelection.value = { [rowIdx.value]: true, lookupKey }
+    },
+    arrowdown: (event) => {
+        // event.preventDefault()
+        if (rowIdx.value < companies.value.length - 1) rowIdx.value++
+        lookupKey.value = companies.value[rowIdx.value]?.comCode
+        rowSelection.value = { [rowIdx.value]: true, lookupKey }
+    },
+})
 </script>

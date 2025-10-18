@@ -1,11 +1,11 @@
 <template>
     <USelectMenu
-        v-model="model"
+        v-model="lookupKey"
         v-model:open="isOpen"
         value-key="id"
         :class="name ? 'w-50' : 'w-30'"
         :items="data"
-        @update:model-value="(item:string) => { if (props.name && model === item) model = null }"
+        @update:model-value="(item:string) => { if (props.name && lookupKey === item) lookupKey = undefined }"
         @update:open="openLookupDialog"
     />
 </template>
@@ -19,9 +19,9 @@ const openLookupDialog = async (open: boolean) => {
         if (props.dialogName) {
             const result = await dialog({
                 lookupName: props.dialogName,
-                lookupCode: props.lookupKey,
+                lookupCode: lookupKey.value,
             })
-            model.value = result
+            lookupKey.value = result
         } else
             await dialog({
                 title: "No Lookup Dialog",
@@ -33,15 +33,13 @@ const openLookupDialog = async (open: boolean) => {
 import type { LookupItem } from "~~/shared/types"
 
 const props = defineProps<{
-    lookupKey?: string
     name?: string
     dialogName?: string
 }>()
 
-const model = defineModel<string | null>("lookupKey")
+const lookupKey = defineModel<string>("lookupKey")
 
 const data = ref<LookupItem[]>(
     props.name ? await $fetch("/api/lookup", { method: "GET", query: { name: props.name } }) : [],
 )
-
 </script>

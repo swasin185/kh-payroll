@@ -122,6 +122,7 @@ const mainMenu: NavigationMenuItem[] = [
 const menuState = ref<NavigationMenuItem[]>(mainMenu)
 const setMenuSession = async () => {
     const { user } = useUserSession()
+    menuKey.value++    
     await getMenuPermissionBy(mainMenu, user.value?.comCode, user.value?.id, user.value?.level)
 }
 
@@ -206,8 +207,11 @@ const getMenuItemByRoute = (to: string): NavigationMenuItem => {
     return defaultMenu
 }
 
+const menuKey=ref(0)
+
 export default function usePayrollMenu() {
     return {
+        menuKey,
         loginUrl,
         activeMenu,
         isAdmin: activeMenu.value.level >= LEVELS.Admin,

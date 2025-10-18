@@ -2,8 +2,8 @@ export default defineAppConfig({
     ui: {
         modal: {
             slots: {
-                body: ""
-            }
+                body: "",
+            },
         },
         colors: {
             primary: "blue",
@@ -22,6 +22,11 @@ export default defineAppConfig({
         inputNumber: {
             slots: {
                 base: "text-right",
+            },
+        },
+        input: {
+            slots: {
+                root: "w-full",
             },
         },
     },
