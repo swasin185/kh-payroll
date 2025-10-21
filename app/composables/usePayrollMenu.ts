@@ -175,7 +175,7 @@ type TypePermission = SchemaTypes["permission"]
 const permissionsFromMenu = (
     comCode: string,
     userId: string,
-    menu: NavigationMenuItem[],
+    menu: Record<string, any>[], // NavigationMenuItem[] is recuresive type-checking problem
 ): TypePermission[] => {
     const perms: TypePermission[] = []
     for (const item of menu)

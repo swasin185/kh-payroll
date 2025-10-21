@@ -57,7 +57,6 @@ const { isAdmin } = usePayrollMenu()
 const searchKey: Ref<string> = ref(user.value.id)
 const mode = ref(DBMODE.Idle)
 const record = ref<any>({})
-const toast = useToast()
 
 const newRecord = () => {
     record.value = { id: "", name: "", descript: "", level: 1, role: "" }

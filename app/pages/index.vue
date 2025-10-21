@@ -6,6 +6,9 @@
     Test Dialog
     <UButton class="m-4" label="Confirm" @click="askUser" />
     <UButton class="m-4" label="Lookup Company" @click="lookupCompany" />
+    <USeparator/>Test Report
+    <UButton class="m-4" label="Open Report" @click="openReport(params)" />
+    <UButton class="m-4" label="Save Report" @click="saveReport(params)" />
 </template>
 
 <script lang="ts" setup>
@@ -20,12 +23,24 @@ const askUser = async () => {
     if (ok) alert("Let's go!!")
 }
 
+const { user } = useUserSession()
+
 const lookupCompany = async () => {
-    const { user } = useUserSession()
     const code = await confirm({
         lookupName: "Company",
         lookupCode: user.value.comCode,
     })
     if (code) alert("Lookup = " + code)
+}
+
+const { openReport, saveReport } = useKxReport()
+
+import type { ReportParameter } from "~~/shared/types"
+const params : ReportParameter = {
+    db: "payroll",
+    report: "A00",
+    comCode: user.value.comCode,
+    comName: user.value.comName,
+    option:"3"
 }
 </script>

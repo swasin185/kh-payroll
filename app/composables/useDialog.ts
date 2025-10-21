@@ -28,7 +28,7 @@ export function useDialogState() {
     }
 }
 
-export function useDialog() {
+export default function useDialog() {
     return (options?: ConfirmOptions) => {
         state.title = options?.title ?? options?.lookupName ?? " "
         state.message = options?.message ?? " "

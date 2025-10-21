@@ -53,7 +53,7 @@ const onSelectCom = () =>
     dialog({
         lookupName: "Company",
         lookupCode: user.value.comCode,
-    }).then(async (code) => {
+    }).then(async (code:string) => {
         if (!code) return
         await $waitFetch("/api/company-session", {
             method: "PUT",

@@ -22,9 +22,15 @@ export default defineNuxtConfig({
     nitro: {
         storage: {
             sessions: {
-                driver: process.env.REDIS_URL? "redis" : "memory",
+                driver: process.env.REDIS_URL ? "redis" : "memory",
                 url: process.env.REDIS_URL ?? "",
             },
+        },
+    },
+    routeRules: {
+        "/kxreport/**": {
+            // proxy to report server
+            proxy: process.env.KXREPORT ?? "/api/kxreport",
         },
     },
 })
