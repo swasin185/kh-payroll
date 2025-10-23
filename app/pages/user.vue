@@ -68,15 +68,6 @@ const onSelect = async () => {
         method: "GET",
         query: { id: searchKey.value },
     })
-    // if (!record.value) {
-    //     newRecord()
-    //     toast.add({
-    //         title: `[${new Date()}] Not Found`,
-    //         description: "ไม่พบข้อมูล",
-    //         color: "warning",
-    //         duration: 1000,
-    //     })
-    // }
 }
 
 const onUpdate = async () => {

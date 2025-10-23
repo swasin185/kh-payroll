@@ -8,7 +8,7 @@ function viewReport(url: string = "report.html") {
 
 async function openReport(params: ReportParameter) {
     const { $waitFetch } = useNuxtApp()
-    viewReport()
+    const x = viewReport()
     const pdfResponse = await $waitFetch("/kxreport/openPDF", {
         method: "POST",
         body: params,
@@ -24,7 +24,7 @@ async function saveReport(params: ReportParameter) {
         method: "POST",
         body: params,
     })
-    if (pdfResponse) viewReport("/kxreport/" + pdfResponse)
+    if (pdfResponse) viewReport("." + pdfResponse)
     else reportNotAvailble()
 }
 

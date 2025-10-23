@@ -161,7 +161,7 @@ const permissionsToMenu = async (
     userId: string,
     userLevel: number = LEVELS.Disabled,
 ): Promise<NavigationMenuItem[]> => {
-    const cloneMenu = JSON.parse(JSON.stringify(mainMenu))
+    const cloneMenu = structuredClone(mainMenu)
     await getMenuPermissionBy(cloneMenu, comCode, userId, userLevel)
     return cloneMenu
 }

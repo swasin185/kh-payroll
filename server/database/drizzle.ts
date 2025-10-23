@@ -32,8 +32,3 @@ export function useDrizzle() {
 export function closeDrizzle() {
     poolConnection.end()
 }
-
-// Move to /shared/utils.ts
-// export type SchemaTypes = {
-//     [K in keyof typeof schema]: (typeof schema)[K] extends { $inferSelect: infer T } ? T : never
-// }

@@ -55,7 +55,7 @@ const validate = (state: any): FormError[] => {
     return errors
 }
 
-import { DBMODE, LEVELS } from "~~/shared/utils"
+import { DBMODE } from "~~/shared/utils"
 const { $waitFetch } = useNuxtApp()
 const { user } = useUserSession()
 const searchKey: Ref<string> = ref(user.value.comCode)

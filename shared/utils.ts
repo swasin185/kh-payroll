@@ -41,7 +41,7 @@ export function moneyThaiText(money: number): string {
         let text = ""
         const len = numStr.length
         for (let i = 0; i < len; i++) {
-            const digit = parseInt(numStr.charAt(i))
+            const digit = Number.parseInt(numStr.charAt(i))
             if (digit === 0) continue
             const pos = len - i - 1
             if (pos === 0 && digit === 1 && len > 1) text += "เอ็ด"
@@ -66,10 +66,24 @@ export function moneyThaiText(money: number): string {
     bahtText = bahtText || "ศูนย์"
     bahtText += "บาท"
     let satangText = ""
-    if (parseInt(satang!) > 0) {
+    if (Number.parseInt(satang!) > 0) {
         satangText = readNumber(satang!) + "สตางค์"
     } else {
         satangText = "ถ้วน"
     }
     return (isNegative ? "ลบ" : "") + bahtText + satangText
+}
+
+export function round2(value: number): number {
+    return Math.round((value + Number.EPSILON) * 100) / 100
+}
+
+export function formatDateTime(date: Date): string {
+    // YYYY-MM-DD HH:MM:SS (2025-10-23 14:45:12)
+    return date.toLocaleString("sv-SE");
+}
+
+export function formatDate(date: Date): string {
+    // YYYY-MM-DD (2025-10-23)
+    return date.toLocaleDateString("sv-SE");
 }

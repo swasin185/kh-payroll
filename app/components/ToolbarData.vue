@@ -109,12 +109,7 @@ const isModeActive = computed(
 const toast = useToast()
 
 const saveClick = async () => {
-    if (props.form)
-        try {
-            await props.form.validate()
-        } catch (error) {
-            return
-        }
+    await props.form?.validate()
 
     let success = false
     if (props.onInsert && mode.value === DBMODE.Insert) success = await props.onInsert()

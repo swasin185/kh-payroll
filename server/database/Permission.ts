@@ -85,10 +85,10 @@ export class Permission {
         userId: string,
         permiss: SchemaTypes["permission"][],
     ): Promise<boolean> {
-        permiss.forEach((item) => {
+        for (let item of permiss) {
             item.userId = userId
             item.comCode = comCode
-        })
+        }
         const db = useDrizzle()
         let result = null
         let rowEffected = 0
