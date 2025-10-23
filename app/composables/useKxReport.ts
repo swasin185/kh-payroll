@@ -2,29 +2,31 @@ import type { ReportParameter } from "~~/shared/types"
 
 const WIN_OPT = "width=800,height=800,toolbar=no,menubar=no,location=no"
 
+const kxreport = "/kxreport"
+
 function viewReport(url: string = "report.html") {
-    window.open(url, "kxreport", WIN_OPT)
+    return window.open(url, "kxreport", WIN_OPT)
 }
 
 async function openReport(params: ReportParameter) {
     const { $waitFetch } = useNuxtApp()
-    const x = viewReport()
-    const pdfResponse = await $waitFetch("/kxreport/openPDF", {
+    const win = viewReport()
+    const pdfResponse = await $waitFetch(`${kxreport}/openPDF`, {
         method: "POST",
         body: params,
     })
-    if (pdfResponse) viewReport(URL.createObjectURL(pdfResponse))
+    if (pdfResponse) win!.location.href = URL.createObjectURL(pdfResponse)
     else reportNotAvailble()
 }
 
 async function saveReport(params: ReportParameter) {
     const { $waitFetch } = useNuxtApp()
-    viewReport()
-    const pdfResponse = await $waitFetch("/kxreport/filePDF", {
+    const win = viewReport()
+    const pdfResponse = await $waitFetch(`${kxreport}/filePDF`, {
         method: "POST",
         body: params,
     })
-    if (pdfResponse) viewReport("." + pdfResponse)
+    if (pdfResponse) win!.location.href = `${kxreport}${pdfResponse}`
     else reportNotAvailble()
 }
 
