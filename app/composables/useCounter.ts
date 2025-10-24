@@ -1,13 +1,13 @@
 const counter = ref<number>(0)
-const { loggedIn, fetch: refreshSession } = useUserSession()
-const toast = useToast()
-const { activeMenu, loginUrl } = usePayrollMenu()
-const config = useRuntimeConfig()
-const idleLimit = config.public.idleLimit
-const scheduleTime = config.public.schedule as number
 
 const setScheduleCount = async () => {
+    const { loggedIn, fetch: refreshSession } = useUserSession()
+    const { activeMenu, loginUrl } = usePayrollMenu()
+    const config = useRuntimeConfig()
+    const idleLimit = config.public.idleLimit
+    const scheduleTime = config.public.schedule as number
     counter.value = await $fetch("/api/counter", { cache: "no-store" })
+    const toast = useToast()
     const intervalId = setInterval(async () => {
         try {
             counter.value = await $fetch("/api/counter", { cache: "no-store" })
@@ -20,7 +20,7 @@ const setScheduleCount = async () => {
                         color: "error",
                         duration: 10_000,
                     })
-                    await navigateTo("/login")
+                    await navigateTo(loginUrl)
                 }
             }
         } catch {
@@ -30,7 +30,7 @@ const setScheduleCount = async () => {
                 message: "Server Disconnected !",
             })
         }
-    }, scheduleTime * 1000)
+    }, scheduleTime * 1_000)
     console.log("Counter Schedule", scheduleTime, "s")
 }
 
