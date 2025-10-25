@@ -31,7 +31,7 @@ export default function useCounter() {
                     message: "Server Disconnected !",
                 })
             }
-        }, scheduleTime * 1_000)
+        }, scheduleTime * 1000)
         console.log("Counter Schedule", scheduleTime, "s")
     }
     return {

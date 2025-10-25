@@ -77,8 +77,11 @@ export function moneyThaiText(money: number): string {
     return (isNegative ? "ลบ" : "") + bahtText + satangText
 }
 
-export function round2(value: number): number {
-    return Math.round((value + Number.EPSILON) * 100) / 100
+const FACTOR = [1, 10, 100, 1e3, 1e4, 1e5, 1e6]
+const EPSILON = 1e-7
+export function roundMoney(value: number, digits: 0 | 1 | 2 | 3 | 4 | 5 | 6 = 2): number {
+    const x = FACTOR[digits] || 100
+    return Math.round((value + Math.sign(value) * EPSILON) * x) / x
 }
 
 export function formatDateTime(date: Date): string {

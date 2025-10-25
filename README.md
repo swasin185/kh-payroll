@@ -13,5 +13,4 @@ pnpm -D add tailwindcss
 pnpm -D add @types/node
 pnpm -D add @types/crypto-js
 pnpm -D add vitest
-pnpm approve-builds
 ```
