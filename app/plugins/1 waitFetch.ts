@@ -18,6 +18,5 @@ export default defineNuxtPlugin((nuxtApp) => {
             showError(event.error)
         },
     })
-
     nuxtApp.provide("waitFetch", customFetch)
 })

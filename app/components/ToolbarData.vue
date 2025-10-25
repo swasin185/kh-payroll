@@ -40,20 +40,20 @@
             :disabled="isModeActive || onPrint == undefined"
         />
         <USeparator orientation="vertical" class="h-8" />
-        <template v-if="isModeActive">
-            <UButton
-                label="Save"
-                class="bg-sky-500 w-25"
-                icon="i-lucide-database-zap"
-                @click="saveClick"
-            />
-            <UButton
-                label="Cancel"
-                class="bg-gray-500 w-25"
-                icon="i-lucide-x-circle"
-                @click="setMode(DBMODE.Select)"
-            />
-        </template>
+        <UButton
+            label="Save"
+            class="bg-sky-500 w-25"
+            icon="i-lucide-database-zap"
+            @click="saveClick"
+            v-if="isModeActive"
+        />
+        <UButton
+            label="Cancel"
+            class="bg-gray-500 w-25"
+            icon="i-lucide-x-circle"
+            @click="setMode(DBMODE.Select)"
+            v-if="isModeActive"
+        />
     </div>
 </template>
 

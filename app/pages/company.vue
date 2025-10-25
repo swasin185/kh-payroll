@@ -47,6 +47,9 @@
 </template>
 
 <script lang="ts" setup>
+
+definePageMeta({ keepalive: true })
+
 const form = useTemplateRef("form")
 import type { FormError } from "@nuxt/ui"
 const validate = (state: any): FormError[] => {

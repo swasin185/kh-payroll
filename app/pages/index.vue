@@ -12,6 +12,9 @@
 </template>
 
 <script lang="ts" setup>
+
+// definePageMeta({ keepalive: true })
+
 const isWaiting = useWaiting()
 const confirm = useDialog()
 const askUser = async () => {

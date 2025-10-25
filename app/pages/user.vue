@@ -1,7 +1,7 @@
 <template>
     <ToolbarData
         lookupName="user"
-        v-model:searchKey="searchKey"
+        v-model:searchKey="search"
         v-model:mode="mode"
         :newRecord="newRecord"
         :onSelect="onSelect"
@@ -37,10 +37,16 @@
             <DBLookup v-model:lookupKey="record.comCode" name="company" />
         </UFormField>
     </UForm>
+    <USeparator class="mt-4" />
+    <UButton label="Permission" icon="i-lucide-blinds" @click="gotoPermission" />
 </template>
 
 <script lang="ts" setup>
+
+definePageMeta({ keepalive: true })
+
 import type { FormError } from "@nuxt/ui"
+
 const validate = (state: any): FormError[] => {
     const errors = []
     if (!state.id) errors.push({ name: "userid", message: "ID is empty" })
@@ -54,7 +60,8 @@ const form = useTemplateRef("form")
 const { $waitFetch } = useNuxtApp()
 const { user } = useUserSession()
 const { isAdmin } = usePayrollMenu()
-const searchKey: Ref<string> = ref(user.value.id)
+const search: Ref<string> = ref(user.value.id)
+
 const mode = ref(DBMODE.Idle)
 const record = ref<any>({})
 
@@ -63,10 +70,10 @@ const newRecord = () => {
 }
 
 const onSelect = async () => {
-    if (!searchKey.value) searchKey.value = user.value.id
+    if (!search.value) search.value = user.value.id
     record.value = await $waitFetch("/api/users", {
         method: "GET",
-        query: { id: searchKey.value },
+        query: { id: search.value },
     })
 }
 
@@ -104,6 +111,13 @@ const onInsert = async () => {
 }
 
 const onPrint = async () => {}
+
+const gotoPermission = async () => {
+    await navigateTo({
+        path: "/permission",
+        query: { userid: search.value },
+    })
+}
 
 await onSelect()
 </script>

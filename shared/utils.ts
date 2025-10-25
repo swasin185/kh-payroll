@@ -27,6 +27,10 @@ export const LEVEL_ITEMS = Object.entries(LEVELS).map(([key, value]) => {
     }
 })
 
+export const VAT = 7
+export const VAT_DC = 6.543 // Math.ceil(1e5 - 1e7 / (100 + VAT)) / 1e3
+export const VAT_INVERSE = 0.934579439
+
 const thNum = ["ศูนย์", "หนึ่ง", "สอง", "สาม", "สี่", "ห้า", "หก", "เจ็ด", "แปด", "เก้า"]
 const thPos = ["", "สิบ", "ร้อย", "พัน", "หมื่น", "แสน", "ล้าน"]
 
@@ -63,8 +67,7 @@ export function moneyThaiText(money: number): string {
         else bahtText = partText + bahtText
         chunk++
     }
-    bahtText = bahtText || "ศูนย์"
-    bahtText += "บาท"
+    bahtText = (bahtText || "ศูนย์") + "บาท"
     let satangText = ""
     if (Number.parseInt(satang!) > 0) {
         satangText = readNumber(satang!) + "สตางค์"
@@ -80,10 +83,17 @@ export function round2(value: number): number {
 
 export function formatDateTime(date: Date): string {
     // YYYY-MM-DD HH:MM:SS (2025-10-23 14:45:12)
-    return date.toLocaleString("sv-SE");
+    return date.toLocaleString("sv-SE")
 }
 
 export function formatDate(date: Date): string {
     // YYYY-MM-DD (2025-10-23)
-    return date.toLocaleDateString("sv-SE");
+    return date.toLocaleDateString("sv-SE")
+}
+
+export function formatMoney(value: number): string {
+    return value.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })
 }

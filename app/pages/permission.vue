@@ -9,7 +9,6 @@
         :onInsert="onInsert"
         :onUpdate="onUpdate"
         :onDelete="onDelete"
-        :onLookup="onLookup"
         :onPrint="onPrint"
     />
     <DBLookup
@@ -20,7 +19,7 @@
         @update:model-value="onSelect"
     />
     <UBadge class="justify-center w-8 m-4" :label="count" />
-    <UTree class="w-100" :items="permissions" v-model="menuItem" selectionBehavior="replace">
+    <UTree class="w-100" :items="permissions" :v-model="menuItem" selectionBehavior="replace">
         <template #item-trailing="{ item }">
             <UBadge
                 v-if="!item.children && mode == DBMODE.Select && item.badge as number > 0"
@@ -56,12 +55,21 @@
 </template>
 
 <script lang="ts" setup>
+
+definePageMeta({ keepalive: true })
+
 import { DBMODE, LEVELS, LEVEL_ITEMS } from "~~/shared/utils"
 import type { TreeItem, NavigationMenuItem } from "@nuxt/ui"
 
 const { $waitFetch } = useNuxtApp()
 const { user } = useUserSession()
 const search: Ref<string> = ref(user.value.id)
+
+onActivated(() => {
+    const route = useRoute()
+    search.value = route.query.userid  || user.value.id
+})
+
 const copyUser = ref<string>("")
 const mode = ref(DBMODE.Idle)
 const comCode = ref<string>("00")
@@ -69,6 +77,7 @@ const copyComCode = ref<string>("")
 const permissions = ref<NavigationMenuItem[]>([])
 const menuItem = ref<TreeItem>({})
 const { activeMenu, permissionsToMenu, permissionsFromMenu, countPermissions } = usePayrollMenu()
+
 const count = computed((): number => {
     return countPermissions(permissions.value)
 })
@@ -101,9 +110,6 @@ const onDelete = async () => {
 
 const onInsert = onUpdate
 
-const onLookup = async () => {
-    // searchKey.value = await useLookupDialog("", searchKey.value) || searchKey.value
-}
 const onPrint = async () => {}
 
 const updateLevel = (item: number | null) => {

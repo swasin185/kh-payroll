@@ -25,9 +25,14 @@
     <UProgress v-else v-model="fullProgress" :max="fullProgress" size="2xs" />
     <UMain class="flex justify-center">
         <!-- show only if screen is desktop size -->
-        <MainMenu :key="menuKey" :version="version" :menu="menuState" class="hidden lg:flex w-[300px] h-[800px]" />
+        <MainMenu
+            :key="menuKey"
+            :version="version"
+            :menu="menuState"
+            class="hidden lg:flex w-[300px] h-[800px]"
+        />
         <UCard class="w-[1200px] h-[800px] overflow-auto">
-            <slot />
+            <NuxtPage />
         </UCard>
         <ModalDialog />
     </UMain>
@@ -53,7 +58,7 @@ const onSelectCom = () =>
     dialog({
         lookupName: "Company",
         lookupCode: user.value.comCode,
-    }).then(async (code:string) => {
+    }).then(async (code: string) => {
         if (!code) return
         await $waitFetch("/api/company-session", {
             method: "PUT",

@@ -32,5 +32,5 @@ export default defineNuxtConfig({
             // proxy to report server
             proxy: process.env.KXREPORT ?? "/api/kxreport",
         },
-    },
+    }
 })
