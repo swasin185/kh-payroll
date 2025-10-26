@@ -1,4 +1,5 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+const isDev = process.env.NODE_ENV !== "production"
+
 export default defineNuxtConfig({
     ssr: false,
     compatibilityDate: "2025-07-15",
@@ -29,8 +30,10 @@ export default defineNuxtConfig({
     },
     routeRules: {
         "/kxreport/**": {
-            // proxy to report server
-            proxy: process.env.KXREPORT ?? "/api/kxreport",
+            // proxy to report server https://192.168.1.12:8443/kxreport/**
+            proxy: isDev
+                ? process.env.KXREPORT ?? "/api/kxreport"
+                : process.env.KXREPORT_HTTPS ?? "/api/kxreport",
         },
-    }
+    },
 })
