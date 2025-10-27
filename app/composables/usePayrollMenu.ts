@@ -143,7 +143,7 @@ const getMenuPermissionBy = async (
     // console.log(userId, comCode, permission)
     for (const item of menu)
         for (const child of item.children!) {
-            child.badge = 0
+            child.badge = undefined
             if (userLevel >= LEVELS.Developer) child.level = userLevel
             else if (userLevel > LEVELS.Disabled) {
                 const perm = permission.find((p) => p.program === child.to)

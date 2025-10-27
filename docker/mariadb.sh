@@ -7,4 +7,4 @@ docker run -d --rm  \
   -e MARIADB_RANDOM_ROOT_PASSWORD=true \
   -e MARIADB_DATABASE=payroll \
   -v $(pwd)/sql:/docker-entrypoint-initdb.d \
-  mariadb:10.5
+  mariadb:12-noble

@@ -3,6 +3,14 @@ import { defineConfig } from "vitest/config"
 export default defineConfig({
     test: {
         globals: true,
+        environment: "node",
+
+        // --- Detailed output ---
+        reporters: ["verbose"], 
+        threads: false, 
+        silent: false, 
+        color: true, 
+        
         projects: [
             {
                 test: {

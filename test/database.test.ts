@@ -1,11 +1,7 @@
-import { describe, it, expect, afterAll } from "vitest"
+import { describe, it, expect } from "vitest"
 import { useDrizzle, closeDrizzle } from "../server/database/drizzle"
 import { Users } from "../server/database/Users"
 import { LookupItem } from "../shared/types"
-afterAll(async () => {
-    closeDrizzle()
-    console.log("Database connection closed")
-})
 
 describe("Payroll MariaDB", async () => {
     const db = useDrizzle()

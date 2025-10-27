@@ -1,40 +1,40 @@
 {
-  "name": "kh-payroll",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "test": "clear && vitest --run",
-    "serve": "./serve.sh"
-  },
-  "dependencies": {
-    "@nuxt/test-utils": "3.19.2",
-    "@nuxt/ui": "^4.1.0",
-    "crypto-js": "^4.2.0",
-    "drizzle-orm": "^0.44.5",
-    "mysql2": "^3.15.1",
-    "nuxt": "^4.1.2",
-    "nuxt-auth-utils": "0.5.25",
-    "typescript": "^5.9.3",
-    "vue": "^3.5.22",
-    "vue-router": "^4.5.1"
-  },
-  "devDependencies": {
-    "@types/crypto-js": "^4.2.2",
-    "@types/node": "^24.5.2",
-    "tailwindcss": "^4.1.13",
-    "vitest": "^3.2.4"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "esbuild",
-      "vue-demi",
-      "oxc-parser"
-    ]
-  }
+    "name": "kh-payroll",
+    "type": "module",
+    "private": true,
+    "scripts": {
+        "build": "nuxt build",
+        "dev": "nuxt dev",
+        "generate": "nuxt generate",
+        "preview": "nuxt preview",
+        "postinstall": "nuxt prepare",
+        "test": "clear && vitest --run",
+        "serve": "./script/serve.sh"
+    },
+    "dependencies": {
+        "@nuxt/test-utils": "3.19.2",
+        "@nuxt/ui": "^4.1.0",
+        "crypto-js": "^4.2.0",
+        "drizzle-orm": "^0.44.5",
+        "mysql2": "^3.15.1",
+        "nuxt": "^4.1.2",
+        "nuxt-auth-utils": "0.5.25",
+        "typescript": "^5.9.3",
+        "vue": "^3.5.22",
+        "vue-router": "^4.5.1"
+    },
+    "devDependencies": {
+        "@types/crypto-js": "^4.2.2",
+        "@types/node": "^24.5.2",
+        "tailwindcss": "^4.1.13",
+        "vitest": "^3.2.4"
+    },
+    "pnpm": {
+        "onlyBuiltDependencies": [
+            "@parcel/watcher",
+            "esbuild",
+            "vue-demi",
+            "oxc-parser"
+        ]
+    }
 }

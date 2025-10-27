@@ -54,7 +54,7 @@ const companies: Ref<Company[]> = ref(await $waitFetch("/api/companyList"))
 const i = companies.value.findIndex((com) => com.comCode == lookupKey.value)
 const rowSelection: Ref<any> = ref({ [i]: true, comCode: lookupKey.value })
 const rowIdx = ref(i)
-function onSelect(row: TableRow<Company>) {
+function onSelect(e:Event, row: TableRow<Company>) {
     if (!rowSelection.value[row.index]) {
         rowIdx.value = row.index
         lookupKey.value = row.getValue("comCode")

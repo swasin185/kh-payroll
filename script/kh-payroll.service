@@ -1,0 +1,18 @@
+[Unit]
+Description=KH Payroll
+After=network-online.target
+
+[Service]
+WorkingDirectory=/home/tom/kh-payroll
+ExecStart=/home/tom/kh-payroll/script/serve.sh
+
+User=tom
+Group=tom
+Environment=NODE_ENV=production
+Environment=PATH=/usr/local/bin:/usr/bin
+
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
