@@ -24,5 +24,4 @@ logs
 !.env.example
 
 *.jasper
-report/.project
-report/.settings/org.eclipse.core.resources.prefs
+report/.settings

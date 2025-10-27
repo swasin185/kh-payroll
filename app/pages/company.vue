@@ -64,7 +64,6 @@ const { user } = useUserSession()
 const searchKey: Ref<string> = ref(user.value.comCode)
 const mode = ref(DBMODE.Idle)
 const record = ref<any>({})
-const toast = useToast()
 
 const newRecord = () => {
     record.value = {

@@ -1,6 +1,5 @@
 export default function useCounter() {
     const counter = ref<number>(0)
-    const toast = useToast()
     const setScheduleCount = async () => {
         const { loggedIn, fetch: refreshSession } = useUserSession()
         const { activeMenu, loginUrl } = usePayrollMenu()
@@ -15,7 +14,7 @@ export default function useCounter() {
                 if (loggedIn.value) {
                     await refreshSession()
                     if (!loggedIn.value && activeMenu.value.label! !== loginUrl) {
-                        toast.add({
+                        useToast().add({
                             title: `[${new Date()}] Session's Expired`,
                             description: `Idel Time Limited ${idleLimit / 60} minute`,
                             color: "error",

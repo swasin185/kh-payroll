@@ -6,13 +6,12 @@
     Test Dialog
     <UButton class="m-4" label="Confirm" @click="askUser" />
     <UButton class="m-4" label="Lookup Company" @click="lookupCompany" />
-    <USeparator/>Test Report
-    <UButton class="m-4" label="Open Report" @click="openReport(params)" />
-    <UButton class="m-4" label="Save Report" @click="saveReport(params)" />
+    <USeparator />Test Report
+    <UButton class="m-4" label="Open Report" @click="preview('openPDF', params)" />
+    <UButton class="m-4" label="Save Report" @click="preview('filePDF', params)" />
 </template>
 
 <script lang="ts" setup>
-
 // definePageMeta({ keepalive: true })
 
 const isWaiting = useWaiting()
@@ -36,14 +35,11 @@ const lookupCompany = async () => {
     if (code) alert("Lookup = " + code)
 }
 
-const { openReport, saveReport } = useKxReport()
+const preview = useKxReport()
 
 import type { ReportParameter } from "~~/shared/types"
-const params : ReportParameter = {
-    db: "payroll",
+const params: ReportParameter = {
     report: "A00",
-    comCode: user.value.comCode,
-    comName: user.value.comName,
-    option:"3"
+    option: "3",
 }
 </script>

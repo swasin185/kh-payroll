@@ -10,10 +10,10 @@ export interface LookupItem {
 
 export interface ReportParameter {
     app?: string
-    db: string
+    db?: string
     report: string
-    comCode: string
-    comName: string
+    comCode?: string
+    comName?: string
     fromDate?: string
     toDate?: string
     fromId?: string

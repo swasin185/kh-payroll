@@ -1,46 +1,33 @@
 import type { ReportParameter } from "~~/shared/types"
 
-const WIN_OPT = "width=800,height=800,toolbar=no,menubar=no,location=no"
-
 const kxreport = "/kxreport"
 
-function viewReport(url: string = "report.html") {
-    return window.open(url, "kxreport", WIN_OPT)
-}
+async function preview(api: "openPDF" | "filePDF", params: ReportParameter) {
+    const win = window.open("report.html", kxreport, "width=800,height=800,toolbar=no,menubar=no")
 
-async function openReport(params: ReportParameter) {
+    params.app = "kh-payroll"
+    params.db = "payroll"
+    const { user } = useUserSession()
+    params.comCode = user.value.comCode
+    params.comName = user.value.comName
+
     const { $waitFetch } = useNuxtApp()
-    const win = viewReport()
-    const pdfResponse = await $waitFetch(`${kxreport}/openPDF`, {
+    const pdfResponse = await $waitFetch(`${kxreport}/${api}`, {
         method: "POST",
         body: params,
     })
-    if (pdfResponse) win!.location.href = URL.createObjectURL(pdfResponse)
-    else reportNotAvailble()
-}
 
-async function saveReport(params: ReportParameter) {
-    const { $waitFetch } = useNuxtApp()
-    const win = viewReport()
-    const pdfResponse = await $waitFetch(`${kxreport}/filePDF`, {
-        method: "POST",
-        body: params,
-    })
-    if (pdfResponse) win!.location.href = `${kxreport}${pdfResponse}`
-    else reportNotAvailble()
-}
-
-function reportNotAvailble() {
-    useToast().add({
-        title: `[${new Date()}] Report Status`,
-        description: "JasperReport Server's availble for local usage",
-        color: "warning",
-    })
+    if (pdfResponse)
+        win!.location.href =
+            api === "filePDF" ? `${kxreport}${pdfResponse}` : URL.createObjectURL(pdfResponse)
+    else
+        useToast().add({
+            title: "Report Status",
+            description: "Local JasperReport Server Error!",
+            color: "warning",
+        })
 }
 
 export default function useKxReport() {
-    return {
-        openReport,
-        saveReport,
-    }
+    return preview
 }

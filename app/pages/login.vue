@@ -47,7 +47,6 @@ const validate = (state: any): FormError[] => {
     return errors
 }
 
-const toast = useToast()
 import CryptoJS from "crypto-js"
 async function login() {
     const loginOk = await $waitFetch("/api/auth/local", {
@@ -59,8 +58,8 @@ async function login() {
     })
     if (loginOk) location.replace("/")
     else
-        toast.add({
-            title: `[${new Date()}] Login Error`,
+        useToast().add({
+            title: "Login Error",
             description: "ผู้ใช้ id/password ผิดพลาด",
             color: "error",
         })
