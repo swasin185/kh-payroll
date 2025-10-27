@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { useDrizzle, closeDrizzle } from "../server/database/drizzle"
+import { useDrizzle } from "../server/database/drizzle"
 import { Permission } from "../server/database/Permission"
 import usePayrollMenu from "../app/composables/usePayrollMenu"
 import { LEVELS } from "../shared/utils"

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jdbcDataAdapter class="net.sf.jasperreports.data.jdbc.JdbcDataAdapterImpl">
+	<name>payroll</name>
+	<driver>org.mariadb.jdbc.Driver</driver>
+	<username>pr-user</username>
+	<password>pr-user</password>
+	<url>jdbc:mariadb://localhost:3306/payroll</url>
+	<database></database>
+	<savePassword>true</savePassword>
+	<serverAddress></serverAddress>
+	<autoCommit>true</autoCommit>
+</jdbcDataAdapter>

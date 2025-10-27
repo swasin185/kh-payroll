@@ -22,3 +22,7 @@ logs
 .env
 .env.*
 !.env.example
+
+*.jasper
+report/.project
+report/.settings/org.eclipse.core.resources.prefs

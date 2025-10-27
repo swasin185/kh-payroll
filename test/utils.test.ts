@@ -23,7 +23,7 @@ describe("/shared/utils TEST", async () => {
         expect(utils.roundMoney(-271.495)).toBe(-271.5)
         expect(utils.roundMoney(271.495)).toBe(271.5)
 
-        expect(utils.roundMoney(0.333333, 4)).toBe(0.3333)
+        expect(utils.roundMoney(0.333333 * 3, 4)).toBe(1)
         expect(utils.roundMoney(-0.333333, 4)).toBe(-0.3333)
 
         expect(utils.roundMoney(0.49499999)).toBe(0.5)
