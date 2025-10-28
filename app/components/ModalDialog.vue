@@ -3,18 +3,18 @@
         v-model:open="state.show"
         :title="state.title"
         :description="state.message"
-        :class="state.lookupName === '' ? '' : 'max-w-full md:max-w-[1000px] h-[750px]'"
+        :class="state.lookupName ? 'max-w-full md:max-w-[1000px] h-[750px]' : ''"
     >
-        <template #body v-if="state.lookupName">
-            <KeepAlive>
-                <component
-                    :is="dynamicLookupComponent"
-                    :key="state.lookupName"
-                    v-model:lookupKey="state.lookupCode"
-                    @dblclick="onConfirm"
-                    @keydown.enter="onConfirm"
-                />
-            </KeepAlive>
+        <template #body v-if="state.lookupName || state.isPrompt">
+            <component
+                v-if="state.lookupName"
+                :is="dynamicLookupComponent"
+                :key="state.lookupName"
+                v-model:lookupKey="state.lookupCode"
+                @dblclick="onConfirm"
+                @keydown.enter="onConfirm"
+            />
+            <UInput ref="prompt" v-if="state.isPrompt" v-model="state.lookupCode" />
         </template>
         <template #footer>
             <div class="flex justify-center w-full space-x-4">
@@ -24,24 +24,29 @@
                     @click="onConfirm"
                     label="&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;"
                 />
-                <UButton
-                    v-if="state.isConfirm"
-                    class="p-2"
-                    @click="onCancel"
-                    label="&nbsp;Cancel&nbsp;"
-                />
+                <UButton class="p-2" @click="onCancel" label="&nbsp;Cancel&nbsp;" />
             </div>
         </template>
     </UModal>
 </template>
 
 <script setup lang="ts">
-import { KeepAlive } from "vue"
 import { useDialogState } from "../composables/useDialog"
 const { state, resolve } = useDialogState()
 
+const prompt = useTemplateRef("prompt")
+watch(
+    () => state.show,
+    (newVal) => {
+        if (newVal)
+            nextTick(() => {
+                if (state.isPrompt) prompt.value?.inputRef?.focus()
+            })
+    },
+)
+
 function onConfirm() {
-    if (state.lookupName) resolve(state.lookupCode)
+    if (state.lookupName || state.isPrompt) resolve(state.lookupCode)
     else resolve("OK")
 }
 

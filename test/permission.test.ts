@@ -8,7 +8,7 @@ describe("Permission", async () => {
     useDrizzle()
     console.log("Database connected")
 
-    const testCompany = "00"
+    const testCompany = "01"
     const testUser = "tom"
     it("insert() admin permission", async () => {
         await Permission.deleteAll(testCompany, testUser)

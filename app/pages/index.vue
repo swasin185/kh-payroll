@@ -5,10 +5,10 @@
     <USeparator />
     Test Dialog
     <UButton class="m-4" label="Confirm" @click="askUser" />
-    <UButton class="m-4" label="Lookup Company" @click="lookupCompany" />
+    <UButton class="m-4" label="Lookup Company" @click="promptDialog" />
     <USeparator />Test Report
-    <UButton class="m-4" label="Open Report" @click="preview('openPDF', params)" />
-    <UButton class="m-4" label="Save Report" @click="preview('filePDF', params)" />
+    <UButton class="m-4" label="Open Report" @click="preview(params)" />
+    <UButton class="m-4" label="Save Report" @click="preview(params, 'fname')" />
 </template>
 
 <script lang="ts" setup>
@@ -25,14 +25,15 @@ const askUser = async () => {
     if (ok) alert("Let's go!!")
 }
 
-const { user } = useUserSession()
-
-const lookupCompany = async () => {
-    const code = await confirm({
-        lookupName: "Company",
-        lookupCode: user.value.comCode,
+const yourName = ref<string>("")
+const promptDialog = async () => {
+    yourName.value = await confirm({
+        message: "What is your name ?",
+        lookupCode: yourName.value,
+        isPrompt: true
     })
-    if (code) alert("Lookup = " + code)
+    if (yourName.value) 
+        alert(yourName.value)
 }
 
 const preview = useKxReport()

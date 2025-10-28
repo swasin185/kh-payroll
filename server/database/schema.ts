@@ -75,7 +75,7 @@ export const employee = mysqlTable(
             .notNull()
             .references(() => company.comCode, { onDelete: "restrict", onUpdate: "restrict" }),
         empCode: smallint().notNull(),
-        taxid: varchar({ length: 17 }),
+        taxId: varchar({ length: 17 }),
         prefix: varchar({ length: 16 }),
         name: varchar({ length: 16 }),
         surName: varchar({ length: 20 }),

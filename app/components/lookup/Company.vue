@@ -36,7 +36,7 @@ const columns: TableColumn<Company>[] = [
         cell: ({ row }) => h("div", { class: "font-bold" }, row.getValue("comName")),
     },
     {
-        accessorKey: "txtId",
+        accessorKey: "taxId",
         header: "เลขผู้เสียภาษี",
     },
     {

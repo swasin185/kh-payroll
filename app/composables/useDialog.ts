@@ -4,15 +4,16 @@ interface ConfirmOptions {
     isConfirm?: boolean
     lookupName?: string
     lookupCode?: string
+    isPrompt?: boolean
 }
 
 const state = reactive({
     show: false,
     title: "Confirm",
     message: "Are you sure?",
-    isConfirm: false,
     lookupName: "",
     lookupCode: "",
+    isPrompt: false,
 })
 
 let resolver: ((value: string) => void) | null = null
@@ -30,14 +31,12 @@ export function useDialogState() {
 
 export default function useDialog() {
     return (options?: ConfirmOptions) => {
+        state.show = true
         state.title = options?.title ?? options?.lookupName ?? " "
         state.message = options?.message ?? " "
-        state.show = true
-        state.isConfirm = options?.isConfirm ?? false
         state.lookupName = options?.lookupName ?? ""
         state.lookupCode = options?.lookupCode ?? ""
-        return new Promise<string>((resolve) => {
-            resolver = resolve
-        })
+        state.isPrompt = options?.isPrompt ?? false
+        return new Promise<string>((resolve) => (resolver = resolve))
     }
 }

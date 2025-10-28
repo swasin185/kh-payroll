@@ -4,8 +4,6 @@ export default defineConfig({
     test: {
         globals: true,
         environment: "node",
-
-        // --- Detailed output ---
         reporters: ["verbose"], 
         threads: false, 
         silent: false, 
