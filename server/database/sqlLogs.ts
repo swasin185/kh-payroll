@@ -1,41 +1,47 @@
-import { getDB } from "./db"
+import { getDB } from "./pool"
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
-import type { Logs } from "./schema" // Assuming Logs type is defined here
+import type { Logs } from "~~/shared/schema"
 
 const db = getDB()
 
 export class sqlLogs {
-    // 1. INSERT (Drizzle to mysql2/promise)
+    
     public static async insert(logsRecord: Logs): Promise<boolean> {
-        // You must manually list all columns and use placeholders for security.
-        // Assuming Logs has: logTime, logType, logMessage, and perhaps userId, comCode.
-        
-        // This query assumes the structure of your Logs table.
         const [result] = await db.execute(
-            `INSERT INTO logs (logTime, logType, logMessage, comCode, userId) 
-             VALUES (?, ?, ?, ?, ?)`,
+            `INSERT INTO logs (logTime, logType, userId, program, tableName, changed, comCode) 
+             VALUES (?,?,?,?,?,?,?)`,
             [
-                logsRecord.logTime, 
-                logsRecord.logType, 
-                logsRecord.logMessage, 
-                logsRecord.comCode, 
-                logsRecord.userId // Adjust fields as necessary for your Logs type
+                logsRecord.logTime,
+                logsRecord.logType,
+                logsRecord.userId,
+                logsRecord.program,
+                logsRecord.tableName,
+                logsRecord.changed,
+                logsRecord.comCode,
             ],
         )
-        
         return (result as ResultSetHeader).affectedRows === 1
     }
 
-    // 2. SELECT (Drizzle to mysql2/promise)
     public static async selectLogsType(type: string): Promise<Logs[]> {
+        const [rows] = await db.query<RowDataPacket[]>(`
+            SELECT * FROM logs 
+            WHERE logType = ?
+            ORDER BY logTime
+            LIMIT 100`,
+            [type],
+        )
+        return rows as Logs[]
+    }
+
+    public static async selectLogsLogin(userId: string): Promise<Logs[]> {
         const [rows] = await db.query<RowDataPacket[]>(
             `SELECT * FROM logs 
-             WHERE logType = ?
+             WHERE logType='login' and userId=?
              ORDER BY logTime
-             LIMIT 100`,
-            [type], // Pass 'type' as a parameter array for the prepared statement
+            LIMIT 20`,
+            [userId],
         )
-        
         return rows as Logs[]
     }
 }

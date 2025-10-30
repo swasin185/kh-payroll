@@ -1,6 +1,7 @@
-import { sqlUsers } from "~~/server/database/sqlUsers"
 import { authEventHandler } from "~~/server/utils/authEventHandler"
-import type {Users } from "~~/shared/schema"
+import { sqlUsers } from "~~/server/database/sqlUsers"
+import type { Users } from "~~/shared/schema"
+
 export default authEventHandler(async (event) => {
     const body = await readBody(event)
     const user = body as Users

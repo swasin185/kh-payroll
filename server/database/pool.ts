@@ -23,8 +23,3 @@ const poolConnection : Pool = mysql.createPool(config)
 export function getDB() : Pool {
     return poolConnection;
 }
-
-export function closeDB(): void {
-    poolConnection.end();
-}
-

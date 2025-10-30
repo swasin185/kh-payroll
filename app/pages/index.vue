@@ -5,7 +5,7 @@
     <USeparator />
     Test Dialog
     <UButton class="m-4" label="Confirm" @click="askUser" />
-    <UButton class="m-4" label="Lookup Company" @click="promptDialog" />
+    <UButton class="m-4" label="Prompt" @click="promptDialog" />
     <USeparator />Test Report
     <UButton class="m-4" label="Open Report" @click="preview(params)" />
     <UButton class="m-4" label="Save Report" @click="preview(params, 'fname')" />
@@ -26,6 +26,7 @@ const askUser = async () => {
 }
 
 const yourName = ref<string>("")
+
 const promptDialog = async () => {
     yourName.value = await confirm({
         message: "What is your name ?",
@@ -39,6 +40,7 @@ const promptDialog = async () => {
 const preview = useKxReport()
 
 import type { ReportParameter } from "~~/shared/types"
+
 const params: ReportParameter = {
     report: "A00",
     option: "3",

@@ -1,4 +1,4 @@
-import { getDB } from "./db"
+import { getDB } from "./pool"
 import type { LookupItem } from "~~/shared/types"
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
 import { Users } from "~~/shared/schema"
@@ -6,18 +6,18 @@ import { Users } from "~~/shared/schema"
 const db = getDB()
 
 export class sqlUsers {
-
+    
     public static async select(userId: string): Promise<Users> {
-        const [result] = await db.query<RowDataPacket[]>(`select * from users where id=?`, [userId])
+        const [result] = await db.query<RowDataPacket[]>(`SELECT * FROM users WHERE id=?`, [userId])
         return result[0] as Users
     }
 
     public static async lookup(): Promise<LookupItem[]> {
         const [result] = await db.query(`
-            select id, concat(id, ' : ', name) as label 
-            from users 
-            where id!='admin' 
-            order by id`)
+            SELECT id, concat(id, ' : ', name) as label 
+            FROM users 
+            WHERE id!='admin' 
+            ORDER BY id`)
         return result as LookupItem[]
     }
 

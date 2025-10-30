@@ -1,6 +1,6 @@
-import type { Permission } from "~~/shared/schema"
-import { sqlPermission } from "~~/server/database/sqlPermission"
 import { authEventHandler } from "~~/server/utils/authEventHandler"
+import { sqlPermission } from "~~/server/database/sqlPermission"
+import type { Permission } from "~~/shared/schema"
 
 export default authEventHandler(async (event) => {
     const body = await readBody(event)

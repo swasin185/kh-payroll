@@ -1,5 +1,5 @@
-import { sqlUsers } from "~~/server/database/sqlUsers"
 import { authEventHandler } from "~~/server/utils/authEventHandler"
+import { sqlUsers } from "~~/server/database/sqlUsers"
 import type { Users } from "~~/shared/schema"
 
 export default authEventHandler(async (event) => {

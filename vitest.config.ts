@@ -4,9 +4,9 @@ export default defineConfig({
     test: {
         globals: true,
         environment: "node",
-        reporters: ["verbose"], 
-        silent: false, 
-        
+        reporters: ["verbose"],
+        silent: false,
+
         projects: [
             {
                 test: {

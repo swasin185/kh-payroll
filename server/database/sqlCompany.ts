@@ -1,4 +1,4 @@
-import { getDB } from "./db"
+import { getDB } from "./pool"
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
 import type { LookupItem } from "~~/shared/types"
 import type { Company } from "~~/shared/schema"
@@ -10,7 +10,7 @@ export class sqlCompany {
     public static async select(comCode: string): Promise<Company> {
         const [rows] = await db.query<RowDataPacket[]>(
             `SELECT * FROM company WHERE comCode=?`,
-            [comCode], // FIX: comCode must be wrapped in an array
+            [comCode], 
         )
         return rows[0] as Company
     }
@@ -40,7 +40,10 @@ export class sqlCompany {
 
     public static async update(com: Company): Promise<boolean> {
         const [result] = await db.execute(
-            `UPDATE company SET comName=?, taxId=?, address=?, phone=?, email1=?, email2=?, email3=?, yrPayroll=?, mnPayroll=? WHERE comCode=?`,
+            `UPDATE company 
+             SET comName=?, taxId=?, address=?, phone=?, email1=?, email2=?, email3=?, 
+                 yrPayroll=?, mnPayroll=?
+             WHERE comCode=?`,
             [
                 com.comName,
                 com.taxId,
@@ -51,7 +54,7 @@ export class sqlCompany {
                 com.email3,
                 com.yrPayroll,
                 com.mnPayroll,
-                com.comCode, 
+                com.comCode,
             ],
         )
         return (result as ResultSetHeader).affectedRows === 1
