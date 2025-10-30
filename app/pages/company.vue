@@ -47,11 +47,11 @@
 </template>
 
 <script lang="ts" setup>
-
 definePageMeta({ keepalive: true })
 
 const form = useTemplateRef("form")
 import type { FormError } from "@nuxt/ui"
+import type { Company } from "~~/shared/schema"
 const validate = (state: any): FormError[] => {
     const errors = []
     if (state.level > user.level) errors.push({ name: "level", message: "limit" })
@@ -63,10 +63,9 @@ const { $waitFetch } = useNuxtApp()
 const { user } = useUserSession()
 const searchKey: Ref<string> = ref(user.value.comCode)
 const mode = ref(DBMODE.Idle)
-const record = ref<any>({})
 
-const newRecord = () => {
-    record.value = {
+function newRecord(): Company {
+    return (record.value = {
         comCode: "",
         comName: "",
         taxId: "",
@@ -75,8 +74,10 @@ const newRecord = () => {
         email1: "",
         email2: "",
         email3: "",
-    }
+    })
 }
+
+const record = ref<Company>(newRecord())
 
 const onSelect = async () => {
     if (!searchKey.value) searchKey.value = user.value.comCode

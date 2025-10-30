@@ -3,7 +3,7 @@ interface ConfirmOptions {
     message?: string
     isConfirm?: boolean
     lookupName?: string
-    lookupCode?: string
+    lookupCode?: string | null
     isPrompt?: boolean
 }
 

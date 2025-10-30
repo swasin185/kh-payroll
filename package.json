@@ -15,7 +15,6 @@
         "@nuxt/test-utils": "3.19.2",
         "@nuxt/ui": "^4.1.0",
         "crypto-js": "^4.2.0",
-        "drizzle-orm": "^0.44.5",
         "mysql2": "^3.15.1",
         "nuxt": "^4.1.2",
         "nuxt-auth-utils": "0.5.25",

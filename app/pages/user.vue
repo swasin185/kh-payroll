@@ -42,10 +42,10 @@
 </template>
 
 <script lang="ts" setup>
-
 definePageMeta({ keepalive: true })
 
 import type { FormError } from "@nuxt/ui"
+import type { Users } from "~~/shared/schema"
 
 const validate = (state: any): FormError[] => {
     const errors = []
@@ -63,11 +63,18 @@ const { isAdmin } = usePayrollMenu()
 const search: Ref<string> = ref(user.value.id)
 
 const mode = ref(DBMODE.Idle)
-const record = ref<any>({})
 
-const newRecord = () => {
-    record.value = { id: "", name: "", descript: "", level: 1, role: "" }
+function newRecord(): Users {
+    return (record.value = {
+        id: "login",
+        name: "name",
+        descript: "",
+        level: 1,
+        role: null,
+    })
 }
+
+const record = ref<Users>(newRecord())
 
 const onSelect = async () => {
     if (!search.value) search.value = user.value.id
@@ -105,7 +112,7 @@ const onInsert = async () => {
             descript: record.value.descript,
             level: record.value.level,
             role: record.value.role,
-            comCode: record.value.comCOde,
+            comCode: record.value.comCode,
         },
     })
 }

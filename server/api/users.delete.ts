@@ -1,4 +1,4 @@
-import { Users } from "~~/server/database/Users"
+import { sqlUsers } from "~~/server/database/sqlUsers"
 import { authEventHandler } from "~~/server/utils/authEventHandler"
 
 export default authEventHandler(async (event) => {
@@ -10,5 +10,5 @@ export default authEventHandler(async (event) => {
             statusMessage: "User ID is required.",
         })
     }
-    return await Users.delete(userId)
+    return await sqlUsers.delete(userId)
 })

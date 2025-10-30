@@ -1,4 +1,4 @@
-import { Company } from "~~/server/database/Company"
+import { sqlCompany } from "~~/server/database/sqlCompany"
 import { authEventHandler } from "~~/server/utils/authEventHandler"
 
 export default authEventHandler(async (event) => {
@@ -10,5 +10,5 @@ export default authEventHandler(async (event) => {
             statusMessage: "comCode is required.",
         })
     }
-    return await Company.select(comCode)
+    return await sqlCompany.select(comCode)
 })

@@ -5,9 +5,7 @@ export default defineConfig({
         globals: true,
         environment: "node",
         reporters: ["verbose"], 
-        threads: false, 
         silent: false, 
-        color: true, 
         
         projects: [
             {
@@ -19,10 +17,10 @@ export default defineConfig({
             },
             {
                 test: {
-                    name: "api",
-                    include: ["test/api/*.{test,spec}.ts"],
+                    name: "nitro",
+                    include: ["test/nitro/*.{test,spec}.ts"],
                     environment: "node",
-                    setupFiles: ["./test/setupServer.ts"],
+                    setupFiles: ["./test/nitro/setupServer.ts"],
                 },
             },
         ],

@@ -1,14 +1,15 @@
 import { describe, it, expect } from "vitest"
-import { useDrizzle } from "../server/database/drizzle"
-import { Users } from "../server/database/Users"
+import { getDB } from "../server/database/db"
+import { sqlUsers } from "../server/database/sqlUsers"
 import { LookupItem } from "../shared/types"
+import { Users } from "../shared/schema"
 
 describe("Payroll MariaDB", async () => {
-    const db = useDrizzle()
+    const db = getDB()
     console.log("Database connected")
 
     const TEST_USER_ID = "testuser"
-    const testUser = { id: TEST_USER_ID, name: "Integration Test" } as any
+    const testUser = { id: TEST_USER_ID, name: "Integration Test", descript: "", level: 1, role:"", comCode:"01" } as Users
 
     it("Database is payroll", async () => {
         const [rows] = await db.execute("SELECT DATABASE() AS db")
@@ -16,12 +17,12 @@ describe("Payroll MariaDB", async () => {
     })
 
     it("insert() returns true for new user", async () => {
-        const result = await Users.insert(testUser)
+        const result = await sqlUsers.insert(testUser)
         expect(result).toBe(true)
     })
 
     it("select() returns the user by ID", async () => {
-        const user = await Users.select(TEST_USER_ID)
+        const user = await sqlUsers.select(TEST_USER_ID)
         expect(user).not.toBeNull()
         expect(user?.id).toBe(TEST_USER_ID)
     })
@@ -29,24 +30,26 @@ describe("Payroll MariaDB", async () => {
     it("lookup() returns users excluding admin", async () => {
         for (let i=0; i < 10; i++) {
             // await db.execute("select sleep(5)") // for debugging
-            const users: LookupItem[] = await Users.lookup()
+            const users: LookupItem[] = await sqlUsers.lookup()
             expect(Array.isArray(users)).toBe(true)
             expect(users.find((u) => u.id === "admin")).toBeUndefined()
+            expect(users.length).toBeGreaterThan(1)
         }
     })
 
     it("update() returns true for existing user", async () => {
         const updateName = "Updated Name"
-        const result = await Users.update({ ...testUser, name: updateName })
+        const result = await sqlUsers.update({ ...testUser, name: updateName })
         expect(result).toBe(true)
-        const user = await Users.select(TEST_USER_ID)
+        const user = await sqlUsers.select(TEST_USER_ID)
         expect(user?.name).toBe(updateName)
+        expect(user?.comCode).toBe(testUser.comCode)
     })
 
     it("delete() returns true for deleted user", async () => {
-        const result = await Users.delete(TEST_USER_ID)
+        const result = await sqlUsers.delete(TEST_USER_ID)
         expect(result).toBe(true)
-        const user = await Users.select(TEST_USER_ID)
-        expect(user).toBeNull()
+        const user = await sqlUsers.select(TEST_USER_ID)
+        expect(user).toBeUndefined()
     })
 })

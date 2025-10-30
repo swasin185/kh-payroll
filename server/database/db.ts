@@ -1,7 +1,5 @@
-import { PoolOptions } from "mysql2"
-import { drizzle } from "drizzle-orm/mysql2"
+import { PoolOptions, Pool } from "mysql2/promise";
 import mysql from "mysql2/promise"
-import * as schema from "./schema"
 
 const config: PoolOptions = {
     host: process.env.DB_HOST ?? "localhost",
@@ -17,18 +15,16 @@ const config: PoolOptions = {
 
 if (process.env.DB_HOST && process.env.DB_HOST != "localhost")
     config.ssl = {
-        // ca: fs.readFileSync('/path/to/ca.pem'),
-        // key: fs.readFileSync('/path/to/client-key.pem'),
-        // cert: fs.readFileSync('/path/to/client-cert.pem'),
         rejectUnauthorized: true,
     }
 
-const poolConnection = mysql.createPool(config)
+const poolConnection : Pool = mysql.createPool(config)
 
-export function useDrizzle() {
-    return drizzle(poolConnection, { schema: schema, mode: "default" })
+export function getDB() : Pool {
+    return poolConnection;
 }
 
-export function closeDrizzle() {
-    poolConnection.end()
+export function closeDB(): void {
+    poolConnection.end();
 }
+

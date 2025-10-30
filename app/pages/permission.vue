@@ -55,7 +55,6 @@
 </template>
 
 <script lang="ts" setup>
-
 definePageMeta({ keepalive: true })
 
 import { DBMODE, LEVELS, LEVEL_ITEMS } from "~~/shared/utils"
@@ -67,7 +66,7 @@ const search: Ref<string> = ref(user.value.id)
 
 onActivated(() => {
     const route = useRoute()
-    search.value = route.query.userid  || user.value.id
+    search.value = route.query.userid || user.value.id
 })
 
 const copyUser = ref<string>("")
@@ -82,7 +81,7 @@ const count = computed((): number => {
     return countPermissions(permissions.value)
 })
 
-const newRecord = () => {
+function newRecord() {
     copyUser.value = ""
     copyComCode.value = comCode.value
 }

@@ -1,11 +1,11 @@
 import { authEventHandler } from "~~/server/utils/authEventHandler"
-import { Company } from "~~/server/database/Company"
+import { sqlCompany } from "~~/server/database/sqlCompany"
 
 export default authEventHandler(async (event) => {
     const query = getQuery(event)
     const com = query.comCode as string
     const session = await getUserSession(event)
-    const company = await Company.select(com)
+    const company = await sqlCompany.select(com)
     await setUserSession(event, {
         user: {
             id: (session.user as any).id,

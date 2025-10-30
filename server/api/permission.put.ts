@@ -1,17 +1,17 @@
-import type { SchemaTypes } from "~~/shared/types"
-import { Permission } from "~~/server/database/Permission"
+import type { Permission } from "~~/shared/schema"
+import { sqlPermission } from "~~/server/database/sqlPermission"
 import { authEventHandler } from "~~/server/utils/authEventHandler"
 
 export default authEventHandler(async (event) => {
     const body = await readBody(event)
     const userId = body.userId
     const comCode = body.comCode
-    const permissions = body.permissions as SchemaTypes["permission"][]
+    const permissions = body.permissions as Permission[]
     if (!permissions || !userId || !comCode ) {
         throw createError({
             status: 400,
             message: "User ID is required.",
         })
     }
-    return Permission.updateAll(comCode, userId, permissions)
+    return sqlPermission.updateAll(comCode, userId, permissions)
 })

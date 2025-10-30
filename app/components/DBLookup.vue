@@ -37,7 +37,7 @@ const props = defineProps<{
     dialogName?: string
 }>()
 
-const lookupKey = defineModel<string>("lookupKey")
+const lookupKey = defineModel<string | null>("lookupKey")
 
 const data = ref<LookupItem[]>(
     props.name ? await $fetch("/api/lookup", { method: "GET", query: { name: props.name } }) : [],

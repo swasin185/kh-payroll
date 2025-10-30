@@ -2,7 +2,14 @@ import { describe, it, expect } from "vitest"
 import { $fetch } from "@nuxt/test-utils/e2e"
 
 describe("API endpoints", async () => {
-    const testUser = { id: "testuser", name: "Test User" }
+    const testUser = {
+        id: "testuser",
+        name: "Test User",
+        descript: "",
+        level: 1,
+        role: "",
+        comCode: "01",
+    }
 
     it("GET /api/counter", async () => {
         const res = await $fetch("/api/counter")

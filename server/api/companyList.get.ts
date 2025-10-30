@@ -1,6 +1,6 @@
-import { Company } from "~~/server/database/Company"
+import { sqlCompany } from "~~/server/database/sqlCompany"
 import { authEventHandler } from "~~/server/utils/authEventHandler"
 
 export default authEventHandler(async (event) => {
-    return await Company.selectAll()
+    return await sqlCompany.selectAll()
 })

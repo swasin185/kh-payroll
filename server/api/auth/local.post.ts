@@ -1,5 +1,5 @@
-import { Users } from "~~/server/database/Users"
-import { Company } from "~~/server/database/Company"
+import { sqlUsers } from "~~/server/database/sqlUsers"
+import { sqlCompany } from "~~/server/database/sqlCompany"
 import { renewSession } from "~~/server/utils/sessions"
 
 export default eventHandler(async (event) => {
@@ -14,11 +14,10 @@ export default eventHandler(async (event) => {
         })
     }
     try {
-        const authUser = await Users.select(userid)
+        const authUser = await sqlUsers.select(userid)
         if (authUser && (authUser.passwd == null || authUser.passwd === password)) {
-            const company = await Company.select(authUser.comCode)
+            const company = await sqlCompany.select(authUser.comCode!)
             await setUserSession(event, {
-                // beware cookie size 4k
                 user: {
                     id: authUser.id,
                     name: authUser.name,

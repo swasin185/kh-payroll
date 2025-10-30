@@ -12,9 +12,8 @@
 
 <script lang="ts" setup>
 const table = useTemplateRef("table")
-import type { SchemaTypes } from "~~/shared/types"
+import type { Company } from "~~/shared/schema"
 import type { TableColumn, TableRow } from "@nuxt/ui"
-type Company = SchemaTypes["company"]
 const UCheckbox = resolveComponent("UCheckbox")
 const columns: TableColumn<Company>[] = [
     {

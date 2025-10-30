@@ -1,4 +1,4 @@
-import { Permission } from "~~/server/database/Permission"
+import { sqlPermission } from "~~/server/database/sqlPermission"
 
 export default eventHandler(async (event) => {
     const query = getQuery(event)
@@ -6,5 +6,5 @@ export default eventHandler(async (event) => {
     const userId = (session.user as any).id
     const comCode = (session.user as any).comCode
     const program = query.program?.toString()
-    return await Permission.used(comCode, userId, program!)
+    return await  sqlPermission.used(comCode, userId, program!)
 })

@@ -170,8 +170,8 @@ const isSetPermission = (level: number, def: boolean): boolean => {
     return level > LEVELS.Viewer || (level === LEVELS.Viewer && !def)
 }
 
-import type { SchemaTypes } from "../../shared/types"
-type TypePermission = SchemaTypes["permission"]
+import type { Permission } from "../../shared/schema"
+type TypePermission = Permission
 const permissionsFromMenu = (
     comCode: string,
     userId: string,

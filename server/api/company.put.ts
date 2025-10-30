@@ -1,15 +1,15 @@
-import { Company } from "~~/server/database/Company"
+import { sqlCompany } from "~~/server/database/sqlCompany"
 import { authEventHandler } from "~~/server/utils/authEventHandler"
-import type { SchemaTypes } from "~~/shared/types"
+import type { Company } from "~~/shared/schema"
 
 export default authEventHandler(async (event) => {
     const body = await readBody(event)
-    const company = body as SchemaTypes["company"]
+    const company = body as Company
     if (!company) {
         throw createError({
             statusCode: 400,
             statusMessage: "company is required.",
         })
     }
-    return await Company.update(company)
+    return await sqlCompany.update(company)
 })
