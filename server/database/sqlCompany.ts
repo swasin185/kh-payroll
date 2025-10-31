@@ -62,7 +62,7 @@ export class sqlCompany {
 
     public static async lookup(): Promise<LookupItem[]> {
         const [rows] = await db.query<RowDataPacket[]>(`
-            SELECT comCode, CONCAT(comCode, ' : ', comName) AS label 
+            SELECT comCode AS id, CONCAT(comCode, ' : ', comName) AS label 
             FROM company
             ORDER BY comCode`)
         return rows as LookupItem[]

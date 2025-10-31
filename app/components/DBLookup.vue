@@ -5,7 +5,7 @@
         value-key="id"
         :class="name ? 'w-50' : 'w-30'"
         :items="data"
-        @update:model-value="(item:string) => { if (props.name && lookupKey === item) lookupKey = undefined }"
+        @update:modelValue="(item:string) => { if (props.name && lookupKey === item) lookupKey = undefined }"
         @update:open="openLookupDialog"
     />
 </template>

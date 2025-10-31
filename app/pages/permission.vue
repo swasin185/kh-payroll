@@ -19,7 +19,7 @@
         @update:model-value="onSelect"
     />
     <UBadge class="justify-center w-8 m-4" :label="count" />
-    <UTree class="w-100" :items="permissions" :v-model="menuItem" selectionBehavior="replace">
+    <UTree class="w-100" :items="permissions" v-model="menuItem" selection-behavior="replace">
         <template #item-trailing="{ item }">
             <UBadge
                 v-if="!item.children && mode == DBMODE.Select && item.badge as number > 0"
@@ -32,7 +32,7 @@
                 :model-value="item.level"
                 :items="LEVEL_ITEMS"
                 @update:model-value="updateLevel"
-                :disabled="item.to != menuItem.to || mode != DBMODE.Update"
+                :disabled="mode != DBMODE.Update || item.to != menuItem.to"
             />
         </template>
     </UTree>
@@ -58,23 +58,24 @@
 definePageMeta({ keepalive: true })
 
 import { DBMODE, LEVELS, LEVEL_ITEMS } from "~~/shared/utils"
-import type { TreeItem, NavigationMenuItem } from "@nuxt/ui"
+import type { NavigationMenuItem } from "@nuxt/ui"
 
 const { $waitFetch } = useNuxtApp()
 const { user } = useUserSession()
 const search: Ref<string> = ref(user.value.id)
+const comCode = ref<string>("00")
 
 onActivated(() => {
     const route = useRoute()
-    search.value = route.query.userid || user.value.id
+    search.value = route.query.userId || user.value.id
+    comCode.value = route.query.comCode || user.value.comCode
 })
 
 const copyUser = ref<string>("")
 const mode = ref(DBMODE.Idle)
-const comCode = ref<string>("00")
 const copyComCode = ref<string>("")
 const permissions = ref<NavigationMenuItem[]>([])
-const menuItem = ref<TreeItem>({})
+const menuItem = ref()
 const { activeMenu, permissionsToMenu, permissionsFromMenu, countPermissions } = usePayrollMenu()
 
 const count = computed((): number => {
@@ -127,6 +128,4 @@ async function copyPermissions() {
     if (copyUser.value === search.value && copyComCode.value === comCode.value) return
     permissions.value = await permissionsToMenu(copyComCode.value, copyUser.value, LEVELS.Viewer)
 }
-
-await onSelect()
 </script>

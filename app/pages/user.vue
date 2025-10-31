@@ -19,13 +19,13 @@
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
     >
         <UFormField label="User ID" name="userid" class="w-30">
-            <UInput v-model="record.id" :disabled="mode !== DBMODE.Insert" maxLength="16" />
+            <UInput v-model="record.id" :disabled="mode !== DBMODE.Insert" />
         </UFormField>
         <UFormField label="ชื่อจริง" name="name" class="w-54">
-            <UInput v-model="record.name" maxLength="40" />
+            <UInput v-model="record.name" />
         </UFormField>
         <UFormField label="อธิบาย" name="descript" class="w-100">
-            <UInput v-model="record.descript" maxLength="100" />
+            <UInput v-model="record.descript" />
         </UFormField>
         <UFormField label="LEVEL" name="level" class="w-36">
             <USelect v-model="record.level" :disabled="!isAdmin" :items="LEVEL_ITEMS" />
@@ -33,7 +33,7 @@
         <UFormField label="ROLE" name="role">
             <DBLookup v-model:lookupKey="record.role" name="role" :disabled="!isAdmin" />
         </UFormField>
-        <UFormField label="Company" name="company">
+        <UFormField label="Company" name="comCode">
             <DBLookup v-model:lookupKey="record.comCode" name="company" />
         </UFormField>
     </UForm>
@@ -109,7 +109,7 @@ const onPrint = async () => {}
 const gotoPermission = async () => {
     await navigateTo({
         path: "/permission",
-        query: { userid: search.value },
+        query: { userId: record.value.id, comCode: record.value.comCode },
     })
 }
 

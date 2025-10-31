@@ -29,7 +29,6 @@ const mainMenu: NavigationMenuItem[] = [
                 to: "/company",
                 icon: "i-lucide-building-2",
                 disabled: true,
-                default: true,
             },
             {
                 label: "สิทธิการใช้เมนู",
