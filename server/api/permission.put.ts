@@ -1,5 +1,5 @@
 import { authEventHandler } from "~~/server/utils/authEventHandler"
-import { SqlPermission } from "~~/server/database/SqlPermission"
+import SqlPermission from "~~/server/database/SqlPermission"
 import type { Permission } from "~~/shared/schema"
 
 export default authEventHandler(async (event) => {

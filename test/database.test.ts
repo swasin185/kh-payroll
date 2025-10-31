@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { getDB } from "../server/database/pool"
-import { SqlUsers } from "../server/database/SqlUsers"
+import SqlUsers from "../server/database/SqlUsers"
 import { LookupItem } from "../shared/types"
 import { Users } from "../shared/schema"
 

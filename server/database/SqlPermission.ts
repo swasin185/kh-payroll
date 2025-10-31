@@ -4,8 +4,9 @@ import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
 
 const db = getDB()
 
-export class SqlPermission {
-    public static async select(company: string, userId: string): Promise<Permission[]> {
+export default {
+    
+    async select(company: string, userId: string): Promise<Permission[]> {
         const [rows] = await db.query<RowDataPacket[]>(
             `SELECT program, level, used 
              FROM permission 
@@ -14,18 +15,18 @@ export class SqlPermission {
             [userId, company],
         )
         return rows as Permission[]
-    }
+    },
 
-    public static async deleteAll(comCode: string, userId: string): Promise<boolean> {
+    async deleteAll(comCode: string, userId: string): Promise<boolean> {
         const [result] = await db.execute(
             `DELETE FROM permission 
              WHERE comCode=? AND userId=?`,
             [comCode, userId],
         )
         return (result as ResultSetHeader).affectedRows > 0
-    }
+    },
 
-    public static async copyPermission(
+    async copyPermission(
         company: string,
         fromUser: string,
         toUser: string,
@@ -40,9 +41,9 @@ export class SqlPermission {
             [toUser, company, fromUser],
         )
         return (result as ResultSetHeader).affectedRows ?? 0
-    }
+    },
 
-    public static async used(comCode: string, userId: string, program: string): Promise<boolean> {
+    async used(comCode: string, userId: string, program: string): Promise<boolean> {
         const [result] = await db.execute(
             `UPDATE permission 
              SET used=used+1
@@ -50,9 +51,9 @@ export class SqlPermission {
             [comCode, userId, program],
         )
         return (result as ResultSetHeader).affectedRows > 0
-    }
+    },
 
-    public static async updateAll(
+    async updateAll(
         comCode: string,
         userId: string,
         permiss: Permission[],

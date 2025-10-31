@@ -1,5 +1,5 @@
 import { authEventHandler } from "~~/server/utils/authEventHandler"
-import { SqlUsers } from "~~/server/database/SqlUsers"
+import SqlUsers from "~~/server/database/SqlUsers"
 
 export default authEventHandler(async (event) => {
     const query = getQuery(event)

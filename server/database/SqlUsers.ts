@@ -5,23 +5,23 @@ import { Users } from "~~/shared/schema"
 
 const db = getDB()
 
-export class SqlUsers {
+export default {
     
-    public static async select(userId: string): Promise<Users> {
+    async select(userId: string): Promise<Users> {
         const [result] = await db.query<RowDataPacket[]>(`SELECT * FROM users WHERE id=?`, [userId])
         return result[0] as Users
-    }
+    },
 
-    public static async lookup(): Promise<LookupItem[]> {
+    async lookup(): Promise<LookupItem[]> {
         const [result] = await db.query(`
             SELECT id, concat(id, ' : ', name) as label 
             FROM users 
             WHERE id!='admin' 
             ORDER BY id`)
         return result as LookupItem[]
-    }
+    },
 
-    public static async insert(user: Users): Promise<boolean> {
+    async insert(user: Users): Promise<boolean> {
         user.id = user.id.toLowerCase().trim()
         const [result] = await db.execute(
             `insert into users (id, name, descript, level, role, comCode) 
@@ -29,14 +29,14 @@ export class SqlUsers {
             [user.id, user.name, user.descript, user.level, user.role, user.comCode],
         )
         return (result as ResultSetHeader).affectedRows === 1
-    }
+    },
 
-    public static async delete(userId: string): Promise<boolean> {
+    async delete(userId: string): Promise<boolean> {
         const [result] = await db.execute(`delete from users where id=?`, [userId])
         return (result as ResultSetHeader).affectedRows === 1
-    }
+    },
 
-    public static async update(user: Users): Promise<boolean> {
+    async update(user: Users): Promise<boolean> {
         const [result] = await db.execute(`update users set name=? where id=?`, [
             user.name,
             user.id,

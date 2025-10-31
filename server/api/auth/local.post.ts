@@ -1,5 +1,5 @@
-import { SqlUsers } from "~~/server/database/SqlUsers"
-import { SqlCompany } from "~~/server/database/SqlCompany"
+import SqlUsers from "~~/server/database/SqlUsers"
+import SqlCompany from "~~/server/database/SqlCompany"
 import { renewSession } from "~~/server/utils/sessions"
 
 export default eventHandler(async (event) => {

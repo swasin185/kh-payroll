@@ -4,9 +4,9 @@ import type { Logs } from "~~/shared/schema"
 
 const db = getDB()
 
-export class SqlLogs {
+export default {
     
-    public static async insert(logsRecord: Logs): Promise<boolean> {
+    async insert(logsRecord: Logs): Promise<boolean> {
         const [result] = await db.execute(
             `INSERT INTO logs (logTime, logType, userId, program, tableName, changed, comCode) 
              VALUES (?,?,?,?,?,?,?)`,
@@ -21,9 +21,9 @@ export class SqlLogs {
             ],
         )
         return (result as ResultSetHeader).affectedRows === 1
-    }
+    },
 
-    public static async selectLogsType(type: string): Promise<Logs[]> {
+    async selectLogsType(type: string): Promise<Logs[]> {
         const [rows] = await db.query<RowDataPacket[]>(`
             SELECT * FROM logs 
             WHERE logType = ?
@@ -32,9 +32,9 @@ export class SqlLogs {
             [type],
         )
         return rows as Logs[]
-    }
+    },
 
-    public static async selectLogsLogin(userId: string): Promise<Logs[]> {
+    async selectLogsLogin(userId: string): Promise<Logs[]> {
         const [rows] = await db.query<RowDataPacket[]>(
             `SELECT * FROM logs 
              WHERE logType='login' and userId=?

@@ -5,22 +5,22 @@ import type { Company } from "~~/shared/schema"
 
 const db = getDB()
 
-export class SqlCompany {
+export default {
 
-    public static async select(comCode: string): Promise<Company> {
+    async select(comCode: string): Promise<Company> {
         const [rows] = await db.query<RowDataPacket[]>(
             `SELECT * FROM company WHERE comCode=?`,
             [comCode], 
         )
         return rows[0] as Company
-    }
+    },
 
-    public static async selectAll(): Promise<Company[]> {
+    async selectAll(): Promise<Company[]> {
         const [rows] = await db.query<RowDataPacket[]>(`SELECT * FROM company order by comCode`)
         return rows as Company[]
-    }
+    },
 
-    public static async insert(com: Company): Promise<boolean> {
+    async insert(com: Company): Promise<boolean> {
         const [result] = await db.execute(
             `INSERT INTO company (comCode, comName, taxId, address, phone, email1, email2, email3) 
              VALUES (?,?,?,?,?,?,?,?)`,
@@ -36,9 +36,9 @@ export class SqlCompany {
             ],
         )
         return (result as ResultSetHeader).affectedRows === 1
-    }
+    },
 
-    public static async update(com: Company): Promise<boolean> {
+    async update(com: Company): Promise<boolean> {
         const [result] = await db.execute(
             `UPDATE company 
              SET comName=?, taxId=?, address=?, phone=?, email1=?, email2=?, email3=?, 
@@ -58,9 +58,9 @@ export class SqlCompany {
             ],
         )
         return (result as ResultSetHeader).affectedRows === 1
-    }
+    },
 
-    public static async lookup(): Promise<LookupItem[]> {
+    async lookup(): Promise<LookupItem[]> {
         const [rows] = await db.query<RowDataPacket[]>(`
             SELECT comCode AS id, CONCAT(comCode, ' : ', comName) AS label 
             FROM company

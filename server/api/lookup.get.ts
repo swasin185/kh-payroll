@@ -1,7 +1,7 @@
 import { authEventHandler } from "~~/server/utils/authEventHandler"
 import type { LookupItem } from "~~/shared/types"
-import { SqlUsers } from "~~/server/database/SqlUsers"
-import { SqlCompany } from "~~/server/database/SqlCompany"
+import SqlUsers from "~~/server/database/SqlUsers"
+import SqlCompany from "~~/server/database/SqlCompany"
 
 export default authEventHandler(async (event) : Promise<LookupItem[]> => {
     const query = getQuery(event)

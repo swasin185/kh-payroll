@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { SqlPermission } from "../server/database/SqlPermission"
+import SqlPermission from "../server/database/SqlPermission"
 import usePayrollMenu from "../app/composables/usePayrollMenu"
 import { LEVELS } from "../shared/utils"
 
