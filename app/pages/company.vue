@@ -15,7 +15,7 @@
     <UForm
         ref="form"
         :state="record"
-        :validate="validate"
+        :schema="CompanySchema"
         class="space-y-4"
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
     >
@@ -50,13 +50,12 @@
 definePageMeta({ keepalive: true })
 
 const form = useTemplateRef("form")
-import type { FormError } from "@nuxt/ui"
-import type { Company } from "~~/shared/schema"
-const validate = (state: any): FormError[] => {
-    const errors = []
-    if (state.level > user.level) errors.push({ name: "level", message: "limit" })
-    return errors
-}
+// import type { FormError } from "@nuxt/ui"
+// const validate = (state: any): FormError[] => {
+//     const errors = []
+//     if (state.level > user.level) errors.push({ name: "level", message: "limit" })
+//     return errors
+// }
 
 import { DBMODE } from "~~/shared/utils"
 const { $waitFetch } = useNuxtApp()
@@ -64,22 +63,16 @@ const { user } = useUserSession()
 const searchKey: Ref<string> = ref(user.value.comCode)
 const mode = ref(DBMODE.Idle)
 
-function newRecord(): Company {
-    return (record.value = {
-        comCode: "",
-        comName: "",
-        taxId: "",
-        address: "",
-        phone: "",
-        email1: "",
-        email2: "",
-        email3: "",
-    })
+import type { Company  } from "~~/shared/schema"
+import { CompanySchema } from "~~/shared/schema"
+
+const record = ref<Company>(CompanySchema.parse({}))
+
+function newRecord(): void {
+   record.value = CompanySchema.parse({})
 }
 
-const record = ref<Company>(newRecord())
-
-const onSelect = async () => {
+async function onSelect() {
     if (!searchKey.value) searchKey.value = user.value.comCode
     record.value = await $waitFetch("/api/company", {
         method: "GET",
@@ -87,26 +80,28 @@ const onSelect = async () => {
     })
 }
 
-const onUpdate = async () => {
+async function onUpdate() {
     return await $waitFetch("/api/company", {
         method: "PUT",
         body: record.value,
     })
 }
 
-const onDelete = async () => {
+async function onDelete() {
     return false
     // return await $waitFetch("/api/users", { method: "DELETE", query: { id: record.value.id } })
 }
 
-const onInsert = async () => {
+async function onInsert() {
     return await $waitFetch("/api/company", {
         method: "POST",
         body: record.value,
     })
 }
 
-const onPrint = async () => {}
+function onPrint() {
+    
+}
 
 await onSelect()
 </script>

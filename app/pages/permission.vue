@@ -81,17 +81,17 @@ const count = computed((): number => {
     return countPermissions(permissions.value)
 })
 
-function newRecord() {
+function newRecord(): void {
     copyUser.value = ""
     copyComCode.value = comCode.value
 }
 
-const onSelect = async () => {
+async function onSelect() {
     if (!search.value) search.value = user.value.id
     permissions.value = await permissionsToMenu(comCode.value, search.value, LEVELS.Viewer)
 }
 
-const onUpdate = async () => {
+async function onUpdate() {
     return await $waitFetch("/api/permission", {
         method: "PUT",
         body: {
@@ -102,16 +102,18 @@ const onUpdate = async () => {
     })
 }
 
-const onDelete = async () => {
+async function onDelete() {
     permissions.value = []
     return await onUpdate()
 }
 
-const onInsert = onUpdate
+async function onInsert() {
+    await onUpdate()
+}
 
-const onPrint = async () => {}
+function onPrint() {}
 
-const updateLevel = (item: number | null) => {
+function updateLevel(item: number | null) {
     for (const subMenu of permissions.value)
         for (const child of subMenu.children!)
             if (child.to == menuItem.value.to) {
@@ -120,7 +122,7 @@ const updateLevel = (item: number | null) => {
             }
 }
 
-const copyPermissions = async () => {
+async function copyPermissions() {
     if (!copyUser.value || !copyComCode.value) return
     if (copyUser.value === search.value && copyComCode.value === comCode.value) return
     permissions.value = await permissionsToMenu(copyComCode.value, copyUser.value, LEVELS.Viewer)

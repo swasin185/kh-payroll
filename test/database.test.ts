@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { getDB } from "../server/database/db"
+import { getDB } from "../server/database/pool"
 import { sqlUsers } from "../server/database/sqlUsers"
 import { LookupItem } from "../shared/types"
 import { Users } from "../shared/schema"

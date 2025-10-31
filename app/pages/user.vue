@@ -14,7 +14,7 @@
     <UForm
         ref="form"
         :state="record"
-        :validate="validate"
+        :schema="UsersSchema"
         class="space-y-4"
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
     >
@@ -44,16 +44,6 @@
 <script lang="ts" setup>
 definePageMeta({ keepalive: true })
 
-import type { FormError } from "@nuxt/ui"
-import type { Users } from "~~/shared/schema"
-
-const validate = (state: any): FormError[] => {
-    const errors = []
-    if (!state.id) errors.push({ name: "userid", message: "ID is empty" })
-    if (state.level > user.level) errors.push({ name: "level", message: "limit" })
-    return errors
-}
-
 import { DBMODE, LEVEL_ITEMS } from "~~/shared/utils"
 
 const form = useTemplateRef("form")
@@ -64,19 +54,16 @@ const search: Ref<string> = ref(user.value.id)
 
 const mode = ref(DBMODE.Idle)
 
-function newRecord(): Users {
-    return (record.value = {
-        id: "login",
-        name: "name",
-        descript: "",
-        level: 1,
-        role: null,
-    })
+import type { Users } from "~~/shared/schema"
+import { UsersSchema } from "~~/shared/schema"
+
+const record = ref<Users>(UsersSchema.parse({}))
+
+function newRecord(): void {
+    record.value = UsersSchema.parse({})
 }
 
-const record = ref<Users>(newRecord())
-
-const onSelect = async () => {
+async function onSelect() {
     if (!search.value) search.value = user.value.id
     record.value = await $waitFetch("/api/users", {
         method: "GET",
@@ -84,7 +71,7 @@ const onSelect = async () => {
     })
 }
 
-const onUpdate = async () => {
+async function onUpdate() {
     return await $waitFetch("/api/users", {
         method: "PUT",
         body: {
@@ -98,12 +85,12 @@ const onUpdate = async () => {
     })
 }
 
-const onDelete = async () => {
+async function onDelete() {
     return false
     // return await $waitFetch("/api/users", { method: "DELETE", query: { id: record.value.id } })
 }
 
-const onInsert = async () => {
+async function onInsert() {
     return await $waitFetch("/api/users", {
         method: "POST",
         body: {
