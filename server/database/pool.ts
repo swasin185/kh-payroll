@@ -1,7 +1,6 @@
-import { PoolOptions, Pool } from "mysql2/promise";
 import mysql from "mysql2/promise"
 
-const config: PoolOptions = {
+const config: mysql.PoolOptions = {
     host: process.env.DB_HOST ?? "localhost",
     port: Number.parseInt(process.env.DB_PORT ?? "3306"),
     user: process.env.DB_USER ?? "pr-user",
@@ -18,8 +17,8 @@ if (process.env.DB_HOST && process.env.DB_HOST != "localhost")
         rejectUnauthorized: true,
     }
 
-const poolConnection : Pool = mysql.createPool(config)
+const poolConnection : mysql.Pool = mysql.createPool(config)
 
-export function getDB() : Pool {
+export function getDB() : mysql.Pool {
     return poolConnection;
 }

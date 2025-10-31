@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeAll, afterEach, afterAll } from "vitest"
+import { describe, it, expect } from "vitest"
 
 const kxhost = "http://localhost:8080/kxreport/"
 console.info(kxhost)
@@ -12,9 +12,8 @@ async function fetchPdf(url: string, reportBody: any): Promise<Blob> {
         body: JSON.stringify(reportBody),
     })
 
-    if (!response.ok) {
+    if (!response.ok)
         throw new Error("Failed to fetch PDF")
-    }
 
     return response.blob()
 }

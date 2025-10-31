@@ -74,10 +74,6 @@ const props = defineProps({
         type: String,
         default: "",
     },
-    // level: {
-    //     type: Number,
-    //     default: LEVELS.Viewer,
-    // },
     newRecord: { type: Function, required: true },
     onSelect: { type: Function, required: true },
     onPrint: { type: Function },
@@ -97,7 +93,6 @@ const setMode = async (newMode: number) => {
     if (props.form) props.form.clear()
     mode.value = newMode
     if (newMode === DBMODE.Insert) {
-        searchKey.value = ""
         props.newRecord()
     } else if (newMode === DBMODE.Select) await props.onSelect()
 }
@@ -110,21 +105,20 @@ const toast = useToast()
 
 const saveClick = async () => {
     await props.form?.validate()
-
     let success = false
     if (props.onInsert && mode.value === DBMODE.Insert) success = await props.onInsert()
     else if (props.onUpdate && mode.value === DBMODE.Update) success = await props.onUpdate()
     else if (props.onDelete && mode.value === DBMODE.Delete) success = await props.onDelete()
     if (success)
         toast.add({
-            title: `[${new Date()}] Save`,
+            title: "Save",
             description: "บันทึกเรียบร้อย",
             color: "success",
             duration: 1000,
         })
     else
         toast.add({
-            title: `[${new Date()}] Error`,
+            title: "Error",
             description: "unsuccessful",
             color: "error",
         })

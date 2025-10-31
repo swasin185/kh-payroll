@@ -4,7 +4,7 @@ import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
 
 const db = getDB()
 
-export class sqlPermission {
+export class SqlPermission {
     public static async select(company: string, userId: string): Promise<Permission[]> {
         const [rows] = await db.query<RowDataPacket[]>(
             `SELECT program, level, used 
@@ -58,6 +58,7 @@ export class sqlPermission {
         permiss: Permission[],
     ): Promise<boolean> {
         if (permiss.length === 0) return false
+        // console.log(comCode, userId, permiss)
         const connect = await db.getConnection()
         try {
             await connect.beginTransaction()
@@ -66,20 +67,17 @@ export class sqlPermission {
                  WHERE comCode=? AND userId=?`,
                 [comCode, userId],
             )
-            let rowEffected = (updateResult as ResultSetHeader).affectedRows
             const valuesPlaceholder = "(?, ?, ?, ?, ?)"
             const valuesToInsert: (string | number)[] = []
-            for (let i = 0; i < permiss.length; i++) {
-                const item = permiss[i]
+            for (let item of permiss)
                 valuesToInsert.push(comCode, userId, item.program, item.level, item.used ?? 0)
-            }
-            const placeholders = Array(permiss.length).fill(valuesPlaceholder).join(", ")
+
+            const placeholders = new Array(permiss.length).fill(valuesPlaceholder).join(", ")
             const multiInsertQuery = `
                 INSERT INTO permission (comCode, userId, program, level, used)
                 VALUES ${placeholders}
                 ON DUPLICATE KEY UPDATE level=VALUES(level), used=VALUES(used)`
             const [insertResult] = await connect.execute(multiInsertQuery, valuesToInsert)
-            rowEffected += (insertResult as ResultSetHeader).affectedRows
             await connect.commit()
             return true
         } catch (error) {

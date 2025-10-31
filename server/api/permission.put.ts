@@ -1,5 +1,5 @@
 import { authEventHandler } from "~~/server/utils/authEventHandler"
-import { sqlPermission } from "~~/server/database/sqlPermission"
+import { SqlPermission } from "~~/server/database/SqlPermission"
 import type { Permission } from "~~/shared/schema"
 
 export default authEventHandler(async (event) => {
@@ -13,5 +13,5 @@ export default authEventHandler(async (event) => {
             message: "User ID is required.",
         })
     }
-    return sqlPermission.updateAll(comCode, userId, permissions)
+    return SqlPermission.updateAll(comCode, userId, permissions)
 })

@@ -4,7 +4,7 @@ import type { Logs } from "~~/shared/schema"
 
 const db = getDB()
 
-export class sqlLogs {
+export class SqlLogs {
     
     public static async insert(logsRecord: Logs): Promise<boolean> {
         const [result] = await db.execute(

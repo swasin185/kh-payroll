@@ -1,7 +1,7 @@
 import { authEventHandler } from "~~/server/utils/authEventHandler"
 import type { LookupItem } from "~~/shared/types"
-import { sqlUsers } from "~~/server/database/sqlUsers"
-import { sqlCompany } from "~~/server/database/sqlCompany"
+import { SqlUsers } from "~~/server/database/SqlUsers"
+import { SqlCompany } from "~~/server/database/SqlCompany"
 
 export default authEventHandler(async (event) : Promise<LookupItem[]> => {
     const query = getQuery(event)
@@ -9,8 +9,8 @@ export default authEventHandler(async (event) : Promise<LookupItem[]> => {
     if (!name)
         throw createError({ statusCode: 400, statusMessage: "Missing Lookup Name" })
     let result: LookupItem[] = []
-    if (name === "user") result = await sqlUsers.lookup()
-    else if (name === "role") result = await sqlUsers.lookup()
-    else if (name === "company") result = await sqlCompany.lookup()
+    if (name === "user") result = await SqlUsers.lookup()
+    else if (name === "role") result = await SqlUsers.lookup()
+    else if (name === "company") result = await SqlCompany.lookup()
     return result
 })

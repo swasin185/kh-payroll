@@ -5,7 +5,7 @@ import { Users } from "~~/shared/schema"
 
 const db = getDB()
 
-export class sqlUsers {
+export class SqlUsers {
     
     public static async select(userId: string): Promise<Users> {
         const [result] = await db.query<RowDataPacket[]>(`SELECT * FROM users WHERE id=?`, [userId])

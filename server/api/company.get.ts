@@ -1,5 +1,5 @@
 import { authEventHandler } from "~~/server/utils/authEventHandler"
-import { sqlCompany } from "~~/server/database/sqlCompany"
+import { SqlCompany } from "~~/server/database/SqlCompany"
 
 export default authEventHandler(async (event) => {
     const query = getQuery(event)
@@ -10,5 +10,5 @@ export default authEventHandler(async (event) => {
             statusMessage: "comCode is required.",
         })
     }
-    return await sqlCompany.select(comCode)
+    return await SqlCompany.select(comCode)
 })

@@ -108,9 +108,7 @@ async function onDelete() {
     return await onUpdate()
 }
 
-async function onInsert() {
-    await onUpdate()
-}
+const onInsert = async () => onUpdate()
 
 function onPrint() {}
 

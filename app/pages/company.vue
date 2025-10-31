@@ -50,12 +50,6 @@
 definePageMeta({ keepalive: true })
 
 const form = useTemplateRef("form")
-// import type { FormError } from "@nuxt/ui"
-// const validate = (state: any): FormError[] => {
-//     const errors = []
-//     if (state.level > user.level) errors.push({ name: "level", message: "limit" })
-//     return errors
-// }
 
 import { DBMODE } from "~~/shared/utils"
 const { $waitFetch } = useNuxtApp()

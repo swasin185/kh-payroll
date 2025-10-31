@@ -1,5 +1,5 @@
 import { authEventHandler } from "~~/server/utils/authEventHandler"
-import { sqlUsers } from "~~/server/database/sqlUsers"
+import { SqlUsers } from "~~/server/database/SqlUsers"
 
 export default authEventHandler(async (event) => {
     const query = getQuery(event)
@@ -10,5 +10,5 @@ export default authEventHandler(async (event) => {
             statusMessage: "User ID is required.",
         })
     }
-    return await sqlUsers.delete(userId)
+    return await SqlUsers.delete(userId)
 })

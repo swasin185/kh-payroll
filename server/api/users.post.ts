@@ -1,5 +1,5 @@
 import { authEventHandler } from "~~/server/utils/authEventHandler"
-import { sqlUsers } from "~~/server/database/sqlUsers"
+import { SqlUsers } from "~~/server/database/SqlUsers"
 import type { Users } from "~~/shared/schema"
 
 export default authEventHandler(async (event) => {
@@ -11,5 +11,5 @@ export default authEventHandler(async (event) => {
             statusMessage: "User ID is required.",
         })
     }
-    return await sqlUsers.insert(user)
+    return await SqlUsers.insert(user)
 })

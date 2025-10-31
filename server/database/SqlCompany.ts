@@ -5,7 +5,7 @@ import type { Company } from "~~/shared/schema"
 
 const db = getDB()
 
-export class sqlCompany {
+export class SqlCompany {
 
     public static async select(comCode: string): Promise<Company> {
         const [rows] = await db.query<RowDataPacket[]>(

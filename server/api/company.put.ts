@@ -1,5 +1,5 @@
 import { authEventHandler } from "~~/server/utils/authEventHandler"
-import { sqlCompany } from "~~/server/database/sqlCompany"
+import { SqlCompany } from "~~/server/database/SqlCompany"
 import type { Company } from "~~/shared/schema"
 
 export default authEventHandler(async (event) => {
@@ -11,5 +11,5 @@ export default authEventHandler(async (event) => {
             statusMessage: "company is required.",
         })
     }
-    return await sqlCompany.update(company)
+    return await SqlCompany.update(company)
 })

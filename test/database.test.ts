@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { getDB } from "../server/database/pool"
-import { sqlUsers } from "../server/database/sqlUsers"
+import { SqlUsers } from "../server/database/SqlUsers"
 import { LookupItem } from "../shared/types"
 import { Users } from "../shared/schema"
 
@@ -17,12 +17,12 @@ describe("Payroll MariaDB", async () => {
     })
 
     it("insert() returns true for new user", async () => {
-        const result = await sqlUsers.insert(testUser)
+        const result = await SqlUsers.insert(testUser)
         expect(result).toBe(true)
     })
 
     it("select() returns the user by ID", async () => {
-        const user = await sqlUsers.select(TEST_USER_ID)
+        const user = await SqlUsers.select(TEST_USER_ID)
         expect(user).not.toBeNull()
         expect(user?.id).toBe(TEST_USER_ID)
     })
@@ -30,7 +30,7 @@ describe("Payroll MariaDB", async () => {
     it("lookup() returns users excluding admin", async () => {
         for (let i=0; i < 10; i++) {
             // await db.execute("select sleep(5)") // for debugging
-            const users: LookupItem[] = await sqlUsers.lookup()
+            const users: LookupItem[] = await SqlUsers.lookup()
             expect(Array.isArray(users)).toBe(true)
             expect(users.find((u) => u.id === "admin")).toBeUndefined()
             expect(users.length).toBeGreaterThan(1)
@@ -39,17 +39,17 @@ describe("Payroll MariaDB", async () => {
 
     it("update() returns true for existing user", async () => {
         const updateName = "Updated Name"
-        const result = await sqlUsers.update({ ...testUser, name: updateName })
+        const result = await SqlUsers.update({ ...testUser, name: updateName })
         expect(result).toBe(true)
-        const user = await sqlUsers.select(TEST_USER_ID)
+        const user = await SqlUsers.select(TEST_USER_ID)
         expect(user?.name).toBe(updateName)
         expect(user?.comCode).toBe(testUser.comCode)
     })
 
     it("delete() returns true for deleted user", async () => {
-        const result = await sqlUsers.delete(TEST_USER_ID)
+        const result = await SqlUsers.delete(TEST_USER_ID)
         expect(result).toBe(true)
-        const user = await sqlUsers.select(TEST_USER_ID)
+        const user = await SqlUsers.select(TEST_USER_ID)
         expect(user).toBeUndefined()
     })
 })
