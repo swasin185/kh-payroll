@@ -6,7 +6,6 @@ export default defineConfig({
         environment: "node",
         reporters: ["verbose"],
         silent: false,
-
         projects: [
             {
                 test: {

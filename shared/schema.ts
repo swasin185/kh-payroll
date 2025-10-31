@@ -32,7 +32,7 @@ export const UsersSchema = z.object({
     passwd2: z.string().max(32).nullable().optional(),
     passwdTime: z.date().nullable().optional(),
     passwd2Time: z.date().nullable().optional(),
-    created: z.date().default(() => new Date()), // Runtime default
+    created: z.date().default(() => new Date()), 
     stoped: z.date().nullable().optional(),
     comCode: ComCodeAttr.default("01"),
 })

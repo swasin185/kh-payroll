@@ -5,30 +5,29 @@ import type { Logs } from "~~/shared/schema"
 const db = getDB()
 
 export default {
-    
-    async insert(logsRecord: Logs): Promise<boolean> {
+    async insert(logs: Logs): Promise<boolean> {
         const [result] = await db.execute(
             `INSERT INTO logs (logTime, logType, userId, program, tableName, changed, comCode) 
              VALUES (?,?,?,?,?,?,?)`,
             [
-                logsRecord.logTime,
-                logsRecord.logType,
-                logsRecord.userId,
-                logsRecord.program,
-                logsRecord.tableName,
-                logsRecord.changed,
-                logsRecord.comCode,
+                logs.logTime,
+                logs.logType,
+                logs.userId,
+                logs.program,
+                logs.tableName,
+                logs.changed,
+                logs.comCode,
             ],
         )
         return (result as ResultSetHeader).affectedRows === 1
     },
 
     async selectLogsType(type: string): Promise<Logs[]> {
-        const [rows] = await db.query<RowDataPacket[]>(`
-            SELECT * FROM logs 
-            WHERE logType = ?
-            ORDER BY logTime
-            LIMIT 100`,
+        const [rows] = await db.query<RowDataPacket[]>(
+            `SELECT * FROM logs 
+             WHERE logType = ?
+             ORDER BY logTime
+             LIMIT 100`,
             [type],
         )
         return rows as Logs[]
@@ -39,9 +38,9 @@ export default {
             `SELECT * FROM logs 
              WHERE logType='login' and userId=?
              ORDER BY logTime
-            LIMIT 20`,
+             LIMIT 20`,
             [userId],
         )
         return rows as Logs[]
-    }
+    },
 }
