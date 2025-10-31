@@ -74,7 +74,7 @@ export default {
                      ${escape(item.program)}, 
                      ${item.level}, 
                      ${item.used ?? 0})`)
-            await connect.query(`
+            await connect.execute(`
                 INSERT INTO permission (comCode, userId, program, level, used)
                 VALUES ${valuesList.join(",")}
                 ON DUPLICATE KEY UPDATE level=VALUES(level), used=VALUES(used)`)
