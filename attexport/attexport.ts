@@ -88,10 +88,6 @@ async function main() {
         // 4. Begin Transaction and Insert into MariaDB
         await mariadbConn.beginTransaction()
 
-        // SQL statement for MariaDB insertion
-        // Note: Assuming 'timecard' table structure is (BadgeNumber, dateTxt, TimeTxt)
-        const insertSQL: string = "insert into timecard values (?,?,?)"
-
         let insertCount: number = 0
         let batch: [string, string, string][] = []
         const BATCH_SIZE = 1000 // Efficient batch insertion
@@ -109,7 +105,6 @@ async function main() {
             batch.push([badgeNumber, dateTxt, timeTxt])
 
             if (batch.length >= BATCH_SIZE) {
-                // Execute batch insert
                 try {
                     const params = batch.flat((item) => item) // Flatten the array for batch insertion
                     const placeholders = batch.map(() => "(?, ?, ?)").join(", ")
@@ -118,7 +113,7 @@ async function main() {
                         VALUES ${placeholders} 
                         ON DUPLICATE KEY UPDATE BadgeNumber = VALUES(BadgeNumber)`
 
-                    const res = await mariadbConn.query(batchInsertSQL, params)
+                    await mariadbConn.query(batchInsertSQL, params)
                     insertCount += batch.length
                 } catch (e) {
                     console.error("Batch insert failed (some records might be duplicates):", e)
@@ -131,7 +126,7 @@ async function main() {
         // Insert remaining batch
         if (batch.length > 0) {
             try {
-                const params = batch.flatMap((item) => item)
+                const params = batch.flat((item) => item)
                 const placeholders = batch.map(() => "(?, ?, ?)").join(", ")
                 const batchInsertSQL = `
                     INSERT INTO timecard (BadgeNumber, dateTxt, TimeTxt)
@@ -169,4 +164,4 @@ async function main() {
     }
 }
 
-main()
+await main()

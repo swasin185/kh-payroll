@@ -58,11 +58,10 @@ export class SqlPermission {
         permiss: Permission[],
     ): Promise<boolean> {
         if (permiss.length === 0) return false
-        // console.log(comCode, userId, permiss)
         const connect = await db.getConnection()
         try {
             await connect.beginTransaction()
-            const [updateResult] = await connect.execute(
+            await connect.execute(
                 `UPDATE permission SET level=-1 
                  WHERE comCode=? AND userId=?`,
                 [comCode, userId],
@@ -77,7 +76,7 @@ export class SqlPermission {
                 INSERT INTO permission (comCode, userId, program, level, used)
                 VALUES ${placeholders}
                 ON DUPLICATE KEY UPDATE level=VALUES(level), used=VALUES(used)`
-            const [insertResult] = await connect.execute(multiInsertQuery, valuesToInsert)
+            await connect.execute(multiInsertQuery, valuesToInsert)
             await connect.commit()
             return true
         } catch (error) {
