@@ -70,13 +70,16 @@ export class SqlPermission {
             const valuesToInsert: (string | number)[] = []
             for (let item of permiss)
                 valuesToInsert.push(comCode, userId, item.program, item.level, item.used ?? 0)
-            const placeholders = new Array(permiss.length).fill(valuesPlaceholder).join(", ")
+            const placeholders = new Array(permiss.length).fill(valuesPlaceholder).join(",")
             const multiInsertQuery = `
                 INSERT INTO permission (comCode, userId, program, level, used)
                 VALUES ${placeholders}
                 ON DUPLICATE KEY UPDATE level=VALUES(level), used=VALUES(used)`
-            console.log(multiInsertQuery)
             await connect.execute(multiInsertQuery, valuesToInsert)
+            await connect.execute(
+                `DELETE FROM permission WHERE comCode=? AND userId=? AND level=-1`,
+                [comCode, userId],
+            )
             await connect.commit()
             return true
         } catch (error) {

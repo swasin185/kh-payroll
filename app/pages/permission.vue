@@ -88,7 +88,8 @@ function newRecord(): void {
 }
 
 async function onSelect() {
-    if (!search.value) search.value = user.value.id
+    if (!search.value || !comCode.value) return
+    console.log("get permission", search.value, comCode.value)
     permissions.value = await permissionsToMenu(comCode.value, search.value, LEVELS.Viewer)
 }
 
@@ -126,4 +127,6 @@ async function copyPermissions() {
     if (copyUser.value === search.value && copyComCode.value === comCode.value) return
     permissions.value = await permissionsToMenu(copyComCode.value, copyUser.value, LEVELS.Viewer)
 }
+
+await onSelect()
 </script>

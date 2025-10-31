@@ -38,7 +38,12 @@
         </UFormField>
     </UForm>
     <USeparator class="mt-4" />
-    <UButton label="Permission" icon="i-lucide-blinds" @click="gotoPermission" />
+    <UButton
+        label="Permission"
+        icon="i-lucide-blinds"
+        @click="gotoPermission"
+        :disabled="mode != DBMODE.Select"
+    />
 </template>
 
 <script lang="ts" setup>
