@@ -67,20 +67,20 @@ export default {
                  WHERE comCode=? AND userId=?`,
                 [comCode, userId],
             )
-            const valuesPlaceholder = "(?, ?, ?, ?, ?)"
-            const valuesToInsert: (string | number)[] = []
-            for (let item of permiss)
-                valuesToInsert.push(comCode, userId, item.program, item.level, item.used ?? 0)
-            const placeholders = new Array(permiss.length).fill(valuesPlaceholder).join(",")
-            const multiInsertQuery = `
+            const valuesList = permiss.map(
+                (item) => 
+                   `(${escape(comCode)}, 
+                     ${escape(userId)}, 
+                     ${escape(item.program)}, 
+                     ${item.level}, 
+                     ${item.used ?? 0})`)
+            await connect.query(`
                 INSERT INTO permission (comCode, userId, program, level, used)
-                VALUES ${placeholders}
-                ON DUPLICATE KEY UPDATE level=VALUES(level), used=VALUES(used)`
-            await connect.execute(multiInsertQuery, valuesToInsert)
+                VALUES ${valuesList.join(",")}
+                ON DUPLICATE KEY UPDATE level=VALUES(level), used=VALUES(used)`)
             await connect.execute(
                 `DELETE FROM permission WHERE comCode=? AND userId=? AND level=-1`,
-                [comCode, userId],
-            )
+                [comCode, userId])
             await connect.commit()
             return true
         } catch (error) {
