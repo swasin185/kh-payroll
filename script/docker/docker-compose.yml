@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+    keehing-app:
+        # Use the name you will give your built image
+        image: kh-payroll:latest
+        container_name: kh-payroll-server
+        # Map the container port 3443 to the host port 3443
+        ports:
+            - "3443:3443"
+
+        # Define the environment variables you need
+        environment:
+            # Disables TLS certificate validation for Node.js
+            - NODE_TLS_REJECT_UNAUTHORIZED=0
+            # Sets the port the Nuxt server listens on
+            - NITRO_PORT=3443
+            # Note: For production, you should manage these keys securely,
+            # but for the command to work, you need the content of the files.
+            # We will mount the files as volumes and then set the variable to the path.
+            # The values below reference the paths inside the container.
+            - NITRO_SSL_KEY=/etc/cert/key.pem
+            - NITRO_SSL_CERT=/etc/cert/cert.pem
+
+        # Mount the local certificate files into the container
+        # Replace the paths on the left (e.g., /path/to/local/cert/key.pem)
+        # with the actual local paths on your Linux Server.
+        volumes:
+            - $(pwd)/script/cert/key.pem:/etc/cert/key.pem:ro
+            - $(pwd)/script/cert/cert.pem:/etc/cert/cert.pem:ro
+
+        # Set restart policy
+        restart: always

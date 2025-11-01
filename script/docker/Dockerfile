@@ -1,6 +1,6 @@
 # 1. Build Stage
 # Use a Node.js image for building the application
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -27,7 +27,7 @@ RUN pnpm run build
 
 # 2. Production Stage
 # Use a smaller, more secure base image for the final runtime
-FROM node:20-alpine
+FROM node:22-alpine
 
 # Set the working directory
 WORKDIR /app
