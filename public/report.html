@@ -28,13 +28,13 @@
     <script>
         let mm = 0
         let ss = 0
-        const timer = document.getElementById('timer')
+        const timer = document.getElementById("timer")
         setInterval(() => {
             if (++ss == 60) {
                 mm++
                 ss = 0
             }
-            timer.textContent = (mm > 9 ? mm : '0' + mm) + ':' + (ss > 9 ? ss : '0' + ss)
+            timer.textContent = (mm > 9 ? mm : "0" + mm) + ":" + (ss > 9 ? ss : "0" + ss)
         }, 1000)
     </script>
 </html>

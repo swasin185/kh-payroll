@@ -6,7 +6,6 @@ import { Users } from "~~/shared/schema"
 const db = getDB()
 
 export default {
-    
     async select(userId: string): Promise<Users> {
         const [result] = await db.query<RowDataPacket[]>(`SELECT * FROM users WHERE id=?`, [userId])
         return result[0] as Users
@@ -42,5 +41,5 @@ export default {
             user.id,
         ])
         return (result as ResultSetHeader).affectedRows === 1
-    }
+    },
 }

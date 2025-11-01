@@ -1,4 +1,5 @@
 #!/bin/bash
+# docker pull mariadb:12-noble
 docker run -d --rm  \
   --name mariadb \
   --network host \

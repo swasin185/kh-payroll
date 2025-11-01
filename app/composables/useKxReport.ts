@@ -1,6 +1,8 @@
 import type { ReportParameter } from "~~/shared/types"
 
 const kxreport = "/kxreport"
+const apiBlob = `${kxreport}/openPDF`
+const apiFile = `${kxreport}/filePDF`
 
 async function preview(params: ReportParameter, saveFile: string = "") {
     const win = window.open("report.html", kxreport, "width=800,height=800,toolbar=no,menubar=no")
@@ -10,11 +12,10 @@ async function preview(params: ReportParameter, saveFile: string = "") {
     const { user } = useUserSession()
     params.comCode = user.value.comCode
     params.comName = user.value.comName
-    if (saveFile) params.saveFile = saveFile
+    params.saveFile = saveFile
 
     const { $waitFetch } = useNuxtApp()
-    const api = params.saveFile ? "filePDF" : "openPDF"
-    const pdfResponse = await $waitFetch(`${kxreport}/${api}`, {
+    const pdfResponse = await $waitFetch(saveFile ? apiFile : apiBlob, {
         method: "POST",
         body: params,
     })

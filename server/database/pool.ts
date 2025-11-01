@@ -17,8 +17,9 @@ if (process.env.DB_HOST && process.env.DB_HOST != "localhost")
         rejectUnauthorized: true,
     }
 
-const poolConnection : mysql.Pool = mysql.createPool(config)
+console.info("[DB] connect MariaDB Pool")
+const poolConnection: mysql.Pool = mysql.createPool(config)
 
-export function getDB() : mysql.Pool {
-    return poolConnection;
+export function getDB(): mysql.Pool {
+    return poolConnection
 }

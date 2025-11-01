@@ -6,12 +6,10 @@ import type { Company } from "~~/shared/schema"
 const db = getDB()
 
 export default {
-
     async select(comCode: string): Promise<Company> {
-        const [rows] = await db.query<RowDataPacket[]>(
-            `SELECT * FROM company WHERE comCode=?`,
-            [comCode], 
-        )
+        const [rows] = await db.query<RowDataPacket[]>(`SELECT * FROM company WHERE comCode=?`, [
+            comCode,
+        ])
         return rows[0] as Company
     },
 
@@ -61,10 +59,11 @@ export default {
     },
 
     async lookup(): Promise<LookupItem[]> {
-        const [rows] = await db.query<RowDataPacket[]>(`
-            SELECT comCode AS id, CONCAT(comCode, ' : ', comName) AS label 
-            FROM company
-            ORDER BY comCode`)
+        const [rows] = await db.query<RowDataPacket[]>(
+            `SELECT comCode AS id, CONCAT(comCode, ' : ', comName) AS label 
+             FROM company
+             ORDER BY comCode`,
+        )
         return rows as LookupItem[]
-    }
+    },
 }

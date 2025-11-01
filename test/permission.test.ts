@@ -19,7 +19,7 @@ describe("Permission", async () => {
         )
         expect(result).toBe(true)
         const permission = await SqlPermission.select(testCompany, testUser)
-        expect(permission.length).toBeGreaterThan(0)
+        expect(permission.length).toBeGreaterThan(1)
     })
 
     it("used count", async () => {
