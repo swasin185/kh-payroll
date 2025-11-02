@@ -1,7 +1,4 @@
 #!/bin/bash
-docker build -t kh-payroll:latest -f script/docker/Dockerfile .
+docker build -t kh-payroll:latest .
 docker image prune -f
-docker run -d \
-  --name kh-payroll-server \
-  --network "host" \
-  kh-payroll:latest
+docker-compose up -d
