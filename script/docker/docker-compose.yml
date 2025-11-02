@@ -2,17 +2,23 @@ services:
     mariadb:
         image: mariadb:12-noble
         container_name: mariadb
-        expose:
-            - "3306"
+        ports:
+            - "3306:3306"
         environment:
             MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "true"
             MARIADB_RANDOM_ROOT_PASSWORD: "true"
             MARIADB_DATABASE: payroll
         volumes:
             - ../sql:/docker-entrypoint-initdb.d:ro
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            interval: 5s
+            timeout: 3s
+            retries: 10
+            start_period: 5s
 
     nuxt-app:
-        build: 
+        build:
             context: ../..
             dockerfile: script/docker/Dockerfile
         image: kh-payroll:latest
