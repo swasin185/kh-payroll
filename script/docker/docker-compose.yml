@@ -12,10 +12,9 @@ services:
             MARIADB_DATABASE: payroll
         volumes:
             - ../sql:/docker-entrypoint-initdb.d:ro
-        restart: unless-stopped
 
     nuxt-app:
-        image: kh-payroll:lastest
+        image: kh-payroll:latest
         expose:
             - "3000"
         environment:
