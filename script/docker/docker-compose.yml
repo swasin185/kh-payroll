@@ -9,11 +9,6 @@ services:
             MARIADB_DATABASE: payroll
         volumes:
             - ../sql:/docker-entrypoint-initdb.d:ro
-        healthcheck:
-            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-            interval: 5s
-            timeout: 3s
-            retries: 5
         networks:
             - payroll-net
 
@@ -27,7 +22,7 @@ services:
         environment:
             DB_HOST: mariadb 
             NODE_ENV: production
-        command: ["node", ".output/server/index.mjs"]
+        command: ["/bin/sh", "-c", "echo '⏳ Waiting for DB...' && sleep 15 && node .output/server/index.mjs"]
         depends_on:
             - mariadb
         networks:
