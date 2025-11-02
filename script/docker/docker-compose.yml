@@ -2,29 +2,32 @@ services:
     mariadb:
         image: mariadb:12-noble
         container_name: mariadb
-        ports:
-            - "3306:3306"
+        expose:
+            - "3306"
         environment:
             MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "true"
             MARIADB_RANDOM_ROOT_PASSWORD: "true"
             MARIADB_DATABASE: payroll
         volumes:
             - ../sql:/docker-entrypoint-initdb.d:ro
+        networks:
+            - payroll-net
 
     nuxt-app:
         build:
             context: ../..
             dockerfile: script/docker/Dockerfile
         image: kh-payroll:latest
-#        network_mode: "host"
         expose:
             - "3000"
         environment:
-            DB_HOST: mariadb
+            DB_HOST: mariadb 
             NODE_ENV: production
         command: ["node", ".output/server/index.mjs"]
         depends_on:
             - mariadb
+        networks:
+            - payroll-net 
 
     nginx:
         image: nginx:latest
@@ -36,3 +39,9 @@ services:
             - ../cert:/etc/nginx/certs:ro
         depends_on:
             - nuxt-app
+        networks:
+            - payroll-net 
+
+networks:
+    payroll-net:
+        driver: bridge
