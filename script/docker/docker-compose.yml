@@ -15,7 +15,7 @@ services:
 
     nuxt-app:
         build: 
-            context: .
+            context: ../..
             dockerfile: Dockerfile
         image: kh-payroll:latest
         expose:
