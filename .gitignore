@@ -25,3 +25,4 @@ logs
 
 *.jasper
 report/.settings
+script/attexport/package-lock.json
