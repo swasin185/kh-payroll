@@ -17,7 +17,7 @@ if (process.env.DB_HOST && process.env.DB_HOST != "localhost" && process.env.DB_
         rejectUnauthorized: true,
     }
 
-console.info("[DB] connect MariaDB Pool")
+
 const poolConnection: mysql.Pool = mysql.createPool(config)
 
 export function getDB(): mysql.Pool {

@@ -22,16 +22,16 @@ services:
         environment:
             DB_HOST: mariadb 
             NODE_ENV: production
-        command: ["/bin/sh", "-c", "echo '⏳ Waiting for DB...' && sleep 15 && node .output/server/index.mjs"]
+        command: ["/bin/sh", "-c", "echo '⏳ Waiting for DB...' && sleep 10 && node .output/server/index.mjs"]
         depends_on:
             - mariadb
         networks:
             - payroll-net 
+        restart: unless-stopped
 
     nginx:
         image: nginx:latest
         ports:
-            - "80:80"
             - "3443:3443"
         volumes:
             - ./nginx.conf:/etc/nginx/nginx.conf:ro
