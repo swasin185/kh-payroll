@@ -3,7 +3,7 @@ import { ofetch } from "ofetch"
 export default defineNuxtPlugin((nuxtApp) => {
     const isWaiting = useWaiting()
     const customFetch = ofetch.create({
-        onRequest(event) {
+        onRequest() {
             isWaiting.value = true
         },
         onResponse() {

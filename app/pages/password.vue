@@ -58,18 +58,19 @@ onActivated(() => {
     if (user.value.level >= LEVELS.Admin) chgUser.value = route.query.userId || user.value.id
     else chgUser.value = user.value.id
 })
+
 import { z } from "zod"
 
-const pwdMessage = "รหัสผ่านปัจจุบันต้องมีความยาวอย่างน้อย 6 ตัวอักษร"
+const pwdMessage = "รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร"
 const ChangePasswordSchema = z
     .object({
-        currentPassword: z.string().min(6, pwdMessage),
+        currentPassword: z.string(),
         newPassword: z.string().min(6, pwdMessage),
         confirmPassword: z.string().min(6, pwdMessage),
     })
     .refine((data) => data.newPassword === data.confirmPassword, {
         message: "รหัสผ่านใหม่และการยืนยันไม่ตรงกัน",
-        path: ["confirmPassword"], // Show error on confirmPassword field
+        path: ["confirmPassword"],
     })
 
 type ChangePasswordData = z.infer<typeof ChangePasswordSchema>
@@ -90,8 +91,7 @@ import CryptoJS from "crypto-js"
 import { LEVELS } from "~~/shared/utils"
 
 async function changePassword(): Promise<void> {
-    const result = await (form.value as any).validate()
-
+    await (form.value as any).validate()
     loading.value = true
     try {
         await $waitFetch("/api/password", {
@@ -115,9 +115,7 @@ async function changePassword(): Promise<void> {
             confirmPassword: "",
         })
         form.value?.clear()
-
     } catch (error) {
-        // Error Feedback (e.g., current password incorrect, or server error)
         console.error("Change password failed:", error)
         toast.add({
             title: "ผิดพลาด",

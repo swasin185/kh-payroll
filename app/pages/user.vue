@@ -48,7 +48,7 @@
     <UButton
         class="m-4"
         label="Password"
-        icon="i-lucide-blinds"
+        icon="i-lucide-lock-keyhole"
         @click="gotoPassword"
         :disabled="!isAdmin"
     />
