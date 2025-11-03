@@ -9,7 +9,7 @@ const defaultMenu: NavigationMenuItem = {
     level: LEVELS.Viewer,
 }
 
-const activeMenu = ref(defaultMenu)
+const activeMenu = ref<NavigationMenuItem>(defaultMenu)
 
 const mainMenu: NavigationMenuItem[] = [
     {
@@ -121,7 +121,7 @@ const mainMenu: NavigationMenuItem[] = [
 const menuState = ref<NavigationMenuItem[]>(mainMenu)
 const setMenuSession = async () => {
     const { user } = useUserSession()
-    menuKey.value++    
+    menuKey.value++
     await getMenuPermissionBy(mainMenu, user.value?.comCode, user.value?.id, user.value?.level)
 }
 
@@ -195,26 +195,26 @@ const countPermissions = (menu: NavigationMenuItem[]): number => {
 }
 
 const getMenuItemByRoute = (to: string): NavigationMenuItem => {
+    activeMenu.value = defaultMenu
     for (const item of menuState.value) {
         const menuItem = item.children?.find((i) => i.to === to)
         if (menuItem) {
             activeMenu.value = menuItem
-            return menuItem as NavigationMenuItem
+            break
         }
     }
-    activeMenu.value = defaultMenu
-    return defaultMenu
+    return activeMenu.value as NavigationMenuItem
 }
 
-const menuKey=ref(0)
+const menuKey = ref(0)
 
 export default function usePayrollMenu() {
     return {
         menuKey,
         loginUrl,
         activeMenu,
-        isAdmin: activeMenu.value.level >= LEVELS.Admin,
         menuState,
+        isAdmin: activeMenu.value.level >= LEVELS.Admin,
         setMenuSession,
         permissionsToMenu,
         permissionsFromMenu,

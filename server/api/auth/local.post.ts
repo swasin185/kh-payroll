@@ -4,18 +4,18 @@ import { renewSession } from "~~/server/utils/sessions"
 
 export default eventHandler(async (event) => {
     const body = await readBody(event)
-    const userid = body.id?.toString().toLowerCase()
+    const userId = body.id?.toString().toLowerCase()
     const password = body.pwd?.toString()
-    if (!userid || !password) {
+    if (!userId || !password) {
         throw createError({
             status: 400,
             message: "User ID and Password are required.",
         })
     }
-    console.log("LOGIN:", userid)
+    console.log("LOGIN:", userId)
     try {
-        const authUser = await SqlUsers.select(userid)
-        if (authUser && (authUser.passwd == null || authUser.passwd === password)) {
+        if (await SqlUsers.authPasswd(userId, password)) {
+            const authUser = await SqlUsers.select(userId)
             const company = await SqlCompany.select(authUser.comCode!)
             await setUserSession(event, {
                 user: {

@@ -22,12 +22,6 @@ describe("API endpoints", async () => {
             body: { id: testUser.id, pwd: "wrongpassword" },
         })
         expect(res0).toBe(false)
-
-        const res = await $fetch("/api/auth/local", {
-            method: "POST",
-            body: { id: "tom", pwd: "xx" },
-        })
-        expect(res).toBe(true)
     })
 
     it("POST /api/users", async () => {

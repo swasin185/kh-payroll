@@ -39,10 +39,18 @@
     </UForm>
     <USeparator class="mt-4" />
     <UButton
+        class="m-4"
         label="Permission"
         icon="i-lucide-blinds"
         @click="gotoPermission"
-        :disabled="mode != DBMODE.Select"
+        :disabled="!isAdmin"
+    />
+    <UButton
+        class="m-4"
+        label="Password"
+        icon="i-lucide-blinds"
+        @click="gotoPassword"
+        :disabled="!isAdmin"
     />
 </template>
 
@@ -115,6 +123,13 @@ const gotoPermission = async () => {
     await navigateTo({
         path: "/permission",
         query: { userId: record.value.id, comCode: record.value.comCode },
+    })
+}
+
+const gotoPassword = async () => {
+    await navigateTo({
+        path: "/password",
+        query: { userId: record.value.id },
     })
 }
 

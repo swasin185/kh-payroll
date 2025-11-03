@@ -42,4 +42,25 @@ export default {
         ])
         return (result as ResultSetHeader).affectedRows === 1
     },
+
+    async changePasswd(userId: string, pwd: string, newPwd: string) {
+        console.log(userId, pwd, newPwd)
+        if (await this.authPasswd(userId, pwd)) {
+            const [result] = await db.execute(`update users set passwd=? where id=?`, [
+                newPwd,
+                userId,
+            ])
+            return (result as ResultSetHeader).affectedRows === 1
+        } else {
+            return false
+        }
+    },
+
+    async authPasswd(userId: string, pwd: string) {
+        const [result] = await db.query<RowDataPacket[]>(
+            `select id from users where id=? and (passwd is null or passwd=?)`,
+            [userId, pwd],
+        )
+        return result.length === 1
+    },
 }
