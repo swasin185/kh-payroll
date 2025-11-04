@@ -15,10 +15,10 @@
         ref="form"
         :state="record"
         :schema="UsersSchema"
-        class="space-y-4"
+        class="grid grid-cols-2 gap-x-8 gap-y-4"
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
     >
-        <UFormField label="User ID" name="userid" class="w-30">
+        <UFormField label="User ID" name="id" class="w-30">
             <UInput v-model="record.id" :disabled="mode !== DBMODE.Insert" />
         </UFormField>
         <UFormField label="ชื่อจริง" name="name" class="w-54">
@@ -35,6 +35,15 @@
         </UFormField>
         <UFormField label="Company" name="comCode">
             <DBLookup v-model:lookupKey="record.comCode" name="company" />
+        </UFormField>
+        <UFormField label="วันที่รหัสผ่าน" name="passwdTime" class="w-40">
+            <UInput type="date" v-model="record.passwdTime" disabled />
+        </UFormField>
+        <UFormField label="วันที่สร้าง" name="created" class="w-40">
+            <UInput type="date" v-model="record.created" disabled />
+        </UFormField>
+        <UFormField label="วันที่ยกเลิก" name="stoped" class="w-40">
+            <UInput type="date" v-model="record.stoped" />
         </UFormField>
     </UForm>
     <USeparator class="mt-4" />
@@ -56,6 +65,7 @@ const search: Ref<string> = ref(user.value.id)
 const mode = ref(DBMODE.Idle)
 
 import { UsersSchema, type Users } from "~~/shared/schema"
+import { union } from "zod"
 
 const record = reactive<Users>(UsersSchema.parse({}))
 
@@ -89,8 +99,8 @@ async function onUpdate() {
 }
 
 async function onDelete() {
-    return false
-    // return await $waitFetch("/api/users", { method: "DELETE", query: { id: record.value.id } })
+    if (record.id === user.value.id) return false
+    return await $waitFetch("/api/users", { method: "DELETE", query: { id: record.id } })
 }
 
 async function onInsert() {

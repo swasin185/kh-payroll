@@ -7,7 +7,15 @@ const db = getDB()
 
 export default {
     async select(userId: string): Promise<Users> {
-        const [result] = await db.query<RowDataPacket[]>(`SELECT * FROM users WHERE id=?`, [userId])
+        const [result] = await db.query<RowDataPacket[]>(
+            `
+            SELECT id, name, descript, level, role, 
+                LEFT(passwdTime, 10) passwdTime, 
+                LEFT(created, 10) created, 
+                LEFT(stoped, 10) stoped, comCode
+            FROM users WHERE id=?`,
+            [userId],
+        )
         return result[0] as Users
     },
 
@@ -32,14 +40,15 @@ export default {
 
     async delete(userId: string): Promise<boolean> {
         const [result] = await db.execute(`delete from users where id=?`, [userId])
+        console.log("delete", userId, (result as ResultSetHeader).affectedRows)
         return (result as ResultSetHeader).affectedRows === 1
     },
 
     async update(user: Users): Promise<boolean> {
-        const [result] = await db.execute(`update users set name=? where id=?`, [
-            user.name,
-            user.id,
-        ])
+        const [result] = await db.execute(
+            `update users set name=?, descript=?, level=?, role=?, comCode=? where id=?`,
+            [user.name, user.descript, user.level, user.role, user.comCode, user.id],
+        )
         return (result as ResultSetHeader).affectedRows === 1
     },
 

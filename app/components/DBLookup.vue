@@ -30,8 +30,6 @@ const openLookupDialog = async (open: boolean) => {
     }
 }
 
-import type { LookupItem } from "~~/shared/types"
-
 const props = defineProps<{
     name?: string
     dialogName?: string
@@ -39,7 +37,18 @@ const props = defineProps<{
 
 const lookupKey = defineModel<string | null>("lookupKey")
 
-const data = ref<LookupItem[]>(
-    props.name ? await $fetch("/api/lookup", { method: "GET", query: { name: props.name } }) : [],
-)
+import type { LookupItem } from "~~/shared/types"
+
+const data = ref<LookupItem[]>([])
+await refresh()
+
+async function refresh(): Promise<void> {
+    data.value = props.name
+        ? await $fetch("/api/lookup", { method: "GET", query: { name: props.name } })
+        : []
+}
+
+defineExpose({
+    refresh,
+})
 </script>

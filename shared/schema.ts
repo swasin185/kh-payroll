@@ -18,21 +18,22 @@ export const CompanySchema = z.object({
         .int()
         .min(0)
         .max(13)
-        .default(new Date().getMonth() + 1).optional(),
+        .default(new Date().getMonth() + 1)
+        .optional(),
 })
 export type Company = z.infer<typeof CompanySchema>
 
 export const UsersSchema = z.object({
     id: UserIdAttr,
-    name: z.string().max(40).nullable().default(null),
+    name: z.string().min(3).max(40).default("name"),
     descript: z.string().max(60).nullable().default(null),
-    level: z.number().int().min(0).max(9).default(0),
+    level: z.int().min(0).max(9).default(0),
     role: z.string().max(16).nullable().default(null),
-    passwd: z.string().max(32).nullable().optional(),
-    passwdTime: z.date().nullable().optional(),
-    created: z.date().default(() => new Date()), 
-    stoped: z.date().nullable().optional(),
-    comCode: ComCodeAttr.default("01"),
+    passwd: z.string().max(32).nullable().default(null).optional(),
+    passwdTime: z.string().nullable().default(null).optional(),
+    created: z.string().nullable().default(null).optional(),
+    stoped: z.string().nullable().default(null).optional(),
+    comCode: ComCodeAttr.nullable().default("01"),
 })
 export type Users = z.infer<typeof UsersSchema>
 
@@ -48,7 +49,7 @@ export const PermissionSchema = z
 export type Permission = z.infer<typeof PermissionSchema>
 
 export const LogsSchema = z.object({
-    logNr: z.number().int().positive().optional(), 
+    logNr: z.number().int().positive().optional(),
     logTime: z.number().int().positive().optional(),
     logType: z
         .enum(["insert", "delete", "update", "query", "rollback", "login", "logfail", "execute"])

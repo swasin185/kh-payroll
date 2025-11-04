@@ -1,6 +1,7 @@
 <template>
     <div class="flex space-x-2 border-b-1 pb-2 mb-2">
         <DBLookup
+            ref="lookup"
             v-model:lookupKey="searchKey"
             :name="lookupName"
             :dialogName="dialogName"
@@ -64,6 +65,7 @@ const level = activeMenu.value.level
 
 const searchKey = defineModel<string>("searchKey")
 const mode = defineModel<number>("mode")
+const lookup = useTemplateRef("lookup")
 
 const props = defineProps({
     lookupName: {
@@ -104,24 +106,29 @@ const isModeActive = computed(
 const toast = useToast()
 
 const saveClick = async () => {
-    await props.form?.validate()
+    if (mode.value !== DBMODE.Delete) await props.form?.validate()
     let success = false
     if (props.onInsert && mode.value === DBMODE.Insert) success = await props.onInsert()
     else if (props.onUpdate && mode.value === DBMODE.Update) success = await props.onUpdate()
-    else if (props.onDelete && mode.value === DBMODE.Delete) success = await props.onDelete()
-    if (success)
+    else if (props.onDelete && mode.value === DBMODE.Delete) {
+        success = await props.onDelete()
+        searchKey.value = ""
+    }
+    if (success) {
         toast.add({
             title: "Save",
             description: "บันทึกเรียบร้อย",
             color: "success",
             duration: 1000,
         })
-    else
+        setMode(DBMODE.Select)
+        if (mode.value === DBMODE.Insert || mode.value === DBMODE.Delete)
+            await lookup.value?.refresh()
+    } else
         toast.add({
             title: "Error",
             description: "unsuccessful",
             color: "error",
         })
-    setMode(DBMODE.Select)
 }
 </script>

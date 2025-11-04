@@ -49,8 +49,9 @@ const columns: TableColumn<Company>[] = [
 ]
 const { $waitFetch } = useNuxtApp()
 const lookupKey = defineModel<string>("lookupKey")
-const companies: Ref<Company[]> = ref(await $waitFetch("/api/companyList"))
-const i = companies.value.findIndex((com) => com.comCode == lookupKey.value)
+import {reactive} from "vue"
+const companies = reactive<Company[]>(await $waitFetch("/api/companyList"))
+const i = companies.findIndex((com) => com.comCode == lookupKey.value)
 const rowSelection: Ref<any> = ref({ [i]: true, comCode: lookupKey.value })
 const rowIdx = ref(i)
 function onSelect(e:Event, row: TableRow<Company>) {
@@ -66,13 +67,13 @@ defineShortcuts({
     arrowup: (event) => {
         // event.preventDefault()
         if (rowIdx.value > 0) rowIdx.value--
-        lookupKey.value = companies.value[rowIdx.value]?.comCode
+        lookupKey.value = companies[rowIdx.value]?.comCode
         rowSelection.value = { [rowIdx.value]: true, lookupKey }
     },
     arrowdown: (event) => {
         // event.preventDefault()
-        if (rowIdx.value < companies.value.length - 1) rowIdx.value++
-        lookupKey.value = companies.value[rowIdx.value]?.comCode
+        if (rowIdx.value < companies.length - 1) rowIdx.value++
+        lookupKey.value = companies[rowIdx.value]?.comCode
         rowSelection.value = { [rowIdx.value]: true, lookupKey }
     },
 })
