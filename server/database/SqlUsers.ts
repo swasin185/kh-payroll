@@ -44,12 +44,11 @@ export default {
     },
 
     async changePasswd(userId: string, pwd: string, newPwd: string) {
-        console.log(userId, pwd, newPwd)
         if (await this.authPasswd(userId, pwd)) {
-            const [result] = await db.execute(`update users set passwd=? where id=?`, [
-                newPwd,
-                userId,
-            ])
+            const [result] = await db.execute(
+                `update users set passwd=?, passwdTime=now() where id=?`,
+                [newPwd, userId],
+            )
             return (result as ResultSetHeader).affectedRows === 1
         } else {
             return false

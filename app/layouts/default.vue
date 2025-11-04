@@ -18,7 +18,7 @@
             </NuxtLink>
         </template>
         <template #body>
-            <MainMenu :key="menuKey" :version="version" :menu="menuState" />
+            <MainMenu :version="version" :menu="menuState" />
         </template>
     </UHeader>
     <UProgress v-if="isWaiting" animation="elastic" size="2xs" />
@@ -26,7 +26,6 @@
     <UMain class="flex justify-center">
         <!-- show only if screen is desktop size -->
         <MainMenu
-            :key="menuKey"
             :version="version"
             :menu="menuState"
             class="hidden lg:flex w-[300px] h-[800px]"

@@ -31,10 +31,9 @@ const promptDialog = async () => {
     yourName.value = await confirm({
         message: "What is your name ?",
         lookupCode: yourName.value,
-        isPrompt: true
+        isPrompt: true,
     })
-    if (yourName.value) 
-        alert(yourName.value)
+    if (yourName.value) alert(yourName.value)
 }
 
 const preview = useKxReport()

@@ -118,10 +118,11 @@ const mainMenu: NavigationMenuItem[] = [
     },
 ]
 
-const menuState = ref<NavigationMenuItem[]>(mainMenu)
+import { reactive } from "vue"
+const menuState = reactive<NavigationMenuItem[]>(mainMenu)
+
 const setMenuSession = async () => {
     const { user } = useUserSession()
-    menuKey.value++
     await getMenuPermissionBy(mainMenu, user.value?.comCode, user.value?.id, user.value?.level)
 }
 
@@ -195,22 +196,28 @@ const countPermissions = (menu: NavigationMenuItem[]): number => {
 }
 
 const getMenuItemByRoute = (to: string): NavigationMenuItem => {
-    activeMenu.value = defaultMenu
-    for (const item of menuState.value) {
-        const menuItem = item.children?.find((i) => i.to === to)
-        if (menuItem) {
-            activeMenu.value = menuItem
-            break
-        }
-    }
+    activeMenu.value = findMenuItem(to) ?? defaultMenu
     return activeMenu.value as NavigationMenuItem
 }
 
-const menuKey = ref(0)
+const getPermission = (to: string): number => {
+    const menu = findMenuItem(to)
+    return menu ? menu.level : LEVELS.Disabled
+}
+
+const findMenuItem = (to: string): NavigationMenuItem | null => {
+    for (const item of menuState) {
+        const menuItem = item.children?.find((i) => i.to === to)
+        if (menuItem) {
+            activeMenu.value = menuItem
+            return activeMenu.value as NavigationMenuItem
+        }
+    }
+    return null
+}
 
 export default function usePayrollMenu() {
     return {
-        menuKey,
         loginUrl,
         activeMenu,
         menuState,
@@ -220,5 +227,6 @@ export default function usePayrollMenu() {
         permissionsFromMenu,
         countPermissions,
         getMenuItemByRoute,
+        getPermission,
     }
 }

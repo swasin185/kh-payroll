@@ -38,20 +38,8 @@
         </UFormField>
     </UForm>
     <USeparator class="mt-4" />
-    <UButton
-        class="m-4"
-        label="Permission"
-        icon="i-lucide-blinds"
-        @click="gotoPermission"
-        :disabled="!isAdmin"
-    />
-    <UButton
-        class="m-4"
-        label="Password"
-        icon="i-lucide-lock-keyhole"
-        @click="gotoPassword"
-        :disabled="!isAdmin"
-    />
+    <UButton class="m-4" label="Permission" icon="i-lucide-blinds" @click="gotoPermission" />
+    <UButton class="m-4" label="Password" icon="i-lucide-lock-keyhole" @click="gotoPassword" />
 </template>
 
 <script lang="ts" setup>
@@ -67,33 +55,35 @@ const search: Ref<string> = ref(user.value.id)
 
 const mode = ref(DBMODE.Idle)
 
-import type { Users } from "~~/shared/schema"
-import { UsersSchema } from "~~/shared/schema"
+import { UsersSchema, type Users } from "~~/shared/schema"
 
-const record = ref<Users>(UsersSchema.parse({}))
+const record = reactive<Users>(UsersSchema.parse({}))
 
 function newRecord(): void {
-    record.value = UsersSchema.parse({})
+    Object.assign(record, UsersSchema.parse({}))
 }
 
 async function onSelect() {
     if (!search.value) search.value = user.value.id
-    record.value = await $waitFetch("/api/users", {
-        method: "GET",
-        query: { id: search.value },
-    })
+    Object.assign(
+        record,
+        await $waitFetch("/api/users", {
+            method: "GET",
+            query: { id: search.value },
+        }),
+    )
 }
 
 async function onUpdate() {
     return await $waitFetch("/api/users", {
         method: "PUT",
         body: {
-            id: record.value.id,
-            name: record.value.name,
-            descript: record.value.descript,
-            level: record.value.level,
-            role: record.value.role,
-            comCode: record.value.comCode,
+            id: record.id,
+            name: record.name,
+            descript: record.descript,
+            level: record.level,
+            role: record.role,
+            comCode: record.comCode,
         },
     })
 }
@@ -107,12 +97,12 @@ async function onInsert() {
     return await $waitFetch("/api/users", {
         method: "POST",
         body: {
-            id: record.value.id,
-            name: record.value.name,
-            descript: record.value.descript,
-            level: record.value.level,
-            role: record.value.role,
-            comCode: record.value.comCode,
+            id: record.id,
+            name: record.name,
+            descript: record.descript,
+            level: record.level,
+            role: record.role,
+            comCode: record.comCode,
         },
     })
 }
@@ -122,14 +112,14 @@ const onPrint = async () => {}
 const gotoPermission = async () => {
     await navigateTo({
         path: "/permission",
-        query: { userId: record.value.id, comCode: record.value.comCode },
+        query: { userId: record.id, comCode: record.comCode },
     })
 }
 
 const gotoPassword = async () => {
     await navigateTo({
         path: "/password",
-        query: { userId: record.value.id },
+        query: { userId: record.id },
     })
 }
 

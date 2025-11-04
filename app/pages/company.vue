@@ -57,27 +57,29 @@ const { user } = useUserSession()
 const searchKey: Ref<string> = ref(user.value.comCode)
 const mode = ref(DBMODE.Idle)
 
-import type { Company  } from "~~/shared/schema"
-import { CompanySchema } from "~~/shared/schema"
+import { CompanySchema, type Company } from "~~/shared/schema"
 
-const record = ref<Company>(CompanySchema.parse({}))
+const record = reactive<Company>(CompanySchema.parse({}))
 
 function newRecord(): void {
-   record.value = CompanySchema.parse({})
+    Object.assign(record, CompanySchema.parse({}))
 }
 
 async function onSelect() {
     if (!searchKey.value) searchKey.value = user.value.comCode
-    record.value = await $waitFetch("/api/company", {
-        method: "GET",
-        query: { comCode: searchKey.value },
-    })
+    Object.assign(
+        record,
+        await $waitFetch("/api/company", {
+            method: "GET",
+            query: { comCode: searchKey.value },
+        }),
+    )
 }
 
 async function onUpdate() {
     return await $waitFetch("/api/company", {
         method: "PUT",
-        body: record.value,
+        body: record,
     })
 }
 
@@ -89,13 +91,11 @@ async function onDelete() {
 async function onInsert() {
     return await $waitFetch("/api/company", {
         method: "POST",
-        body: record.value,
+        body: record,
     })
 }
 
-function onPrint() {
-    
-}
+function onPrint() {}
 
 await onSelect()
 </script>
