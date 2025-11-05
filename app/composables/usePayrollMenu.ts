@@ -1,5 +1,5 @@
 import type { NavigationMenuItem } from "@nuxt/ui"
-import { ref } from "vue"
+import { ref, reactive } from "vue"
 
 const loginUrl = "/login"
 
@@ -118,7 +118,6 @@ const mainMenu: NavigationMenuItem[] = [
     },
 ]
 
-import { reactive } from "vue"
 const menuState = reactive<NavigationMenuItem[]>(mainMenu)
 
 const setMenuSession = async () => {

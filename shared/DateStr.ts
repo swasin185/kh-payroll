@@ -30,7 +30,7 @@ export default class DateStr {
     constructor(str: string | null) {
         if (!str) return
         const check = new Date(str)
-        if (check && !isNaN(check.getTime())) {
+        if (check && !Number.isNaN(check.getTime())) {
             this.isoDate = formatDate(check)
             this.year = this.isoDate.substring(0, 4)
             this.month = this.isoDate.substring(5, 7)

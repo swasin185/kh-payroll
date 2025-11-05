@@ -41,13 +41,11 @@ const filterInput = (event: Event) => {
         inputElement.value = DateStr.TODAY().localeDate
         return
     }
-    let filter = value.replace(/\/\/+/g, "/").replace(/[^\d/]/g, "")
+    let filter = value.replaceAll(/\/\/+/g, "/").replaceAll(/[^\d/]/g, "")
     let idx = filter.indexOf("/")
-    if (filter.length == 2 && idx == -1) filter += "/"
-    else if (
-        filter.length <= 5 &&
-        filter.length == idx + 3 &&
-        idx === filter.lastIndexOf("/")
+    if (
+        (filter.length == 2 && idx == -1) ||
+        (filter.length <= 5 && filter.length == idx + 3 && idx === filter.lastIndexOf("/"))
     )
         filter += "/"
     if (value !== filter) inputElement.value = filter
