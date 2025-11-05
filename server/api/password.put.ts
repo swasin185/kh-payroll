@@ -1,6 +1,7 @@
+import { authEventHandler } from "~~/server/utils/authEventHandler"
 import SqlUsers from "~~/server/database/SqlUsers"
 
-export default eventHandler(async (event) => {
+export default authEventHandler(async (event) => {
     const body = await readBody(event)
     const id = body.id?.toString().toLowerCase()
     const pwd = body.pwd?.toString()

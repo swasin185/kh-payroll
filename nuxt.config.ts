@@ -32,8 +32,8 @@ export default defineNuxtConfig({
         "/kxreport/**": {
             // proxy to report server https://192.168.1.12:8443/kxreport/**
             proxy: isDev
-                ? process.env.KXREPORT ?? "/api/kxreport"
-                : process.env.KXREPORT_HTTPS ?? "/api/kxreport",
+                ? process.env.KXREPORT ?? "/api/lobby/kxreport"
+                : process.env.KXREPORT_HTTPS ?? "/api/lobby/kxreport",
         },
     },
 })

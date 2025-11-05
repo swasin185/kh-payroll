@@ -100,3 +100,4 @@ export function formatMoney(value: number): string {
         maximumFractionDigits: 2,
     })
 }
+

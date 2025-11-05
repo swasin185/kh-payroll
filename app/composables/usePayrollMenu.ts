@@ -1,4 +1,5 @@
 import type { NavigationMenuItem } from "@nuxt/ui"
+import { ref } from "vue"
 
 const loginUrl = "/login"
 
@@ -125,7 +126,7 @@ const setMenuSession = async () => {
     await getMenuPermissionBy(mainMenu, user.value?.comCode, user.value?.id, user.value?.level)
 }
 
-import { LEVELS } from "~~/shared/utils"
+import { LEVELS } from "../../shared/utils"
 
 const getMenuPermissionBy = async (
     menu: NavigationMenuItem[],

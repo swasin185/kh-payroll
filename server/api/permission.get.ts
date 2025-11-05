@@ -1,6 +1,7 @@
+import { authEventHandler } from "~~/server/utils/authEventHandler"
 import SqlPermission from "~~/server/database/SqlPermission"
 
-export default eventHandler(async (event) => {
+export default authEventHandler(async (event) => {
     const query = getQuery(event)
     const userId = query.userId!.toString()
     const comCode = query.comCode!.toString()

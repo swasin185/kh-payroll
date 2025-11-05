@@ -36,14 +36,14 @@
         <UFormField label="Company" name="comCode">
             <DBLookup v-model:lookupKey="record.comCode" name="company" />
         </UFormField>
-        <UFormField label="วันที่รหัสผ่าน" name="passwdTime" class="w-40">
-            <UInput type="date" v-model="record.passwdTime" disabled />
+        <UFormField label="วันที่รหัสผ่าน" name="passwdTime" class="w-30">
+            <DateInput v-model="record.passwdTime" />
         </UFormField>
-        <UFormField label="วันที่สร้าง" name="created" class="w-40">
-            <UInput type="date" v-model="record.created" disabled />
+        <UFormField label="วันที่สร้าง" name="created" class="w-30">
+            <DateInput v-model="record.created" />
         </UFormField>
-        <UFormField label="วันที่ยกเลิก" name="stoped" class="w-40">
-            <UInput type="date" v-model="record.stoped" />
+        <UFormField label="วันที่ยกเลิก" name="stoped" class="w-30">
+            <DateInput v-model="record.stoped" />
         </UFormField>
     </UForm>
     <USeparator class="mt-4" />
@@ -65,7 +65,6 @@ const search: Ref<string> = ref(user.value.id)
 const mode = ref(DBMODE.Idle)
 
 import { UsersSchema, type Users } from "~~/shared/schema"
-import { union } from "zod"
 
 const record = reactive<Users>(UsersSchema.parse({}))
 

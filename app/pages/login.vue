@@ -50,7 +50,7 @@ const validate = (state: any): FormError[] => {
 import CryptoJS from "crypto-js"
 
 async function login() {
-    const loginOk = await $waitFetch("/api/auth/local", {
+    const loginOk = await $waitFetch("/api/lobby/login", {
         method: "POST",
         body: {
             id: state.userid,
