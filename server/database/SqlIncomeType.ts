@@ -12,7 +12,7 @@ export default {
              FROM incometype WHERE inCode=?`,
             [inCode],
         )
-        if (result.length != 1) return null
+        if (result.length !== 1) return null
         return IncomeTypeSchema.parse(result[0])
     },
 

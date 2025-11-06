@@ -1,6 +1,6 @@
 import { getDB } from "./pool"
 import { ResultSetHeader, RowDataPacket, escape } from "mysql2/promise"
-import { type Permission, PermissionsArraySchema } from "../../shared/schema"
+import { type Permission } from "../../shared/schema"
 
 
 const db = getDB()
@@ -15,7 +15,7 @@ export default {
              ORDER BY program`,
             [userId, company],
         )
-        return PermissionsArraySchema.parse(rows)
+        return rows as Permission[]
     },
 
     async deleteAll(comCode: string, userId: string): Promise<boolean> {

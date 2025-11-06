@@ -1,7 +1,7 @@
 import { getDB } from "./pool"
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
 import { type LookupItem } from "~~/shared/types"
-import { type Company, CompanySchema } from "../../shared/schema"
+import { type Company, CompanySchema, CompanyArraySchema } from "../../shared/schema"
 
 const db = getDB()
 
@@ -10,13 +10,13 @@ export default {
         const [result] = await db.query<RowDataPacket[]>(`SELECT * FROM company WHERE comCode=?`, [
             comCode,
         ])
-        if (result.length != 1) return null
+        if (result.length !== 1) return null
         return CompanySchema.parse(result[0])
     },
 
     async selectAll(): Promise<Company[]> {
-        const [rows] = await db.query<RowDataPacket[]>(`SELECT * FROM company order by comCode`)
-        return rows as Company[]
+        const [rows] = await db.query<RowDataPacket[]>(`SELECT * FROM company ORDER BY comCode`)
+        return CompanyArraySchema.parse(rows)
     },
 
     async insert(com: Company): Promise<boolean> {

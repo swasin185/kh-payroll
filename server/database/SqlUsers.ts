@@ -1,5 +1,5 @@
 import { getDB } from "./pool"
-import type { LookupItem } from "~~/shared/types"
+import { type LookupItem } from "~~/shared/types"
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
 import { type Users, UsersSchema } from "../../shared/schema"
 
@@ -15,8 +15,8 @@ export default {
              FROM users WHERE id=?`,
             [userId],
         )
-        if (result.length != 1) return null
-        else return UsersSchema.parse(result[0])
+        if (result.length !== 1) return null
+        return UsersSchema.parse(result[0])
     },
 
     async lookup(): Promise<LookupItem[]> {

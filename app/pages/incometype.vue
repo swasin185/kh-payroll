@@ -50,7 +50,6 @@
 <script lang="ts" setup>
 definePageMeta({ keepalive: true })
 
-import type { boolean } from "zod"
 import { IncomeTypeSchema, type IncomeType } from "~~/shared/schema"
 import { DBMODE } from "~~/shared/utils"
 

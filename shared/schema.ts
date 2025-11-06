@@ -24,6 +24,8 @@ export const CompanySchema = z.object({
 })
 export type Company = z.infer<typeof CompanySchema>
 
+export const CompanyArraySchema = z.array(CompanySchema)
+
 export const UsersSchema = z.object({
     id: UserIdAttr,
     name: z.string().min(3).max(40).default("name"),
@@ -48,7 +50,6 @@ export const PermissionSchema = z
     })
     .strict()
 export type Permission = z.infer<typeof PermissionSchema>
-export const PermissionsArraySchema = z.array(PermissionSchema)
 
 export const LogsSchema = z.object({
     logNr: z.number().int().positive().optional(),

@@ -3,8 +3,8 @@ import { $fetch } from "@nuxt/test-utils/e2e"
 import DateStr from "../../shared/DateStr"
 
 describe("API endpoints", async () => {
-    it("GET /api/lobby/today " + DateStr.TODAY().isoDate, async () => {
-        const res = await $fetch("/api/lobby/today")
+    it("GET /api/today " + DateStr.TODAY().isoDate, async () => {
+        const res = await $fetch("/api/today")
         expect(res).toBe(DateStr.TODAY().isoDate)
     })
 
@@ -17,13 +17,13 @@ describe("API endpoints", async () => {
         comCode: "01",
     }
 
-    it("GET /api/lobby/counter", async () => {
-        const res = await $fetch("/api/lobby/counter")
+    it("GET /api/counter", async () => {
+        const res = await $fetch("/api/counter")
         expect(res).greaterThanOrEqual(0)
     })
 
-    it("POST /api/lobby/login", async () => {
-        const res0 = await $fetch("/api/lobby/login", {
+    it("POST /api/login", async () => {
+        const res0 = await $fetch("/api/login", {
             method: "POST",
             body: { id: testUser.id, pwd: "wrongpassword" },
         })
