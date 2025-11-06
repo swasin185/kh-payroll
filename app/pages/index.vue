@@ -9,10 +9,15 @@
     <USeparator />Test Report
     <UButton class="m-4" label="Open Report" @click="preview(params)" />
     <UButton class="m-4" label="Save Report" @click="preview(params, 'fname')" />
+    <USeparator />Money Input
+    <MoneyInput v-model="money" class="m-4"/>
+    
 </template>
 
 <script lang="ts" setup>
 // definePageMeta({ keepalive: true })
+
+const money = ref<number>(1234567.89)
 
 const isWaiting = useWaiting()
 const confirm = useDialog()
@@ -38,6 +43,7 @@ const promptDialog = async () => {
 
 const preview = useKxReport()
 
+import MoneyInput from "~/components/MoneyInput.vue"
 import type { ReportParameter } from "~~/shared/types"
 
 const params: ReportParameter = {

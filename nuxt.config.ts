@@ -1,4 +1,5 @@
 const isDev = process.env.NODE_ENV !== "production"
+const mockReportApi = "/api/lobby/kxreport"
 
 export default defineNuxtConfig({
     ssr: false,
@@ -32,8 +33,8 @@ export default defineNuxtConfig({
         "/kxreport/**": {
             // proxy to report server https://192.168.1.12:8443/kxreport/**
             proxy: isDev
-                ? process.env.KXREPORT ?? "/api/lobby/kxreport"
-                : process.env.KXREPORT_HTTPS ?? "/api/lobby/kxreport",
+                ? process.env.KXREPORT ?? mockReportApi
+                : process.env.KXREPORT_HTTPS ?? mockReportApi,
         },
     },
 })

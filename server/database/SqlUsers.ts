@@ -10,7 +10,7 @@ export default {
         const [result] = await db.query<RowDataPacket[]>(
             `
             SELECT id, name, descript, level, role, 
-                LEFT(passwdTime, 10) passwdTime, 
+                passwdTime, 
                 LEFT(created, 10) created, 
                 LEFT(stoped, 10) stoped, comCode
             FROM users WHERE id=?`,

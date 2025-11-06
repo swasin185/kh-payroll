@@ -2,6 +2,7 @@ import { z } from "zod"
 
 const ComCodeAttr = z.string().max(2).default("")
 const UserIdAttr = z.string().max(16).default("")
+const DateAttr = z.string().max(10).nullable().default(null)
 
 export const CompanySchema = z.object({
     comCode: ComCodeAttr,
@@ -31,8 +32,8 @@ export const UsersSchema = z.object({
     role: z.string().max(16).nullable().default(null),
     passwd: z.string().max(32).nullable().default(null).optional(),
     passwdTime: z.string().nullable().default(null).optional(),
-    created: z.string().nullable().default(null).optional(),
-    stoped: z.string().nullable().default(null).optional(),
+    created: DateAttr.optional(),
+    stoped: DateAttr,
     comCode: ComCodeAttr.nullable().default("01"),
 })
 export type Users = z.infer<typeof UsersSchema>

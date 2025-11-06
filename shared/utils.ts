@@ -95,9 +95,10 @@ export function formatDate(date: Date): string {
 }
 
 export function formatMoney(value: number): string {
-    return value.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    })
+    return value.toLocaleString("en-US", moneyOption)
 }
 
+export const moneyOption = {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+}

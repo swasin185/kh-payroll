@@ -4,6 +4,7 @@
         type="text"
         placeholder="dd/mm/yyyy"
         maxLength="10"
+        class="w-30"
         @blur="handleBlur"
         @input="filterInput"
     />

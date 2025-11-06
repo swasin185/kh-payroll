@@ -16,11 +16,6 @@ export default defineAppConfig({
                 th: "p-0",
             },
         },
-        inputNumber: {
-            slots: {
-                base: "text-right",
-            },
-        },
         input: {
             slots: {
                 root: "w-full",

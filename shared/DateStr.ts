@@ -9,9 +9,8 @@ export default class DateStr {
     }
 
     // Initilized at plugins
-    // const today = await $fetch("/api/lobby/today")
-    // DateStr.init(today)
-    public static init(date: string = new Date().toLocaleString("sv-SE").substring(0, 10)) {
+    // DateStr.init(await $fetch("/api/lobby/today"))
+    public static init(date: string = formatDate(new Date())) {
         DateStr._TODAY = new DateStr(date)
         console.log("Today is", DateStr._TODAY.localeDate)
     }
@@ -36,8 +35,7 @@ export default class DateStr {
             this.month = this.isoDate.substring(5, 7)
             this.day = this.isoDate.substring(8, 10)
             this.localeDate = `${this.day}/${this.month}/${this.year}`
-        } else {
+        } else
             console.error(`Date Value Invalid ${str}`)
-        }
     }
 }

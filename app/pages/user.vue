@@ -36,13 +36,13 @@
         <UFormField label="Company" name="comCode">
             <DBLookup v-model:lookupKey="record.comCode" name="company" />
         </UFormField>
-        <UFormField label="วันที่รหัสผ่าน" name="passwdTime" class="w-30">
-            <DateInput v-model="record.passwdTime" disabled />
+        <UFormField label="วันที่รหัสผ่าน" name="passwdTime" class="w-40">
+            <UInput v-model="record.passwdTime" disabled />
         </UFormField>
-        <UFormField label="วันที่สร้าง" name="created" class="w-30">
+        <UFormField label="วันที่สร้าง" name="created" >
             <DateInput v-model="record.created" disabled />
         </UFormField>
-        <UFormField label="วันที่ยกเลิก" name="stoped" class="w-30">
+        <UFormField label="วันที่ยกเลิก" name="stoped">
             <DateInput v-model="record.stoped" />
         </UFormField>
     </UForm>
