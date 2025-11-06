@@ -1,27 +1,27 @@
 import { getDB } from "./pool"
 import type { LookupItem } from "~~/shared/types"
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
-import { Users } from "~~/shared/schema"
+import { type Users, UsersSchema } from "../../shared/schema"
 
 const db = getDB()
 
 export default {
-    async select(userId: string): Promise<Users> {
+    async select(userId: string): Promise<Users | null> {
         const [result] = await db.query<RowDataPacket[]>(
-            `
-            SELECT id, name, descript, level, role, 
-                passwdTime, 
-                LEFT(created, 10) created, 
-                LEFT(stoped, 10) stoped, comCode
-            FROM users WHERE id=?`,
+            `SELECT id, name, descript, level, role, 
+                 passwdTime, 
+                 LEFT(created, 10) created, 
+                 LEFT(stoped, 10) stoped, comCode
+             FROM users WHERE id=?`,
             [userId],
         )
-        return result[0] as Users
+        if (result.length != 1) return null
+        else return UsersSchema.parse(result[0])
     },
 
     async lookup(): Promise<LookupItem[]> {
         const [result] = await db.query(`
-            SELECT id, concat(id, ' : ', name) as label 
+            SELECT id, concat(id, ' : ', name) AS label 
             FROM users 
             WHERE id!='admin' 
             ORDER BY id`)
@@ -31,22 +31,21 @@ export default {
     async insert(user: Users): Promise<boolean> {
         user.id = user.id.toLowerCase().trim()
         const [result] = await db.execute(
-            `insert into users (id, name, descript, level, role, comCode) 
-             values (?,?,?,?,?,?)`,
+            `INSERT INTO users (id, name, descript, level, role, comCode) 
+             VALUES (?,?,?,?,?,?)`,
             [user.id, user.name, user.descript, user.level, user.role, user.comCode],
         )
         return (result as ResultSetHeader).affectedRows === 1
     },
 
     async delete(userId: string): Promise<boolean> {
-        const [result] = await db.execute(`delete from users where id=?`, [userId])
-        console.log("delete", userId, (result as ResultSetHeader).affectedRows)
+        const [result] = await db.execute(`DELETE FROM users WHERE id=?`, [userId])
         return (result as ResultSetHeader).affectedRows === 1
     },
 
     async update(user: Users): Promise<boolean> {
         const [result] = await db.execute(
-            `update users set name=?, descript=?, level=?, role=?, comCode=? where id=?`,
+            `UPDATE users SET name=?, descript=?, level=?, role=?, comCode=? WHERE id=?`,
             [user.name, user.descript, user.level, user.role, user.comCode, user.id],
         )
         return (result as ResultSetHeader).affectedRows === 1

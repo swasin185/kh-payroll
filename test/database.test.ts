@@ -50,6 +50,6 @@ describe("Payroll MariaDB", async () => {
         const result = await SqlUsers.delete(TEST_USER_ID)
         expect(result).toBe(true)
         const user = await SqlUsers.select(TEST_USER_ID)
-        expect(user).toBeUndefined()
+        expect(user).toBeNull()
     })
 })

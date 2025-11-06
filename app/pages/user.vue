@@ -55,17 +55,14 @@
 definePageMeta({ keepalive: true })
 
 import { DBMODE, LEVEL_ITEMS } from "~~/shared/utils"
+import { UsersSchema, type Users } from "~~/shared/schema"
 
 const form = useTemplateRef("form")
 const { $waitFetch } = useNuxtApp()
 const { user } = useUserSession()
 const { isAdmin } = usePayrollMenu()
 const search: Ref<string> = ref(user.value.id)
-
 const mode = ref(DBMODE.Idle)
-
-import { UsersSchema, type Users } from "~~/shared/schema"
-
 const record = reactive<Users>(UsersSchema.parse({}))
 
 function newRecord(): void {

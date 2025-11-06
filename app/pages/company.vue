@@ -49,16 +49,14 @@
 <script lang="ts" setup>
 definePageMeta({ keepalive: true })
 
-const form = useTemplateRef("form")
-
+import { CompanySchema, type Company } from "~~/shared/schema"
 import { DBMODE } from "~~/shared/utils"
+
+const form = useTemplateRef("form")
 const { $waitFetch } = useNuxtApp()
 const { user } = useUserSession()
 const searchKey: Ref<string> = ref(user.value.comCode)
 const mode = ref(DBMODE.Idle)
-
-import { CompanySchema, type Company } from "~~/shared/schema"
-
 const record = reactive<Company>(CompanySchema.parse({}))
 
 function newRecord(): void {

@@ -82,6 +82,17 @@ describe("API endpoints", async () => {
         const user = (res as any[]).find((u) => u.id === testUser.id)
         expect(user).toHaveProperty("id", testUser.id)
     })
+    
+    it("PUT /api/users/password", async () => {
+        const res = await $fetch("/api/users/password", {
+            method: "PUT",
+            body: { id: testUser.id, pwd: "", newPwd: "xxx" },
+            headers: {
+                "x-test-user": "vitest", // bypass authEventHandler()
+            },
+        })
+        expect(res).toBe(true)
+    })
 
     it("DELETE /api/users", async () => {
         const res = await $fetch("/api/users", {
@@ -93,4 +104,5 @@ describe("API endpoints", async () => {
         })
         expect(res).toBe(true)
     })
+
 })

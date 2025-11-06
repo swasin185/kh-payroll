@@ -8,9 +8,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
         const { getMenuItemByRoute } = usePayrollMenu()
         const menuSelected = getMenuItemByRoute(to.path)
         const menuLevel = menuSelected!.level
-        if (menuLevel < LEVELS.Viewer) 
-            return navigateTo(loginUrl)
+        if (menuLevel < LEVELS.Viewer) return navigateTo(loginUrl)
         if (menuLevel >= LEVELS.Entry && menuLevel <= LEVELS.Admin)
-            $fetch("/api/permission-used", { method: "PUT", query: { program: to.path } })
+            $fetch("/api/permission/used", { method: "PUT", query: { program: to.path } })
     }
 })

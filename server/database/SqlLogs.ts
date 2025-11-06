@@ -1,6 +1,6 @@
 import { getDB } from "./pool"
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
-import type { Logs } from "~~/shared/schema"
+import type { Logs } from "../../shared/schema"
 
 const db = getDB()
 

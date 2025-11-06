@@ -1,4 +1,3 @@
-import { authEventHandler } from "~~/server/utils/authEventHandler"
 import SqlPermission from "~~/server/database/SqlPermission"
 
 export default authEventHandler(async (event) => {

@@ -48,6 +48,7 @@ export const PermissionSchema = z
     })
     .strict()
 export type Permission = z.infer<typeof PermissionSchema>
+export const PermissionsArraySchema = z.array(PermissionSchema)
 
 export const LogsSchema = z.object({
     logNr: z.number().int().positive().optional(),
@@ -63,3 +64,15 @@ export const LogsSchema = z.object({
     comCode: ComCodeAttr.nullable().optional(),
 })
 export type Logs = z.infer<typeof LogsSchema>
+
+
+export const IncomeTypeSchema = z.object({
+    inCode: z.string().min(2).max(2).optional(),
+    inName: z.string().max(30).optional(),
+    inType: z.number().int().min(-1).max(1).optional().default(1),
+    isTax: z.coerce.boolean().optional().default(true),
+    isReset: z.coerce.boolean().optional().default(true),
+    initLimit: z.coerce.number().min(0).max(999999).optional().default(0),
+    initPercent: z.coerce.number().min(0).max(99.99).optional().default(0),
+})
+export type IncomeType = z.infer<typeof IncomeTypeSchema>

@@ -87,7 +87,7 @@ import { LEVELS } from "~~/shared/utils"
 
 async function changePassword(): Promise<void> {
     await (form.value as any).validate()
-    const result = await $waitFetch("/api/password", {
+    const result = await $waitFetch("/api/users/password", {
         method: "PUT",
         body: {
             id: chgUser.value,

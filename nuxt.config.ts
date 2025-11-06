@@ -1,5 +1,5 @@
 const isDev = process.env.NODE_ENV !== "production"
-const mockReportApi = "/api/lobby/kxreport"
+const mockReportApi = "/api/kxreport"
 
 export default defineNuxtConfig({
     ssr: false,

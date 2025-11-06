@@ -37,7 +37,7 @@ const mainMenu: NavigationMenuItem[] = [
                 disabled: true,
             },
             { label: "ตำแหน่งงาน", to: "/position", icon: "i-lucide-boxes", disabled: true },
-            { label: "ประเภทเงินได้/หัก", to: "/income", icon: "i-lucide-dollar-sign" },
+            { label: "ประเภทเงินได้/หัก", to: "/incometype", icon: "i-lucide-dollar-sign" },
             { label: "วิธีคิดล่วงเวลา", to: "/ottype", icon: "i-lucide-clock", disabled: true },
         ],
     },
@@ -84,7 +84,7 @@ const mainMenu: NavigationMenuItem[] = [
             { label: "ประมวลผลงวด", to: "/calculate", icon: "i-lucide-calculator", disabled: true },
             {
                 label: "เงินได้/หัก ประจำงวด",
-                to: "/payrollincome",
+                to: "/income",
                 icon: "i-lucide-file-bar-chart-2",
                 disabled: true,
             },

@@ -50,7 +50,7 @@ const columns: TableColumn<Company>[] = [
 const { $waitFetch } = useNuxtApp()
 const lookupKey = defineModel<string>("lookupKey")
 import {reactive} from "vue"
-const companies = reactive<Company[]>(await $waitFetch("/api/companyList"))
+const companies = reactive<Company[]>(await $waitFetch("/api/company/list"))
 const i = companies.findIndex((com) => com.comCode == lookupKey.value)
 const rowSelection: Ref<any> = ref({ [i]: true, comCode: lookupKey.value })
 const rowIdx = ref(i)

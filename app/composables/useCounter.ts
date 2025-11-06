@@ -7,10 +7,10 @@ export default function useCounter() {
         const idleLimit = config.public.idleLimit
         const scheduleTime = config.public.schedule as number
 
-        counter.value = await $fetch("/api/lobby/counter", { cache: "no-store" })
+        counter.value = await $fetch("/api/counter", { cache: "no-store" })
         const intervalId = setInterval(async () => {
             try {
-                counter.value = await $fetch("/api/lobby/counter", { cache: "no-store" })
+                counter.value = await $fetch("/api/counter", { cache: "no-store" })
                 if (loggedIn.value) {
                     await refreshSession()
                     if (!loggedIn.value && activeMenu.value.label! !== loginUrl) {
