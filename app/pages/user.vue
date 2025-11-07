@@ -31,12 +31,12 @@
             <USelect v-model="record.level" :disabled="!isAdmin" :items="LEVEL_ITEMS" />
         </UFormField>
         <UFormField label="ROLE" name="role">
-            <DBLookup v-model:lookupKey="record.role" name="role" :disabled="!isAdmin" />
+            <DBLookup v-model:lookupKey="record.role" name="role" :disabled="!isAdmin" class="w55"/>
         </UFormField>
         <UFormField label="Company" name="comCode">
-            <DBLookup v-model:lookupKey="record.comCode" name="company" />
+            <DBLookup v-model:lookupKey="record.comCode" name="company" class="w-70"/>
         </UFormField>
-        <UFormField label="วันที่รหัสผ่าน" name="passwdTime" class="w-40">
+        <UFormField label="วันที่รหัสผ่าน" name="passwdTime" class="w-45">
             <UInput v-model="record.passwdTime" disabled />
         </UFormField>
         <UFormField label="วันที่สร้าง" name="created" >

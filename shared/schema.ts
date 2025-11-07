@@ -9,7 +9,7 @@ function toLocaleDate(date: Date | null | undefined) {
     return date ? formatDate(date) : null
 }
 
-const ComCodeAttr = z.string().min(2).max(2)
+const ComCodeAttr = z.string().max(2).default("")
 
 const UserIdAttr = z.string().min(3).max(16)
 

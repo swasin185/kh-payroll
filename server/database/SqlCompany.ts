@@ -10,6 +10,7 @@ export default {
         const [result] = await db.query<RowDataPacket[]>(`SELECT * FROM company WHERE comCode=?`, [
             comCode,
         ])
+        console.log(result[0])
         if (result.length !== 1) return null
         return CompanySchema.parse(result[0])
     },
