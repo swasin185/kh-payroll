@@ -1,8 +1,18 @@
 import { z } from "zod"
+import { formatDate, formatDateTime } from "./utils"
+
+const toLocaleDateTime = (time: Date | null | undefined) => {
+    return time ? formatDateTime(time) : null
+}
+
+const toLocaleDate = (date: Date | null | undefined) => {
+    return date ? formatDate(date) : null
+}
 
 const ComCodeAttr = z.string().max(2).default("")
 const UserIdAttr = z.string().max(16).default("")
-const DateAttr = z.string().max(10).nullable().default(null)
+const DateAttr = z.coerce.date().nullable().default(null).transform(toLocaleDate)
+const TimeAttr = z.coerce.date().nullable().default(null).optional().transform(toLocaleDateTime)
 
 export const CompanySchema = z.object({
     comCode: ComCodeAttr,
@@ -33,8 +43,8 @@ export const UsersSchema = z.object({
     level: z.int().min(0).max(9).default(0),
     role: z.string().max(16).nullable().default(null),
     passwd: z.string().max(32).nullable().default(null).optional(),
-    passwdTime: z.string().nullable().default(null).optional(),
-    created: DateAttr.optional(),
+    passwdTime: TimeAttr,
+    created: DateAttr,
     stoped: DateAttr,
     comCode: ComCodeAttr.nullable().default("01"),
 })
@@ -53,7 +63,7 @@ export type Permission = z.infer<typeof PermissionSchema>
 
 export const LogsSchema = z.object({
     logNr: z.number().int().positive().optional(),
-    logTime: z.number().int().positive().optional(),
+    logTime: TimeAttr,
     logType: z
         .enum(["insert", "delete", "update", "query", "rollback", "login", "logfail", "execute"])
         .nullable()
@@ -65,7 +75,6 @@ export const LogsSchema = z.object({
     comCode: ComCodeAttr.nullable().optional(),
 })
 export type Logs = z.infer<typeof LogsSchema>
-
 
 export const IncomeTypeSchema = z.object({
     inCode: z.string().min(2).max(2).optional(),

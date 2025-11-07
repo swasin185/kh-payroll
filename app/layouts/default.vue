@@ -44,7 +44,7 @@ const { counter, setScheduleCount } = useCounter()
 setScheduleCount()
 
 const { user, fetch: refreshSession } = useUserSession()
-const { menuKey, menuState, activeMenu, setMenuSession } = usePayrollMenu()
+const { menuState, activeMenu, setMenuSession } = usePayrollMenu()
 await setMenuSession()
 const config = useRuntimeConfig()
 const date = new Date(config.public.buildTime)
@@ -59,7 +59,7 @@ const onSelectCom = () =>
         lookupCode: user.value.comCode,
     }).then(async (code: string) => {
         if (!code) return
-        await $waitFetch("/api/company-session", {
+        await $waitFetch("/api/company/session", {
             method: "PUT",
             query: { comCode: code },
         })

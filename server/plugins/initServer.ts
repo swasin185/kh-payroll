@@ -5,7 +5,7 @@ export default defineNitroPlugin(async (nitroApp) => {
     console.log("Server initialized at startup")
     try {
         const users = await SqlUsers.select("admin")
-        console.log("[DB] is connected -", users.id, users.name, users.created)
+        console.log("[DB] is connected -", users?.id, users?.name, users?.created)
     } catch (error) {
         console.log(error)
     }

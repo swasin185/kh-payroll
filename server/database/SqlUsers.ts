@@ -9,15 +9,12 @@ export default {
     async select(userId: string): Promise<Users | null> {
         const [result] = await db.query<RowDataPacket[]>(
             `SELECT id, name, descript, level, role, 
-                 passwdTime, 
-                 LEFT(created, 10) created, 
-                 LEFT(stoped, 10) stoped, comCode
+                 passwdTime, created, stoped, comCode
              FROM users WHERE id=?`,
             [userId],
         )
         if (result.length !== 1) return null
-        console.log(result[0])
-        return result[0] as Users //UsersSchema.parse(result[0])
+        return UsersSchema.parse(result[0])
     },
 
     async lookup(): Promise<LookupItem[]> {

@@ -1,8 +1,9 @@
 import SqlPermission from "~~/server/database/SqlPermission"
-import type { Permission } from "~~/shared/schema"
+import { type Permission } from "~~/shared/schema"
 
-export const put = authEventHandler(async (event) => {
+export default authEventHandler(async (event) => {
     const body = await readBody(event)
+    console.log("permission put", body)
     return SqlPermission.updateAll(
         body.comCode, 
         body.userId, 

@@ -1,5 +1,5 @@
 import SqlCompany from "~~/server/database/SqlCompany"
 
-export const list = authEventHandler(async (event) => {
+export default authEventHandler(async (event) => {
     return await SqlCompany.selectAll()
 })

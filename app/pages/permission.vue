@@ -65,10 +65,11 @@ const { user } = useUserSession()
 const search: Ref<string> = ref(user.value.id)
 const comCode = ref<string>("00")
 
-onActivated(() => {
+onActivated(async () => {
     const route = useRoute()
     search.value = route.query.userId || user.value.id
     comCode.value = route.query.comCode || user.value.comCode
+    await onSelect()
 })
 
 const copyUser = ref<string>("")
@@ -89,7 +90,6 @@ function newRecord(): void {
 
 async function onSelect() {
     if (!search.value || !comCode.value) return
-    console.log("get permission", search.value, comCode.value)
     permissions.value = await permissionsToMenu(comCode.value, search.value, LEVELS.Viewer)
 }
 
@@ -128,5 +128,4 @@ async function copyPermissions() {
     permissions.value = await permissionsToMenu(copyComCode.value, copyUser.value, LEVELS.Viewer)
 }
 
-await onSelect()
 </script>
