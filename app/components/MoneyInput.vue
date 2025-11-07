@@ -7,7 +7,7 @@
             ...moneyOption
         }"
         locale="en-US"
-        placeholder="±#,###,###.##"
+        placeholder="±#,###.##"
         maxLength="20"
         :ui="{ base: 'w-32 text-right' }"
         :increment="false"

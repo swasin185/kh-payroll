@@ -1,29 +1,38 @@
 import { z } from "zod"
 import { formatDate, formatDateTime } from "./utils"
 
-const toLocaleDateTime = (time: Date | null | undefined) => {
+function toLocaleDateTime(time: Date | null | undefined) {
     return time ? formatDateTime(time) : null
 }
 
-const toLocaleDate = (date: Date | null | undefined) => {
+function toLocaleDate(date: Date | null | undefined) {
     return date ? formatDate(date) : null
 }
 
-const ComCodeAttr = z.string().max(2).default("")
-const UserIdAttr = z.string().max(16).default("")
+const ComCodeAttr = z.string().min(2).max(2)
+
+const UserIdAttr = z.string().min(3).max(16)
+
 const DateAttr = z.coerce.date().nullable().default(null).transform(toLocaleDate)
+
 const TimeAttr = z.coerce.date().nullable().default(null).optional().transform(toLocaleDateTime)
+
+const MoneyAttr = z.coerce.number().min(-999_999_999).max(999_999_999).nullable().optional().default(null)
+
+const PercentAttr = z.coerce.number().min(0).max(100).nullable().optional().default(null)
+
+const BooleanAttr = z.coerce.boolean().optional().default(true)
 
 export const CompanySchema = z.object({
     comCode: ComCodeAttr,
-    comName: z.string().max(90).min(1, "Company name is required.").default("Company Name"),
+    comName: z.string().max(90).min(5, "Company name is required.").default(""),
     taxId: z.string().max(13).min(13).nullable().default(null),
     address: z.string().max(200).nullable().default(null),
     phone: z.string().max(100).nullable().default(null),
     email1: z.email().max(30).nullable().default(null),
     email2: z.email().max(30).nullable().default(null),
     email3: z.email().max(30).nullable().default(null),
-    yrPayroll: z.number().int().min(1900).max(2500).default(new Date().getFullYear()).optional(),
+    yrPayroll: z.number().int().min(1900).max(2200).default(new Date().getFullYear()).optional(),
     mnPayroll: z
         .number()
         .int()
@@ -37,11 +46,11 @@ export type Company = z.infer<typeof CompanySchema>
 export const CompanyArraySchema = z.array(CompanySchema)
 
 export const UsersSchema = z.object({
-    id: UserIdAttr,
-    name: z.string().min(3).max(40).default("name"),
+    id: UserIdAttr.default("xxx"),
+    name: z.string().min(3).max(40).default(""),
     descript: z.string().max(60).nullable().default(null),
     level: z.int().min(0).max(9).default(0),
-    role: z.string().max(16).nullable().default(null),
+    role: UserIdAttr.nullable().default(null),
     passwd: z.string().max(32).nullable().default(null).optional(),
     passwdTime: TimeAttr,
     created: DateAttr,
@@ -80,9 +89,9 @@ export const IncomeTypeSchema = z.object({
     inCode: z.string().min(2).max(2).optional(),
     inName: z.string().max(30).optional(),
     inType: z.number().int().min(-1).max(1).optional().default(1),
-    isTax: z.coerce.boolean().optional().default(true),
-    isReset: z.coerce.boolean().optional().default(true),
-    initLimit: z.coerce.number().min(0).max(999999).optional().default(0),
-    initPercent: z.coerce.number().min(0).max(99.99).optional().default(0),
+    isTax: BooleanAttr,
+    isReset: BooleanAttr,
+    initLimit: MoneyAttr,
+    initPercent: PercentAttr,
 })
 export type IncomeType = z.infer<typeof IncomeTypeSchema>

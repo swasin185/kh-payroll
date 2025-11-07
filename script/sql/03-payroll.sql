@@ -74,8 +74,8 @@ create table incometype (
     inType         tinyint default 1 comment "เป็นเงินได้ (1) หรือ เงินหัก (-1)",
     isTax          boolean default true comment "คิดภาษีประจำปีหรือไม่",
     isReset        boolean default true comment "reset เป็นศูนย์ ในเดือนต่อไป",
-    initLimit      decimal(9,2) default 0 comment "ค่าเริ่มต้นสำหรับทุกๆคนไม่เกิน",
-    initPercent    decimal(4,2) default 0 comment "อัตราค่าเริ่มต้นสำหรับทุกๆคน",
+    initLimit      decimal(9,2) default 0 comment "มูลค่าจำกัด ไม่เกิน",
+    initPercent    decimal(4,2) default 0 comment "มูลค่าคิดเป็นเปอร์เซ็นฐานเงินเดือน",
     primary key (inCode)
 ) comment = "ประเภทเงินได้ เงินหัก";
 

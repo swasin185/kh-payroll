@@ -33,10 +33,10 @@
         <UFormField label="รีเซ็ตเมื่อปิดงวด" name="isReset" class="w-54">
             <USwitch v-model="record.isReset" />
         </UFormField>
-        <UFormField label="ค่าเริ่มต้นสำหรับทุกๆคนไม่เกิน" name="initLimit">
+        <UFormField label="มูลค่าจำกัด ไม่เกิน" name="initLimit">
             <MoneyInput v-model="record.initLimit" />
         </UFormField>
-        <UFormField label="อัตราค่าเริ่มต้นสำหรับทุกๆคน" name="initPercent">
+        <UFormField label="มูลค่าคิดเป็นเปอร์เซ็นฐานเงินเดือน" name="initPercent">
             <UInputNumber
                 v-model="record.initPercent"
                 :step="0.01"
