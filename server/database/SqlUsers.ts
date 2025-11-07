@@ -16,7 +16,8 @@ export default {
             [userId],
         )
         if (result.length !== 1) return null
-        return UsersSchema.parse(result[0])
+        console.log(result[0])
+        return result[0] as Users //UsersSchema.parse(result[0])
     },
 
     async lookup(): Promise<LookupItem[]> {
