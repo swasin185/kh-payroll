@@ -16,6 +16,7 @@ export default eventHandler(async (event) => {
     try {
         if (await SqlUsers.authPasswd(userId, password)) {
             const authUser = await SqlUsers.select(userId)
+            if (!authUser) return false
             const company = await SqlCompany.select(authUser.comCode!)
             await setUserSession(event, {
                 user: {
@@ -29,11 +30,10 @@ export default eventHandler(async (event) => {
                 },
             })
             const sess = await getUserSession(event)
-            await renewSession(sess?.id, authUser.id)
+            await renewSession(sess.id, authUser.id)
             return true
-        } else {
-            return false
-        }
+        } 
+        return false
     } catch (error) {
         throw createError(error as Error)
     }

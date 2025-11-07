@@ -59,12 +59,12 @@ onActivated(() => {
 
 import { z } from "zod"
 
-const pwdMessage = "รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร"
+const mesg = "รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร"
 const ChangePasswordSchema = z
     .object({
         currentPassword: z.string(),
-        newPassword: z.string().min(6, pwdMessage),
-        confirmPassword: z.string().min(6, pwdMessage),
+        newPassword: z.string().min(6, mesg),
+        confirmPassword: z.string().min(6, mesg),
     })
     .refine((data) => data.newPassword === data.confirmPassword, {
         message: "รหัสผ่านใหม่และการยืนยันไม่ตรงกัน",

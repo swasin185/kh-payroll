@@ -21,7 +21,7 @@ export default {
 
     async lookup(): Promise<LookupItem[]> {
         const [result] = await db.query(`
-            SELECT id, concat(id, ' : ', name) AS label 
+            SELECT id, CONCAT(id, ' : ', name) AS label 
             FROM users 
             WHERE id!='admin' 
             ORDER BY id`)
@@ -58,16 +58,15 @@ export default {
                 [newPwd, userId],
             )
             return (result as ResultSetHeader).affectedRows === 1
-        } else {
-            return false
-        }
+        } 
+        return false
     },
 
     async authPasswd(userId: string, pwd: string) {
         const [result] = await db.query<RowDataPacket[]>(
-            `select id from users where id=? and (passwd is null or passwd=?)`,
+            `SELECT id FROM users WHERE id=? AND (passwd IS null OR passwd=?)`,
             [userId, pwd],
         )
-        return result.length === 1
+        return result && result.length === 1
     },
 }

@@ -9,7 +9,7 @@ export default class DateStr {
     }
 
     // Initilized at plugins
-    // DateStr.init(await $fetch("/api/lobby/today"))
+    // DateStr.init(await $fetch("/api/today"))
     public static init(date: string = formatDate(new Date())) {
         DateStr._TODAY = new DateStr(date)
         console.log("Today is", DateStr._TODAY.localeDate)

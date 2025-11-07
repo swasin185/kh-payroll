@@ -44,7 +44,6 @@
                 class="w-32"
             />
         </UFormField>
-        <UButton label="test" @click="console.log(record)" />
     </UForm>
 </template>
 <script lang="ts" setup>
