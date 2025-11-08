@@ -9,19 +9,26 @@ function toLocaleDate(date: Date | null | undefined) {
     return date ? formatDate(date) : null
 }
 
-const ComCodeAttr = z.string().max(2).default("")
+const ComCodeAttr = z.string().min(2).max(2).default("")
 
-const UserIdAttr = z.string().min(3).max(16)
+const UserIdAttr = z.string().max(16)
 
 const DateAttr = z.coerce.date().nullable().default(null).transform(toLocaleDate)
 
 const TimeAttr = z.coerce.date().nullable().default(null).optional().transform(toLocaleDateTime)
 
-const MoneyAttr = z.coerce.number().min(-999_999_999).max(999_999_999).nullable().optional().default(null)
+const MoneyAttr = z.coerce
+    .number()
+    .min(-999_999_999)
+    .max(+999_999_999)
+    .nullable()
+    .default(null)
 
 const PercentAttr = z.coerce.number().min(0).max(100).nullable().optional().default(null)
 
-const BooleanAttr = z.coerce.boolean().optional().default(true)
+const BooleanAttr = z.coerce.boolean().optional().default(false)
+
+const EmployeeAttr = z.int().positive().max(9999).default(0)
 
 export const CompanySchema = z.object({
     comCode: ComCodeAttr,
@@ -32,9 +39,8 @@ export const CompanySchema = z.object({
     email1: z.email().max(30).nullable().default(null),
     email2: z.email().max(30).nullable().default(null),
     email3: z.email().max(30).nullable().default(null),
-    yrPayroll: z.number().int().min(1900).max(2200).default(new Date().getFullYear()).optional(),
+    yrPayroll: z.int().min(1900).max(2200).default(new Date().getFullYear()).optional(),
     mnPayroll: z
-        .number()
         .int()
         .min(0)
         .max(13)
@@ -59,19 +65,17 @@ export const UsersSchema = z.object({
 })
 export type Users = z.infer<typeof UsersSchema>
 
-export const PermissionSchema = z
-    .object({
-        comCode: ComCodeAttr,
-        userId: UserIdAttr,
-        program: z.string().max(20),
-        level: z.number().int().min(-1).max(9).default(0),
-        used: z.number().int().min(0).default(0),
-    })
-    .strict()
+export const PermissionSchema = z.object({
+    comCode: ComCodeAttr,
+    userId: UserIdAttr,
+    program: z.string().max(20),
+    level: z.int().min(-1).max(9).default(0),
+    used: z.int().min(0).default(0),
+})
 export type Permission = z.infer<typeof PermissionSchema>
 
 export const LogsSchema = z.object({
-    logNr: z.number().int().positive().optional(),
+    logNr: z.int().positive().optional(),
     logTime: TimeAttr,
     logType: z
         .enum(["insert", "delete", "update", "query", "rollback", "login", "logfail", "execute"])
@@ -88,10 +92,40 @@ export type Logs = z.infer<typeof LogsSchema>
 export const IncomeTypeSchema = z.object({
     inCode: z.string().min(2).max(2).optional(),
     inName: z.string().max(30).optional(),
-    inType: z.number().int().min(-1).max(1).optional().default(1),
-    isTax: BooleanAttr,
-    isReset: BooleanAttr,
+    inType: z.int().min(-1).max(1).optional().default(1),
+    isTax: BooleanAttr.default(true),
+    isReset: BooleanAttr.default(true),
     initLimit: MoneyAttr,
     initPercent: PercentAttr,
 })
 export type IncomeType = z.infer<typeof IncomeTypeSchema>
+
+export const EmployeeSchema = z.object({
+    comCode: ComCodeAttr,
+    empCode: EmployeeAttr,
+    taxId: z.string().max(13).nullable().default(null),
+    prefix: z.string().max(16).nullable().default(null),
+    name: z.string().max(20).nullable().default(null),
+    surName: z.string().max(30).nullable().default(null),
+    nickName: z.string().max(20).nullable().default(null),
+    birthDate: DateAttr,
+    department: z.string().max(20).nullable().default(null),
+    timeCode: z.int().positive().nullable().default(0),
+    beginDate: DateAttr,
+    endDate: DateAttr,
+    empType: z.enum(["ประจำ", "ชั่วคราว", "ฝึกงาน"]).nullable().default(null),
+    bankAccount: z.string().max(20).nullable().default(null),
+    address: z.string().max(100).nullable().default(null),
+    phone: z.string().max(20).nullable().default(null),
+    childAll: z.int().min(0).max(10).nullable().default(0),
+    childEdu: z.int().min(0).max(10).nullable().default(0),
+    isSpouse: BooleanAttr,
+    isChildShare: BooleanAttr,
+    isExcSocialIns: BooleanAttr,
+    deductInsure: MoneyAttr,
+    deductHome: MoneyAttr,
+    deductElse: MoneyAttr,
+    scanCode: z.string().max(5).nullable().default(null),
+})
+
+export type Employee = z.infer<typeof EmployeeSchema>
