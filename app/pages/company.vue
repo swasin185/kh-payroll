@@ -19,29 +19,29 @@
         class="space-y-4"
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
     >
-        <UFormField label="ComCode" name="comCode" class="w-15">
-            <UInput v-model="record.comCode" :disabled="mode !== DBMODE.Insert" maxLength="2" />
+        <UFormField label="ComCode" name="comCode">
+            <UInput v-model="record.comCode" :disabled="mode !== DBMODE.Insert" class="w-15" />
         </UFormField>
-        <UFormField label="Title" name="comName" class="w-80">
-            <UInput v-model="record.comName" maxLength="90" />
+        <UFormField label="Title" name="comName">
+            <UInput v-model="record.comName" class="w-80" />
         </UFormField>
-        <UFormField label="TaxID" name="taxId" class="w-40">
-            <UInput v-model="record.taxId" maxLength="13" />
+        <UFormField label="TaxID" name="taxId">
+            <UInput v-model="record.taxId" class="w-40" />
         </UFormField>
-        <UFormField label="Address" name="address" class="w-150">
-            <UInput v-model="record.address" maxLength="200" />
+        <UFormField label="Address" name="address">
+            <UInput v-model="record.address" class="w-150" />
         </UFormField>
-        <UFormField label="Phone" name="phone" class="w-80">
-            <UInput v-model="record.phone" maxLength="100" />
+        <UFormField label="Phone" name="phone">
+            <UInput v-model="record.phone" class="w-80" />
         </UFormField>
-        <UFormField label="Email 1" name="email1" class="w-50">
-            <UInput v-model="record.email1" maxLength="30" />
+        <UFormField label="Email 1" name="email1">
+            <UInput v-model="record.email1" class="w-50" />
         </UFormField>
-        <UFormField label="Email 2" name="email2" class="w-50">
-            <UInput v-model="record.email2" maxLength="30" />
+        <UFormField label="Email 2" name="email2">
+            <UInput v-model="record.email2" class="w-50" />
         </UFormField>
-        <UFormField label="Email 3" name="email3" class="w-50">
-            <UInput v-model="record.email3" maxLength="30" />
+        <UFormField label="Email 3" name="email3">
+            <UInput v-model="record.email3" class="w-50" />
         </UFormField>
     </UForm>
 </template>

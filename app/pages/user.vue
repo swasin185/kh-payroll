@@ -18,28 +18,38 @@
         class="grid grid-flow-col grid-rows-5 gap-x-8 gap-y-4"
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
     >
-        <UFormField label="User ID" name="id" class="w-30">
-            <UInput v-model="record.id" :disabled="mode !== DBMODE.Insert" />
+        <UFormField label="User ID" name="id">
+            <UInput v-model="record.id" :disabled="mode !== DBMODE.Insert" class="w-30" />
         </UFormField>
-        <UFormField label="ชื่อจริง" name="name" class="w-54">
-            <UInput v-model="record.name" />
+        <UFormField label="ชื่อจริง" name="name">
+            <UInput v-model="record.name" class="w-54" />
         </UFormField>
-        <UFormField label="อธิบาย" name="descript" class="w-100">
-            <UInput v-model="record.descript" />
+        <UFormField label="อธิบาย" name="descript" >
+            <UInput v-model="record.descript" class="w-100"/>
         </UFormField>
-        <UFormField label="LEVEL" name="level" class="w-36">
-            <USelect v-model="record.level" :disabled="!isAdmin" :items="LEVEL_ITEMS" />
+        <UFormField label="LEVEL" name="level">
+            <USelect
+                v-model="record.level"
+                :disabled="!isAdmin"
+                :items="LEVEL_ITEMS"
+                class="w-36"
+            />
         </UFormField>
         <UFormField label="ROLE" name="role">
-            <DBLookup v-model:lookupKey="record.role" name="role" :disabled="!isAdmin" class="w55"/>
+            <DBLookup
+                v-model:lookupKey="record.role"
+                name="role"
+                :disabled="!isAdmin"
+                class="w-55"
+            />
         </UFormField>
         <UFormField label="Company" name="comCode">
-            <DBLookup v-model:lookupKey="record.comCode" name="company" class="w-70"/>
+            <DBLookup v-model:lookupKey="record.comCode" name="company" class="w-70" />
         </UFormField>
-        <UFormField label="วันที่รหัสผ่าน" name="passwdTime" class="w-45">
-            <UInput v-model="record.passwdTime" disabled />
+        <UFormField label="วันที่รหัสผ่าน" name="passwdTime">
+            <UInput v-model="record.passwdTime" disabled class="w-40" />
         </UFormField>
-        <UFormField label="วันที่สร้าง" name="created" >
+        <UFormField label="วันที่สร้าง" name="created">
             <DateInput v-model="record.created" disabled />
         </UFormField>
         <UFormField label="วันที่ยกเลิก" name="stoped">

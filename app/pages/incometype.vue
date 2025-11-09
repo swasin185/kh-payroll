@@ -18,25 +18,25 @@
         class="grid grid-flow-col grid-rows-5 gap-x-8 gap-y-4"
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
     >
-        <UFormField label="Inc Code" name="inCode" class="w-30">
-            <UInput type="text" v-model="record.inCode" :disabled="mode !== DBMODE.Insert" />
+        <UFormField label="Inc Code" name="inCode" >
+            <UInput type="text" v-model="record.inCode" :disabled="mode !== DBMODE.Insert" class="w-30"/>
         </UFormField>
-        <UFormField label="ชื่อเงินได้/หัก" name="inName" class="w-54">
-            <UInput type="text" v-model="record.inName" />
+        <UFormField label="ชื่อเงินได้/หัก" name="inName">
+            <UInput type="text" v-model="record.inName"  class="w-54" />
         </UFormField>
-        <UFormField label="ประเภท" name="inType" class="w-54">
+        <UFormField label="ประเภท" name="inType" >
             <UInputNumber v-model="record.inType" :min="-1" :max="1" :step="2" class="w-30" />
         </UFormField>
-        <UFormField label="คิดภาษีหรือไม่" name="isTax" class="w-54">
-            <USwitch v-model="record.isTax" />
+        <UFormField label="คิดภาษี" name="isTax" >
+            <USwitch v-model="record.isTax"  class="w-54" />
         </UFormField>
-        <UFormField label="รีเซ็ตเมื่อปิดงวด" name="isReset" class="w-54">
-            <USwitch v-model="record.isReset" />
+        <UFormField label="รีเซ็ตเมื่อปิดงวด" name="isReset" >
+            <USwitch v-model="record.isReset" class="w-30"/>
         </UFormField>
         <UFormField label="มูลค่าจำกัด ไม่เกิน" name="initLimit">
             <MoneyInput v-model="record.initLimit" />
         </UFormField>
-        <UFormField label="มูลค่าคิดเป็นเปอร์เซ็นฐานเงินเดือน" name="initPercent">
+        <UFormField label="มูลค่าเปอร์เซ็น" name="initPercent">
             <UInputNumber
                 v-model="record.initPercent"
                 :step="0.01"

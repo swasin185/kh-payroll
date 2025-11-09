@@ -108,7 +108,7 @@ export const EmployeeSchema = z.object({
     name: z.string().max(20).nullable().default(null),
     surName: z.string().max(30).nullable().default(null),
     nickName: z.string().max(20).nullable().default(null),
-    birthDate: DateAttr,
+    birthDate:w DateAttr,
     department: z.string().max(20).nullable().default(null),
     timeCode: z.int().positive().nullable().default(0),
     beginDate: DateAttr,
