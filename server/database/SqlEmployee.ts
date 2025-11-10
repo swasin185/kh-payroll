@@ -41,35 +41,30 @@ export default {
                     return rows[0].nextCode as number
                 })
 
-        const valueArray = Object.entries(emp).map(([key, value]) => {
-            return value
-        })
-        const [result] = await db.execute(
+        const [result] = await db.execute<ResultSetHeader>(
             `INSERT INTO employee  
              VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?)`,
-            valueArray,
+            Object.values(emp),
         )
-        return (result as ResultSetHeader).affectedRows === 1
+        return result.affectedRows === 1
     },
 
     async delete(comCode: string, empCode: string): Promise<boolean> {
-        const [result] = await db.execute(`DELETE FROM employee WHERE comCode=? and empCode=?`, [
+        const [result] = await db.execute<ResultSetHeader>(`DELETE FROM employee WHERE comCode=? and empCode=?`, [
             comCode,
             empCode,
         ])
-        return (result as ResultSetHeader).affectedRows === 1
+        return result.affectedRows === 1
     },
 
     async update(emp: Employee): Promise<boolean> {
-        const valueArray = Object.entries(emp).map(([key, value]) => {
-            return value
-        })
-        const comCode = valueArray[0]
-        const empCode = valueArray[1]
-        for (let i = 2; i < valueArray.length; i++) valueArray[i - 2] = valueArray[i]
-        valueArray[valueArray.length - 2] = comCode
-        valueArray[valueArray.length - 1] = empCode
-        const [result] = await db.execute(
+        const values = Object.values(emp)
+        values.shift() // remove comCode
+        values.shift() // remove empCode
+        values.push(emp.comCode) 
+        values.push(emp.empCode) 
+        
+        const [result] = await db.execute<ResultSetHeader>(
             `UPDATE employee
              SET
                  taxId=?,
@@ -97,8 +92,8 @@ export default {
                  scanCode=?
              WHERE
                  comCode=? and empCode=?`,
-            valueArray,
+            values,
         )
-        return (result as ResultSetHeader).affectedRows === 1
+        return result.affectedRows === 1
     },
 }

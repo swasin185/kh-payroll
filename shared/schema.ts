@@ -90,7 +90,7 @@ export const LogsSchema = z.object({
 export type Logs = z.infer<typeof LogsSchema>
 
 export const IncomeTypeSchema = z.object({
-    inCode: z.string().min(2).max(2).optional(),
+    inCode: z.string().min(2).max(2),
     inName: z.string().max(30).optional(),
     inType: z.int().min(-1).max(1).optional().default(1),
     isTax: BooleanAttr.default(true),

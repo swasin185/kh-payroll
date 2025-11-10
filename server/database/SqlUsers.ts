@@ -18,7 +18,7 @@ export default {
     },
 
     async lookup(): Promise<LookupItem[]> {
-        const [result] = await db.query(`
+        const [result] = await db.query<RowDataPacket[]>(`
             SELECT id, CONCAT(id, ' : ', name) AS label 
             FROM users 
             WHERE id!='admin' 
@@ -28,35 +28,38 @@ export default {
 
     async insert(user: Users): Promise<boolean> {
         user.id = user.id.toLowerCase().trim()
-        const [result] = await db.execute(
+        const [result] = await db.execute<ResultSetHeader>(
             `INSERT INTO users (id, name, descript, level, role, comCode) 
              VALUES (?,?,?,?,?,?)`,
-            [user.id, user.name, user.descript, user.level, user.role, user.comCode],
+            Object.values(user),
         )
-        return (result as ResultSetHeader).affectedRows === 1
+        return result.affectedRows === 1
     },
 
     async delete(userId: string): Promise<boolean> {
-        const [result] = await db.execute(`DELETE FROM users WHERE id=?`, [userId])
-        return (result as ResultSetHeader).affectedRows === 1
+        const [result] = await db.execute<ResultSetHeader>(`DELETE FROM users WHERE id=?`, [userId])
+        return result.affectedRows === 1
     },
 
     async update(user: Users): Promise<boolean> {
-        const [result] = await db.execute(
+        const values = Object.values(user)
+        values.shift()
+        values.push(user.id)
+        const [result] = await db.execute<ResultSetHeader>(
             `UPDATE users SET name=?, descript=?, level=?, role=?, comCode=? WHERE id=?`,
-            [user.name, user.descript, user.level, user.role, user.comCode, user.id],
+            values,
         )
-        return (result as ResultSetHeader).affectedRows === 1
+        return result.affectedRows === 1
     },
 
     async changePasswd(userId: string, pwd: string, newPwd: string) {
         if (await this.authPasswd(userId, pwd)) {
-            const [result] = await db.execute(
+            const [result] = await db.execute<ResultSetHeader>(
                 `update users set passwd=?, passwdTime=now() where id=?`,
                 [newPwd, userId],
             )
-            return (result as ResultSetHeader).affectedRows === 1
-        } 
+            return result.affectedRows === 1
+        }
         return false
     },
 

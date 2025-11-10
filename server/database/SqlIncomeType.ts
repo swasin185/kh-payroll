@@ -20,7 +20,8 @@ export default {
         const [result] = await db.query(
             `SELECT inCode AS id, concat(inName) AS label 
              FROM incometype 
-             ORDER BY inCode`)
+             ORDER BY inCode`,
+        )
         return result as LookupItem[]
     },
 
@@ -28,37 +29,25 @@ export default {
         const [result] = await db.execute(
             `INSERT INTO incometype (inCode, inName, inType, isTax, isReset, initLimit, initPercent) 
              VALUES (?,?,?,?,?,?,?)`,
-            [
-                inc.inCode,
-                inc.inName,
-                inc.inType,
-                inc.isTax,
-                inc.isReset,
-                inc.initLimit,
-                inc.initPercent,
-            ],
+            Object.values(inc),
         )
         return (result as ResultSetHeader).affectedRows === 1
     },
 
     async delete(inCode: string): Promise<boolean> {
-        const [result] = await db.execute(`DELETE FROM incometype WHERE inCode=?`, [inCode])
-        return (result as ResultSetHeader).affectedRows === 1
+        const [result] = await db.execute<ResultSetHeader>(`DELETE FROM incometype WHERE inCode=?`, [inCode])
+        return result.affectedRows === 1
     },
 
     async update(inc: IncomeType): Promise<boolean> {
-        const [result] = await db.execute(
+        const values = Object.values(inc)
+        values.shift()
+        values.push(inc.inCode)
+
+        const [result] = await db.execute<ResultSetHeader>(
             `UPDATE incometype SET inName=?, inType=?, isTax=?, isReset=?, initLimit=?, initPercent=? WHERE inCode=?`,
-            [
-                inc.inName,
-                inc.inType,
-                inc.isTax,
-                inc.isReset,
-                inc.initLimit,
-                inc.initPercent,
-                inc.inCode,
-            ],
+            values,
         )
-        return (result as ResultSetHeader).affectedRows === 1
+        return result.affectedRows === 1
     },
 }

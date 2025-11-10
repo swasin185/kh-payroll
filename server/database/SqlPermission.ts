@@ -2,11 +2,9 @@ import { getDB } from "./pool"
 import { ResultSetHeader, RowDataPacket, escape } from "mysql2/promise"
 import { type Permission } from "../../shared/schema"
 
-
 const db = getDB()
 
 export default {
-    
     async select(company: string, userId: string): Promise<Permission[]> {
         const [rows] = await db.query<RowDataPacket[]>(
             `SELECT program, level, used 
@@ -19,35 +17,35 @@ export default {
     },
 
     async deleteAll(comCode: string, userId: string): Promise<boolean> {
-        const [result] = await db.execute(
+        const [result] = await db.execute<ResultSetHeader>(
             `DELETE FROM permission 
              WHERE comCode=? AND userId=?`,
             [comCode, userId],
         )
-        return (result as ResultSetHeader).affectedRows > 0
+        return result.affectedRows > 0
     },
 
     async copyPermission(company: string, fromUser: string, toUser: string): Promise<number> {
         if (fromUser === toUser) return 0
         await db.execute(`DELETE FROM permission WHERE userId=? AND comCode=?`, [toUser, company])
-        const [result] = await db.execute(
+        const [result] = await db.execute<ResultSetHeader>(
             `INSERT INTO permission (comCode, userId, program, level, used)
              SELECT comCode, ?, program, level, used 
              FROM permission 
              WHERE comCode=? AND userId=?`,
             [toUser, company, fromUser],
         )
-        return (result as ResultSetHeader).affectedRows ?? 0
+        return result.affectedRows ?? 0
     },
 
     async used(comCode: string, userId: string, program: string): Promise<boolean> {
-        const [result] = await db.execute(
+        const [result] = await db.execute<ResultSetHeader>(
             `UPDATE permission 
              SET used=used+1
              WHERE comCode=? AND userId=? AND program=?`,
             [comCode, userId, program],
         )
-        return (result as ResultSetHeader).affectedRows > 0
+        return result.affectedRows > 0
     },
 
     async updateAll(comCode: string, userId: string, permiss: Permission[]): Promise<boolean> {

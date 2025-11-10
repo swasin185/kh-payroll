@@ -6,20 +6,12 @@ const db = getDB()
 
 export default {
     async insert(logs: Logs): Promise<boolean> {
-        const [result] = await db.execute(
+        const [result] = await db.execute<ResultSetHeader>(
             `INSERT INTO logs (logTime, logType, userId, program, tableName, changed, comCode) 
              VALUES (?,?,?,?,?,?,?)`,
-            [
-                logs.logTime,
-                logs.logType,
-                logs.userId,
-                logs.program,
-                logs.tableName,
-                logs.changed,
-                logs.comCode,
-            ],
+            Object.values(logs),
         )
-        return (result as ResultSetHeader).affectedRows === 1
+        return result.affectedRows === 1
     },
 
     async selectLogsType(type: string): Promise<Logs[]> {

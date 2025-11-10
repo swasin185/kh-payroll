@@ -20,43 +20,27 @@ export default {
     },
 
     async insert(com: Company): Promise<boolean> {
-        const [result] = await db.execute(
+        const [result] = await db.execute<ResultSetHeader>(
             `INSERT INTO company (comCode, comName, taxId, address, phone, email1, email2, email3) 
              VALUES (?,?,?,?,?,?,?,?)`,
-            [
-                com.comCode,
-                com.comName,
-                com.taxId,
-                com.address,
-                com.phone,
-                com.email1,
-                com.email2,
-                com.email3,
-            ],
+            Object.values(com),
         )
-        return (result as ResultSetHeader).affectedRows === 1
+        return result.affectedRows === 1
     },
 
     async update(com: Company): Promise<boolean> {
-        const [result] = await db.execute(
+        const values = Object.values(com)
+        values.shift()
+        values.push(com.comCode)
+        
+        const [result] = await db.execute<ResultSetHeader>(
             `UPDATE company 
              SET comName=?, taxId=?, address=?, phone=?, email1=?, email2=?, email3=?, 
                  yrPayroll=?, mnPayroll=?
              WHERE comCode=?`,
-            [
-                com.comName,
-                com.taxId,
-                com.address,
-                com.phone,
-                com.email1,
-                com.email2,
-                com.email3,
-                com.yrPayroll,
-                com.mnPayroll,
-                com.comCode,
-            ],
+            values,
         )
-        return (result as ResultSetHeader).affectedRows === 1
+        return result.affectedRows === 1
     },
 
     async lookup(): Promise<LookupItem[]> {
