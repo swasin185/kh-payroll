@@ -11,7 +11,7 @@
         <UButton
             label="New"
             icon="i-lucide-plus-circle"
-            class="bg-green-500 w-10"
+            class="bg-pink-500 w-10"
             @click="setMode(DBMODE.Insert)"
             :variant="isModeActive ? (mode == DBMODE.Insert ? 'outline' : 'ghost') : 'solid'"
             :disabled="isModeActive || level < LEVELS.Entry || onInsert == undefined"
@@ -35,7 +35,7 @@
         <UButton
             label="Print"
             icon="i-lucide-printer"
-            class="w-10"
+            class="bg-sky-500 w-10"
             @click="onPrint!()"
             :variant="isModeActive ? 'ghost' : 'solid'"
             :disabled="isModeActive || onPrint == undefined"

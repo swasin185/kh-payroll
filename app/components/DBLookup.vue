@@ -5,7 +5,7 @@
         value-key="id"
         :class="name ? 'w-50' : 'w-30'"
         :items="data"
-        @update:modelValue="(item:string) => { if (props.name && lookupKey === item) lookupKey = undefined }"
+        @update:modelValue="(item:string) => { if (props.name && lookupKey === item) lookupKey = null }"
         @update:open="openLookupDialog"
     />
 </template>
@@ -39,7 +39,7 @@ const lookupKey = defineModel<string | null>("lookupKey")
 
 import type { LookupItem } from "~~/shared/types"
 
-const data = ref<LookupItem[]>([])
+const data = ref<LookupItem[] | null[]>([])
 await refresh()
 
 async function refresh(): Promise<void> {

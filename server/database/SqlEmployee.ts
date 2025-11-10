@@ -22,12 +22,25 @@ export default {
             `SELECT CAST(empCode AS CHAR) AS id, concat(empCode, " : ", name, " ", surName) AS label 
              FROM employee 
              WHERE comCode=?
-             ORDER BY empCode`, [ comCode ]
+             ORDER BY empCode`,
+            [comCode],
         )
         return result as LookupItem[]
     },
 
     async insert(emp: Employee): Promise<boolean> {
+        if (!emp.empCode || emp.empCode === 0)
+            emp.empCode = await db
+                .query<RowDataPacket[]>(
+                    `SELECT IFNULL(MAX(empCode), 0) + 1 AS nextCode 
+                     FROM employee 
+                     WHERE comCode=?`,
+                    [emp.comCode],
+                )
+                .then(([rows]) => {
+                    return rows[0].nextCode as number
+                })
+
         const valueArray = Object.entries(emp).map(([key, value]) => {
             return value
         })

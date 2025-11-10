@@ -3,7 +3,7 @@
         lookupName="employee"
         v-model:searchKey="search"
         v-model:mode="mode"
-        :newRecord="newRecord"
+        :newRecord="() => Object.assign(record, EmployeeSchema.parse({}))"
         :onSelect="onSelect"
         :onInsert="onInsert"
         :onUpdate="onUpdate"
@@ -15,15 +15,15 @@
         ref="form"
         :state="record"
         :schema="EmployeeSchema"
-        class="grid grid-flow-col grid-rows-8 gap-y-2"
+        class="grid grid-flow-col grid-rows-6 gap-y-2"
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
     >
         <UFormField label="Employee Code" name="empCode">
             <UInput
                 type="number"
                 v-model="record.empCode"
-                :disabled="mode !== DBMODE.Insert"
-                class="w-30"
+                disabled
+                class="w-20"
             />
         </UFormField>
         <UFormField label="เลขที่ผู้เสียภาษี" name="taxId">
@@ -34,11 +34,11 @@
                 type="text"
                 v-model="record.prefix"
                 :items="[null, 'นาย', 'นาง', 'นางสาว']"
-                class="w-40"
+                class="w-30"
             />
         </UFormField>
         <UFormField label="ชื่อ" name="name">
-            <UInput type="text" v-model="record.name" class="w-40" />
+            <UInput type="text" v-model="record.name" class="w-30" />
         </UFormField>
         <UFormField label="นามสกุล" name="surName">
             <UInput type="text" v-model="record.surName" class="w-50" />
@@ -69,7 +69,7 @@
                 type="text"
                 v-model="record.empType"
                 :items="[null, 'ประจำ', 'ชั่วคราว', 'ฝึกงาน']"
-                class="w-40"
+                class="w-30"
             />
         </UFormField>
         <UFormField label="ที่อยู่" name="address" class="w-80">
@@ -121,10 +121,6 @@ const record = reactive<Employee>(EmployeeSchema.parse({}))
 
 const { user } = useUserSession()
 const comCode = ref(user.value.comCode)
-
-function newRecord(): void {
-    Object.assign(record, EmployeeSchema.parse({}))
-}
 
 async function onSelect() {
     Object.assign(

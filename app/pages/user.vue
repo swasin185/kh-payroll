@@ -3,7 +3,7 @@
         lookupName="user"
         v-model:searchKey="search"
         v-model:mode="mode"
-        :newRecord="newRecord"
+        :newRecord="() => Object.assign(record, UsersSchema.parse({}))"
         :onSelect="onSelect"
         :onInsert="onInsert"
         :onUpdate="onUpdate"
@@ -24,8 +24,8 @@
         <UFormField label="ชื่อจริง" name="name">
             <UInput v-model="record.name" class="w-54" />
         </UFormField>
-        <UFormField label="อธิบาย" name="descript" >
-            <UInput v-model="record.descript" class="w-100"/>
+        <UFormField label="อธิบาย" name="descript">
+            <UInput v-model="record.descript" class="w-100" />
         </UFormField>
         <UFormField label="LEVEL" name="level">
             <USelect
@@ -74,10 +74,6 @@ const { isAdmin } = usePayrollMenu()
 const search: Ref<string> = ref(user.value.id)
 const mode = ref(DBMODE.Idle)
 const record = reactive<Users>(UsersSchema.parse({}))
-
-function newRecord(): void {
-    Object.assign(record, UsersSchema.parse({}))
-}
 
 async function onSelect() {
     if (!search.value) search.value = user.value.id

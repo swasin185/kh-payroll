@@ -1,7 +1,7 @@
 export interface LookupItem {
   id: any;
   label: any;
-}
+} 
 
 export interface ReportParameter {
     app?: string

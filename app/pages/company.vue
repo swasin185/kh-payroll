@@ -4,7 +4,7 @@
         dialogName="Company"
         v-model:searchKey="searchKey"
         v-model:mode="mode"
-        :newRecord="newRecord"
+        :newRecord="() => Object.assign(record, CompanySchema.parse({}))"
         :onSelect="onSelect"
         :onInsert="onInsert"
         :onUpdate="onUpdate"
@@ -58,10 +58,6 @@ const { user } = useUserSession()
 const searchKey: Ref<string> = ref(user.value.comCode)
 const mode = ref(DBMODE.Idle)
 const record = reactive<Company>(CompanySchema.parse({}))
-
-function newRecord(): void {
-    Object.assign(record, CompanySchema.parse({}))
-}
 
 async function onSelect() {
     if (!searchKey.value) searchKey.value = user.value.comCode
