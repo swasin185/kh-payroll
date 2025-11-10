@@ -84,6 +84,9 @@
         <UFormField label="จำนวนบุตรกำลังศึกษา" name="childEdu">
             <UInputNumber v-model="record.childEdu" class="w-32" />
         </UFormField>
+        <UFormField label="รหัสสแกน" name="scanCode">
+            <UInput type="text" v-model="record.scanCode" class="w-20" />
+        </UFormField>
         <UFormField label="ลดหย่อนคู่สมรส" name="isSpouse">
             <USwitch v-model="record.isSpouse" class="w-30" />
         </UFormField>
@@ -101,9 +104,6 @@
         </UFormField>
         <UFormField label="ลดหย่อนอื่นๆ" name="deductElse">
             <MoneyInput v-model="record.deductElse" />
-        </UFormField>
-        <UFormField label="รหัสสแกน" name="scanCode">
-            <UInput type="text" v-model="record.scanCode" class="w-20" />
         </UFormField>
     </UForm>
 </template>

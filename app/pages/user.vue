@@ -15,7 +15,7 @@
         ref="form"
         :state="record"
         :schema="UsersSchema"
-        class="grid grid-flow-col grid-rows-5 gap-x-8 gap-y-4"
+        class="grid grid-flow-col grid-rows-5 gap-y-2"
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
     >
         <UFormField label="User ID" name="id">
@@ -47,7 +47,7 @@
             <DBLookup v-model:lookupKey="record.comCode" name="company" class="w-70" />
         </UFormField>
         <UFormField label="วันที่รหัสผ่าน" name="passwdTime">
-            <UInput v-model="record.passwdTime" disabled class="w-40" />
+            <UInput v-model="record.passwdTime" disabled class="w-45" />
         </UFormField>
         <UFormField label="วันที่สร้าง" name="created">
             <DateInput v-model="record.created" disabled />

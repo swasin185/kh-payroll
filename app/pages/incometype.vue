@@ -15,7 +15,7 @@
         ref="form"
         :state="record"
         :schema="IncomeTypeSchema"
-        class="grid grid-flow-col grid-rows-5 gap-x-8 gap-y-4"
+        class="grid grid-flow-col grid-rows-5 gap-y-2"
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
     >
         <UFormField label="Inc Code" name="inCode">

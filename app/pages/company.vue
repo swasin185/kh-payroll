@@ -16,7 +16,7 @@
         ref="form"
         :state="record"
         :schema="CompanySchema"
-        class="space-y-4"
+        class="space-y-2"
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
     >
         <UFormField label="ComCode" name="comCode">
