@@ -110,7 +110,7 @@ export const EmployeeSchema = z.object({
     nickName: z.string().max(20).nullable().default(null),
     birthDate: DateAttr,
     department: z.string().max(20).nullable().default(null),
-    timeCode: z.int().positive().nullable().default(0),
+    timeCode: z.int().nullable().default(null),
     beginDate: DateAttr,
     endDate: DateAttr,
     empType: z.enum(["ประจำ", "ชั่วคราว", "ฝึกงาน"]).nullable().default(null),

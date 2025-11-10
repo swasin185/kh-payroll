@@ -53,7 +53,7 @@
             <UInput type="text" v-model="record.department" class="w-30" />
         </UFormField>
         <UFormField label="timetype code" name="timeCode">
-            <UInput type="text" v-model="record.timeCode" class="w-20" />
+            <UInput type="number" v-model="record.timeCode" class="w-20" />
         </UFormField>
         <UFormField label="วันที่เริ่มงาน" name="beginDate">
             <DateInput v-model="record.beginDate" />
