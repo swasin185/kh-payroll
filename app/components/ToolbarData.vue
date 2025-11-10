@@ -22,7 +22,9 @@
             class="bg-yellow-500 w-10"
             @click="setMode(DBMODE.Update)"
             :variant="isModeActive ? (mode == DBMODE.Update ? 'outline' : 'ghost') : 'solid'"
-            :disabled="isModeActive || level < LEVELS.Officer || onUpdate == undefined || !searchKey"
+            :disabled="
+                isModeActive || level < LEVELS.Officer || onUpdate == undefined || !searchKey
+            "
         />
         <UButton
             label="Delete"
@@ -30,7 +32,9 @@
             class="bg-red-500 w-10"
             @click="setMode(DBMODE.Delete)"
             :variant="isModeActive ? (mode == DBMODE.Delete ? 'outline' : 'ghost') : 'solid'"
-            :disabled="isModeActive || level < LEVELS.Supervisor || onDelete == undefined || !searchKey"
+            :disabled="
+                isModeActive || level < LEVELS.Supervisor || onDelete == undefined || !searchKey
+            "
         />
         <UButton
             label="Print"
@@ -94,9 +98,8 @@ watch(searchKey, async () => {
 const setMode = async (newMode: number) => {
     if (props.form) props.form.clear()
     mode.value = newMode
-    if (newMode === DBMODE.Insert) {
-        props.newRecord()
-    } else if (newMode === DBMODE.Select) await props.onSelect()
+    if (newMode === DBMODE.Insert) props.newRecord()
+    else if (newMode === DBMODE.Select) await props.onSelect()
 }
 
 const isModeActive = computed(

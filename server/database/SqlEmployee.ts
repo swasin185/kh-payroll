@@ -50,10 +50,10 @@ export default {
     },
 
     async delete(comCode: string, empCode: string): Promise<boolean> {
-        const [result] = await db.execute<ResultSetHeader>(`DELETE FROM employee WHERE comCode=? and empCode=?`, [
-            comCode,
-            empCode,
-        ])
+        const [result] = await db.execute<ResultSetHeader>(
+            `DELETE FROM employee WHERE comCode=? and empCode=?`,
+            [comCode, empCode],
+        )
         return result.affectedRows === 1
     },
 
@@ -61,9 +61,7 @@ export default {
         const values = Object.values(emp)
         values.shift() // remove comCode
         values.shift() // remove empCode
-        values.push(emp.comCode) 
-        values.push(emp.empCode) 
-        
+        values.push(emp.comCode, emp.empCode)
         const [result] = await db.execute<ResultSetHeader>(
             `UPDATE employee
              SET
