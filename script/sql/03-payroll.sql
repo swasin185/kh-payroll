@@ -38,7 +38,7 @@ drop table if exists employee;
 create table employee (
     comCode        varchar(2) comment "รหัสบริษัท",
     empCode        smallint unsigned comment "รหัสพนักงาน",
-    taxId          varchar(13) comment "เลขประจำตัวผู้เสียภาษี เลขบัตรประชาชน",
+    taxId          varchar(17) comment "เลขประจำตัวผู้เสียภาษี เลขบัตรประชาชน",
     prefix         varchar(16) comment "คำนำหน้าชื่อ",
     name           varchar(20) comment "ชื่อจริง",
     surName        varchar(30) comment "นามสกุล",

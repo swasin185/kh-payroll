@@ -6,7 +6,7 @@ drop table if exists company;
 create table company (
   comCode       varchar(2),
   comName       varchar(90) not null comment "บริษัท ชื่อ",
-  taxId         varchar(13) comment "เลขประจำตัวผู้เสียภาษี",
+  taxId         varchar(17) comment "เลขประจำตัวผู้เสียภาษี",
   address       varchar(200) comment "ที่อยู่",
   phone         varchar(100) comment "เบอร์โทรศัพท์ FAX มือถือ",
   email1        varchar(30) comment "email 1",

@@ -17,12 +17,7 @@ const DateAttr = z.coerce.date().nullable().default(null).transform(toLocaleDate
 
 const TimeAttr = z.coerce.date().nullable().default(null).optional().transform(toLocaleDateTime)
 
-const MoneyAttr = z.coerce
-    .number()
-    .min(-999_999_999)
-    .max(+999_999_999)
-    .nullable()
-    .default(null)
+const MoneyAttr = z.coerce.number().min(-999_999_999).max(+999_999_999).nullable().default(null)
 
 const PercentAttr = z.coerce.number().min(0).max(100).nullable().optional().default(null)
 
@@ -33,7 +28,7 @@ const EmployeeAttr = z.int().positive().max(9999).default(0)
 export const CompanySchema = z.object({
     comCode: ComCodeAttr,
     comName: z.string().max(90).min(5, "Company name is required.").default(""),
-    taxId: z.string().max(13).min(13).nullable().default(null),
+    taxId: z.string().max(13).nullable().default(null),
     address: z.string().max(200).nullable().default(null),
     phone: z.string().max(100).nullable().default(null),
     email1: z.email().max(30).nullable().default(null),
@@ -103,7 +98,7 @@ export type IncomeType = z.infer<typeof IncomeTypeSchema>
 export const EmployeeSchema = z.object({
     comCode: ComCodeAttr,
     empCode: EmployeeAttr,
-    taxId: z.string().max(13).nullable().default(null),
+    taxId: z.string().max(100).nullable().default(null),
     prefix: z.string().max(16).nullable().default(null),
     name: z.string().max(20).nullable().default(null),
     surName: z.string().max(30).nullable().default(null),
@@ -113,7 +108,7 @@ export const EmployeeSchema = z.object({
     timeCode: z.int().nullable().default(null),
     beginDate: DateAttr,
     endDate: DateAttr,
-    empType: z.enum(["ประจำ", "ชั่วคราว", "ฝึกงาน"]).nullable().default(null),
+    empType: z.string().max(10).nullable().default(null).optional(),
     bankAccount: z.string().max(20).nullable().default(null),
     address: z.string().max(100).nullable().default(null),
     phone: z.string().max(20).nullable().default(null),

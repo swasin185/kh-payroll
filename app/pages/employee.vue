@@ -19,12 +19,7 @@
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
     >
         <UFormField label="Employee Code" name="empCode">
-            <UInput
-                type="number"
-                v-model="record.empCode"
-                disabled
-                class="w-20"
-            />
+            <UInput type="number" v-model="record.empCode" disabled class="w-20" />
         </UFormField>
         <UFormField label="เลขที่ผู้เสียภาษี" name="taxId">
             <UInput type="text" v-model="record.taxId" class="w-40" />
