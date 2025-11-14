@@ -134,7 +134,7 @@ drop table if exists timecard;
 create table timecard (
     dateTxt       varchar(10) comment "วันที่ text",
     scanCode      varchar(5),
-    timeTxt       varchar(8) comment "เวลา text",
+    timeTxt       varchar(5) comment "เวลา text",
     primary key (dateTxt, scanCode, timeTxt)
 ) comment = "รายการลงเวลา";
 
