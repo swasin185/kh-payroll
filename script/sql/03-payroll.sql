@@ -16,23 +16,24 @@ drop table if exists timetype;
 create table timetype (
     timeCode       smallint unsigned auto_increment,
     descript       varchar(40) comment "คำอธิบายวิธีการคิดเวลางาน",
-    workStart      varchar(8) default "08:00:00" comment "hh:mm:ss",
-    lunchBreak     varchar(8) default "12:00:00" comment "hh:mm:ss",
-    workFinish     varchar(8) default "17:00:00" comment "hh:mm:ss",
-    shift1Start    varchar(8) default "06:00:00" comment "hh:mm:ss",
-    shift1Finish   varchar(8) default "14:00:00" comment "hh:mm:ss",
-    shift2Start    varchar(8) default "14:00:00" comment "hh:mm:ss",
-    shift2Finish   varchar(8) default "22:00:00" comment "hh:mm:ss",
-    shift3Start    varchar(8) default "22:00:00" comment "hh:mm:ss",
-    shift3Finish   varchar(8) default "06:00:00" comment "hh:mm:ss",
-    otRate1        decimal(2,1) default 1.5 comment "วันทำงาน",
-    otRate2        decimal(2,1) default 2.0 comment "วันหยุด",
-    otRate3        decimal(2,1) default 3.0 comment "หลังเที่ยงคืน",
+    s1Start        varchar(5) default "08:00" comment "hh:mm",
+    s1Finish       varchar(5) default "12:00" comment "hh:mm",
+    s2Start        varchar(5) default "13:00" comment "hh:mm",
+    s2Finish       varchar(5) default "17:00" comment "hh:mm",
+    s3Start        varchar(5) default "18:00" comment "hh:mm",
+    s3Finish       varchar(5) default "23:00" comment "hh:mm",
+    otRate1        decimal(2,1) default 1.5 comment "อัตรา ot วันทำงาน",
+    otRate2        decimal(2,1) default 2.0 comment "อัตรา ot วันหยุด",
+    otRate3        decimal(2,1) default 3.0 comment "อัตรา ot หลังเที่ยงคืน",
     allowance1     decimal(9,2) default 0.0 comment "เบี้ยเลี้ยง 1",
     allowance2     decimal(9,2) default 0.0 comment "เบี้ยเลี้ยง 2",
+    weekDay        varchar(7) default "123456" comment "วันทำงานในสัปดาห์ 1=จันทร์ ... 7=อาทิตย์",
     primary key (timeCode)
 ) comment = "กำหนดค่าวิธีคิดเวลาทำงาน เบี้ยเลี้ยง OT";
-insert into timetype (descript) value ("เวลาทำงานปกติ มี OT เบี้ยเลี้ยง");
+insert into timetype (descript) value ("เวลาทำงาน 1 ไม่มี OT/เบี้ยเลี้ยง");
+insert into timetype (descript, s1Finish, s2Start) value ("เวลาทำงาน 2 ไม่มี OT/เบี้ยเลี้ยง", "11:00", "12:00");
+insert into timetype (descript, s1Start, s1Finish, s2Start, s2Finish) value ("เวลาฝึกงาน 3 ไม่มี OT/เบี้ยเลี้ยง", "09:00", "12:00", "13:00", "16:30");
+
 
 drop table if exists employee;
 create table employee (
@@ -45,7 +46,7 @@ create table employee (
     nickName       varchar(20) comment "ชื่อเล่น",
     birthDate      date comment "วันเดือนปีเกิด",
     department     varchar(20) comment "แผนก ฝ่าย",
-    timeCode       smallint unsigned default 0 comment "timetype code",
+    timeCode       smallint unsigned comment "timetype code",
     beginDate      date comment "วันที่เริ่มทำงาน",
     endDate        date comment "วันที่สิ้นสุดทำงาน",
     empType        varchar(10) comment "ประเภทพนักงาน ประจำ/ชั่วคราว/ฝึกงาน",
@@ -143,12 +144,12 @@ create table attendance (
     comCode       varchar(2),
     empCode       smallint unsigned,
     dateTxt       varchar(10) comment "วันเดือนปีทำงาน",
-    inTime1       varchar(8) comment "เวลาเข้า เช้า",
-    outTime1      varchar(8) comment "เวลาออก เช้า",
-    inTime2       varchar(8) comment "เวลาเข้า บ่าย",
-    outTime2      varchar(8) comment "เวลาออก บ่าย",
-    inTime3       varchar(8) comment "เวลาเข้า ค่ำ",
-    outTime3      varchar(8) comment "เวลาออก ค่ำ",
+    inTime1       varchar(5) comment "เวลาเข้า เช้า",
+    outTime1      varchar(5) comment "เวลาออก เช้า",
+    inTime2       varchar(5) comment "เวลาเข้า บ่าย",
+    outTime2      varchar(5) comment "เวลาออก บ่าย",
+    inTime3       varchar(5) comment "เวลาเข้า ค่ำ",
+    outTime3      varchar(5) comment "เวลาออก ค่ำ",
     workMinute    smallint unsigned default 0 comment "จำนวนนาทีทำงาน",
     otMinute      smallint unsigned default 0 comment "จำนวนนาทีล่วงเวลา",
     foreign key (comCode, empCode) references employee(comCode, empCode),

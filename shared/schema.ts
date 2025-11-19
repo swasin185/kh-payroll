@@ -25,6 +25,10 @@ const BooleanAttr = z.coerce.boolean().optional().default(false)
 
 const EmployeeAttr = z.int().positive().max(9999).default(0)
 
+const ScanTimeAttr = z.string().max(5)  
+const ScanDateAttr = z.string().max(10)  
+
+
 export const CompanySchema = z.object({
     comCode: ComCodeAttr,
     comName: z.string().max(90).min(5, "Company name is required.").default(""),
@@ -122,5 +126,29 @@ export const EmployeeSchema = z.object({
     deductElse: MoneyAttr,
     scanCode: z.string().max(5).nullable().default(null),
 })
-
 export type Employee = z.infer<typeof EmployeeSchema>
+
+export const TimeTypeSchema = z.object({
+    timeCode: z.int().default(0),
+    descript: z.string().max(40).default("ชื่อเวลาทำงาน"),
+    s1Start:  ScanTimeAttr.default("08:00"),
+    s1Finish:  ScanTimeAttr.default("12:00"),
+    s2Start:  ScanTimeAttr.default("13:00"),
+    s2Finish:  ScanTimeAttr.default("17:00"),
+    s3Start:  ScanTimeAttr.default("18:00"),
+    s3Finish:  ScanTimeAttr.default("23:00"),
+    otRate1: z.coerce.number().min(1).max(5).default(1.5),
+    otRate2: z.coerce.number().min(1).max(5).default(2.0),
+    otRate3: z.coerce.number().min(1).max(5).default(3.0),
+    allowance1: MoneyAttr,
+    allowance2: MoneyAttr,
+    weekDay:  z.string().max(7).default("123456"), 
+})
+export type TimeType = z.infer<typeof TimeTypeSchema>
+
+export const HolidaySchema = z.object({
+    comCode: ComCodeAttr,
+    dateValue: DateAttr,
+    dateName: z.string().max(40).default(""),
+})
+export type Holiday = z.infer<typeof HolidaySchema>

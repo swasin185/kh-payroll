@@ -38,7 +38,8 @@ const mainMenu: NavigationMenuItem[] = [
             },
             { label: "ตำแหน่งงาน", to: "/position", icon: "i-lucide-boxes", disabled: true },
             { label: "ประเภทเงินได้/หัก", to: "/incometype", icon: "i-lucide-dollar-sign" },
-            { label: "วิธีคิดล่วงเวลา", to: "/ottype", icon: "i-lucide-clock", disabled: true },
+            { label: "เวลาทำงาน OT", to: "/timetype", icon: "i-lucide-clock", disabled: true },
+            { label: "วันหยุดประจำปี", to: "/holiday", icon: "i-lucide-calendar-x", disabled: true },
         ],
     },
     {

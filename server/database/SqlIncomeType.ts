@@ -18,7 +18,7 @@ export default {
 
     async lookup(): Promise<LookupItem[]> {
         const [result] = await db.query(
-            `SELECT inCode AS id, concat(inName) AS label 
+            `SELECT inCode AS id, inName AS label 
              FROM incometype 
              ORDER BY inCode`,
         )
