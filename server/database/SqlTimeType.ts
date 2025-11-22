@@ -6,12 +6,12 @@ import { type TimeType, TimeTypeSchema } from "../../shared/schema"
 const db = getDB()
 
 export default {
-    async select(inCode: string): Promise<TimeType | null> {
+    async select(timeCode: string): Promise<TimeType | null> {
         const [result] = await db.query<RowDataPacket[]>(
             `SELECT *
              FROM timetype
              WHERE timeCode=?`,
-            [inCode],
+            [timeCode],
         )
         if (result.length !== 1) return null
         return TimeTypeSchema.parse(result[0])
@@ -37,8 +37,8 @@ export default {
         return (result as ResultSetHeader).affectedRows === 1
     },
 
-    async delete(inCode: string): Promise<boolean> {
-        const [result] = await db.execute<ResultSetHeader>(`DELETE FROM incometype WHERE inCode=?`, [inCode])
+    async delete(timeCode: string): Promise<boolean> {
+        const [result] = await db.execute<ResultSetHeader>(`DELETE FROM incometype WHERE inCode=?`, [timeCode])
         return result.affectedRows === 1
     },
 

@@ -20,7 +20,7 @@
     >
         <UFormField label="Time Code" name="timeCode">
             <UInput
-                type="text"
+                type="number"
                 v-model="record.timeCode"
                 :disabled="mode !== DBMODE.Insert"
                 class="w-30"
