@@ -2,7 +2,6 @@ import { getDB } from "./pool"
 import type { LookupItem } from "~~/shared/types"
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise"
 import { type Holiday, HolidaySchema } from "../../shared/schema"
-import { date } from "zod"
 
 const db = getDB()
 

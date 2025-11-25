@@ -12,21 +12,21 @@
         "serve": "./script/serve.sh"
     },
     "dependencies": {
-        "@nuxt/test-utils": "3.19.2",
-        "@nuxt/ui": "^4.1.0",
+        "@nuxt/test-utils": "3.20.1",
+        "@nuxt/ui": "^4.2.1",
         "crypto-js": "^4.2.0",
-        "mysql2": "^3.15.1",
-        "nuxt": "^4.1.2",
+        "mysql2": "^3.15.3",
+        "nuxt": "^4.2.1",
         "nuxt-auth-utils": "0.5.25",
         "typescript": "^5.9.3",
-        "vue": "^3.5.22",
-        "vue-router": "^4.5.1",
-        "zod": "^4.1.12"
+        "vue": "^3.5.25",
+        "vue-router": "^4.6.3",
+        "zod": "^4.1.13"
     },
     "devDependencies": {
         "@types/crypto-js": "^4.2.2",
-        "@types/node": "^24.5.2",
-        "tailwindcss": "^4.1.13",
+        "@types/node": "^24.10.1",
+        "tailwindcss": "^4.1.17",
         "vitest": "^3.2.4"
     },
     "pnpm": {
