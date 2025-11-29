@@ -25,8 +25,8 @@ const BooleanAttr = z.coerce.boolean().optional().default(false)
 
 const EmployeeAttr = z.int().positive().max(9999).default(0)
 
-const ScanTimeAttr = z.string().max(5)  
-const ScanDateAttr = z.string().max(10)  
+const ScanTimeAttr = z.string().max(5).nullable().default(null)
+const ScanDateAttr = z.string().max(10).nullable().default(null) 
 
 
 export const CompanySchema = z.object({
@@ -152,3 +152,30 @@ export const HolidaySchema = z.object({
     dateName: z.string().max(40).default(""),
 })
 export type Holiday = z.infer<typeof HolidaySchema>
+
+export const TimeCardSchema = z.object({
+    dateTxt: ScanDateAttr,
+    scanCode: z.string().max(5),
+    timeTxt: ScanTimeAttr, 
+})
+export type TimeCard = z.infer<typeof TimeCardSchema>
+export const TimeCardArraySchema = z.array(TimeCardSchema)
+
+export const AttendanceSchema = z.object({
+    comCode: ComCodeAttr,
+    empCode: EmployeeAttr,
+    dateTxt: ScanDateAttr,
+    inTime1: ScanTimeAttr,
+    outTime1: ScanTimeAttr,
+    lateMinute1: z.int().min(0).max(120).default(0),
+    inTime2: ScanTimeAttr,
+    outTime2: ScanTimeAttr,
+    lateMinute2: z.int().min(0).max(120).default(0),
+    inTime3: ScanTimeAttr,
+    outTime3: ScanTimeAttr,
+    lateMinute3: z.int().min(0).max(120).default(0),
+    workMinute: z.int().min(0).max(120).default(0),
+    otMinute: z.int().min(0).max(120).default(0)
+})
+export type Attendance = z.infer<typeof AttendanceSchema>
+export const AttendanceArraySchema = z.array(AttendanceSchema)

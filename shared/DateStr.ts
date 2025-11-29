@@ -38,4 +38,19 @@ export default class DateStr {
         } else
             console.error(`Date Value Invalid ${str}`)
     }
+
+    public getFirstDateOfMonth(): string | null {
+        if (!this.year || !this.month) return null
+        return `${this.year}-${this.month}-01`
+    }
+
+    public getLastDateOfMonth(): string | null {
+        if (!this.year || !this.month) return null
+        const lastDay = new Date(
+            Number(this.year),
+            Number(this.month),
+            0,
+        ).getDate()
+        return `${this.year}-${this.month}-${lastDay.toString().padStart(2, "0")}`
+    }   
 }

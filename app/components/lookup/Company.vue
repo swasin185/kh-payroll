@@ -32,7 +32,7 @@ const columns: TableColumn<Company>[] = [
     {
         accessorKey: "comName",
         header: "ชื่อบริษัท",
-        cell: ({ row }) => h("div", { class: "font-bold" }, row.getValue("comName")),
+        cell: ({ row }) => h("div", { class: "font-bold w-48 truncate", }, row.getValue("comName")),
     },
     {
         accessorKey: "taxId",
@@ -49,12 +49,12 @@ const columns: TableColumn<Company>[] = [
 ]
 const { $waitFetch } = useNuxtApp()
 const lookupKey = defineModel<string>("lookupKey")
-import {reactive} from "vue"
+import { reactive } from "vue"
 const companies = reactive<Company[]>(await $waitFetch("/api/company/list"))
 const i = companies.findIndex((com) => com.comCode == lookupKey.value)
 const rowSelection: Ref<any> = ref({ [i]: true, comCode: lookupKey.value })
 const rowIdx = ref(i)
-function onSelect(e:Event, row: TableRow<Company>) {
+function onSelect(e: Event, row: TableRow<Company>) {
     if (!rowSelection.value[row.index]) {
         rowIdx.value = row.index
         lookupKey.value = row.getValue("comCode")

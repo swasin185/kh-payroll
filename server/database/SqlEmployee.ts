@@ -19,7 +19,7 @@ export default {
 
     async lookup(comCode: string): Promise<LookupItem[]> {
         const [result] = await db.query(
-            `SELECT CAST(empCode AS CHAR) AS id, concat(empCode, " : ", name, " ", surName) AS label 
+            `SELECT CAST(empCode AS CHAR) AS id, concat(empCode, " : ", name, " ", ifnull(surname,'')) AS label 
              FROM employee 
              WHERE comCode=?
              ORDER BY empCode`,

@@ -82,7 +82,7 @@ describe("API endpoints", async () => {
         const user = (res as any[]).find((u) => u.id === testUser.id)
         expect(user).toHaveProperty("id", testUser.id)
     })
-    
+
     it("PUT /api/users/password", async () => {
         const res = await $fetch("/api/users/password", {
             method: "PUT",

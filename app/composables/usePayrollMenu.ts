@@ -64,7 +64,7 @@ const mainMenu: NavigationMenuItem[] = [
         ],
     },
     {
-        label: "Attendent",
+        label: "Attendance",
         icon: "i-lucide-calendar-clock",
         children: [
             { label: "เวลาเข้า/ออก", to: "/timeinout", icon: "i-lucide-clock", disabled: true },
