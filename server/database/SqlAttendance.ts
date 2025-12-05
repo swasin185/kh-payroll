@@ -6,22 +6,25 @@ import { type Attendance, AttendanceArraySchema } from "../../shared/schema"
 const db = getDB()
 
 export default {
-    async select(comCode: string, empCode: string, fromDate: string, toDate: string): Promise<Attendance[]| null> {
+    async select(
+        comCode: string,
+        empCode: string,
+        fromDate: string,
+        toDate: string,
+    ): Promise<Attendance[] | null> {
         const [result] = await db.query<RowDataPacket[]>(
             `SELECT *
              FROM attendance 
              WHERE comCode=? and empCode=? and dateTxt between ? and ?`,
             [comCode, empCode, fromDate, toDate],
         )
-        if (result.length !== 1) return null
-        // return AttendanceSchema.parse(result[0])
         return AttendanceArraySchema.parse(result)
     },
 
     async insert(att: Attendance): Promise<boolean> {
         const [result] = await db.execute<ResultSetHeader>(
             `INSERT INTO attendance
-             VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?)`,
+             VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?)`,
             Object.values(att),
         )
         return result.affectedRows === 1
@@ -46,17 +49,17 @@ export default {
              SET
                 inTime1=?,
                 outTime1=?,
-                lateMinute1=?,
+                lateMin1=?,
                 inTime2=?,
                 outTime2=?,
-                lateMinute2=?,
+                lateMin2=?,
                 inTime3=?,
                 outTime3=?,
-                lateMinute3=?,
-                workMinute=?,
-                otMinute=?
+                lateMin3=?,
+                workMin=?,
+                otMin=?
              WHERE
-                 comCode=? and empCode=? and dateTxt=?`,
+                comCode=? and empCode=? and dateTxt=?`,
             values,
         )
         return result.affectedRows === 1

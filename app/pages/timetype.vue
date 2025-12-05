@@ -62,6 +62,12 @@
         <UFormField label="เบี้ยเลี้ยง 2" name="allowance2">
             <MoneyInput v-model="record.allowance2" />
         </UFormField>
+        <UFormField label="วันทำงาน(สัปดาห์)" name="weekDay">
+            <UInput type="text" v-model="record.weekDay" class="w-30" maxlength="7" />
+        </UFormField>
+        <UFormField label="พักยืดหยุ่น" name="flexible">
+            <UInputNumber v-model="record.flexible" :min="0" :max="120" :step="5" class="w-20" />
+        </UFormField>
     </UForm>
 </template>
 

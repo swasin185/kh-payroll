@@ -28,6 +28,6 @@ describe("Permission", async () => {
         for (let i = 0; i < count; i++) await SqlPermission.used(testCompany, testUser, prog)
         const permission = await SqlPermission.select(testCompany, testUser)
         const found = permission.find((p) => p.program == prog)
-        expect(found.used).toBe(count)
+        expect(found?.used).toBe(count)
     })
 })

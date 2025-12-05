@@ -22,7 +22,7 @@
         <UFormField label="ComCode" name="comCode">
             <UInput v-model="record.comCode" :disabled="mode !== DBMODE.Insert" class="w-15" />
         </UFormField>
-        <UFormField label="Title" name="comName">
+        <UFormField label="Name" name="comName">
             <UInput v-model="record.comName" class="w-80" />
         </UFormField>
         <UFormField label="TaxID" name="taxId">

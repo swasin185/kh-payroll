@@ -13,7 +13,7 @@ export default defineAppConfig({
                 base: "bg-yellow-200 dark:bg-sky-500",
                 tr: "bg-blue-200 dark:bg-gray-800",
                 td: "m-1 p-1 cursor-pointer",
-                th: "p-0",
+                th: "m-0 p-2",
             },
         },
         input: {

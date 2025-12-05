@@ -28,6 +28,7 @@ create table timetype (
     allowance1     decimal(9,2) default 0.0 comment "เบี้ยเลี้ยง 1",
     allowance2     decimal(9,2) default 0.0 comment "เบี้ยเลี้ยง 2",
     weekDay        varchar(7) default "123456" comment "วันทำงานในสัปดาห์ 1=จันทร์ ... 7=อาทิตย์",
+    flaxible       smallint unsigned default 0 comment "ระยะเวลาพักยืดหยุ่น (นาที)",
     primary key (timeCode)
 ) comment = "กำหนดค่าวิธีคิดเวลาทำงาน เบี้ยเลี้ยง OT";
 insert into timetype (descript) value ("เวลาทำงาน 1 ไม่มี OT/เบี้ยเลี้ยง");

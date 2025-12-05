@@ -25,9 +25,21 @@ const BooleanAttr = z.coerce.boolean().optional().default(false)
 
 const EmployeeAttr = z.int().positive().max(9999).default(0)
 
-const ScanTimeAttr = z.string().max(5).nullable().default(null)
-const ScanDateAttr = z.string().max(10).nullable().default(null) 
+const TIME_HH_MM_REGEX = /^(?:[01]\d|2[0-3]):[0-5]\d$/
 
+const ScanTimeAttr = z
+    .string()
+    .max(5)
+    .nullable()
+    .default(null)
+    .refine(
+        (val) => (val === null) || TIME_HH_MM_REGEX.test(val),
+        {
+            message: "Invalid time hh:mm",
+        },
+    )
+
+const ScanDateAttr = z.string().max(10).nullable().default(null)
 
 export const CompanySchema = z.object({
     comCode: ComCodeAttr,
@@ -131,18 +143,19 @@ export type Employee = z.infer<typeof EmployeeSchema>
 export const TimeTypeSchema = z.object({
     timeCode: z.int().default(0),
     descript: z.string().max(40).default("ชื่อเวลาทำงาน"),
-    s1Start:  ScanTimeAttr.default("08:00"),
-    s1Finish:  ScanTimeAttr.default("12:00"),
-    s2Start:  ScanTimeAttr.default("13:00"),
-    s2Finish:  ScanTimeAttr.default("17:00"),
-    s3Start:  ScanTimeAttr.default("18:00"),
-    s3Finish:  ScanTimeAttr.default("23:00"),
+    s1Start: ScanTimeAttr.default("08:00"),
+    s1Finish: ScanTimeAttr.default("12:00"),
+    s2Start: ScanTimeAttr.default("13:00"),
+    s2Finish: ScanTimeAttr.default("17:00"),
+    s3Start: ScanTimeAttr.default("18:00"),
+    s3Finish: ScanTimeAttr.default("23:00"),
     otRate1: z.coerce.number().min(1).max(5).default(1.5),
     otRate2: z.coerce.number().min(1).max(5).default(2),
     otRate3: z.coerce.number().min(1).max(5).default(3),
     allowance1: MoneyAttr,
     allowance2: MoneyAttr,
-    weekDay:  z.string().max(7).default("123456"), 
+    weekDay: z.string().max(7).default("123456"),
+    flexible: z.int().min(0).max(120).default(0),
 })
 export type TimeType = z.infer<typeof TimeTypeSchema>
 
@@ -156,7 +169,7 @@ export type Holiday = z.infer<typeof HolidaySchema>
 export const TimeCardSchema = z.object({
     dateTxt: ScanDateAttr,
     scanCode: z.string().max(5),
-    timeTxt: ScanTimeAttr, 
+    timeTxt: ScanTimeAttr,
 })
 export type TimeCard = z.infer<typeof TimeCardSchema>
 export const TimeCardArraySchema = z.array(TimeCardSchema)
@@ -167,15 +180,15 @@ export const AttendanceSchema = z.object({
     dateTxt: ScanDateAttr,
     inTime1: ScanTimeAttr,
     outTime1: ScanTimeAttr,
-    lateMinute1: z.int().min(0).max(120).default(0),
+    lateMin1: z.int().min(0).max(120).default(0),
     inTime2: ScanTimeAttr,
     outTime2: ScanTimeAttr,
-    lateMinute2: z.int().min(0).max(120).default(0),
+    lateMin2: z.int().min(0).max(120).default(0),
     inTime3: ScanTimeAttr,
     outTime3: ScanTimeAttr,
-    lateMinute3: z.int().min(0).max(120).default(0),
-    workMinute: z.int().min(0).max(120).default(0),
-    otMinute: z.int().min(0).max(120).default(0)
+    lateMin3: z.int().min(0).max(120).default(0),
+    workMin: z.int().min(0).max(120).default(0),
+    otMin: z.int().min(0).max(120).default(0),
 })
 export type Attendance = z.infer<typeof AttendanceSchema>
 export const AttendanceArraySchema = z.array(AttendanceSchema)
