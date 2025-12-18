@@ -32,7 +32,7 @@ export default {
         const values = Object.values(com)
         values.shift()
         values.push(com.comCode)
-        
+
         const [result] = await db.execute<ResultSetHeader>(
             `UPDATE company 
              SET comName=?, taxId=?, address=?, phone=?, email1=?, email2=?, email3=?, 

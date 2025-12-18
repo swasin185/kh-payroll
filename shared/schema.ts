@@ -180,15 +180,16 @@ export const AttendanceSchema = z.object({
     dateTxt: ScanDateAttr,
     inTime1: ScanTimeAttr,
     outTime1: ScanTimeAttr,
-    lateMin1: z.int().min(0).max(120).default(0),
+    lateMin1: z.int().min(0).max(120),
     inTime2: ScanTimeAttr,
     outTime2: ScanTimeAttr,
-    lateMin2: z.int().min(0).max(120).default(0),
+    lateMin2: z.int().max(120),
     inTime3: ScanTimeAttr,
     outTime3: ScanTimeAttr,
-    lateMin3: z.int().min(0).max(120).default(0),
-    workMin: z.int().min(0).max(120).default(0),
-    otMin: z.int().min(0).max(120).default(0),
+    lateMin3: z.int().max(120),
+    workMin: z.int().min(0).max(600),
+    otMin: z.int().min(0).max(400),
+    lunchMin: z.int().min(0).max(180),
 })
 export type Attendance = z.infer<typeof AttendanceSchema>
 export const AttendanceArraySchema = z.array(AttendanceSchema)
