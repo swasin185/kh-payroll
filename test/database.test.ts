@@ -3,13 +3,14 @@ import { getDB } from "../server/database/pool"
 import SqlUsers from "../server/database/SqlUsers"
 import { LookupItem } from "../shared/types"
 import { Users } from "../shared/schema"
+import SqlAttendance from "../server/database/SqlAttendance"
 
 describe("Payroll MariaDB", async () => {
     const db = getDB()
     console.log("Database connected")
 
     const TEST_USER_ID = "testuser"
-    const testUser = { id: TEST_USER_ID, name: "Integration Test", descript: "", level: 1, role:"", comCode:"01" } as Users
+    const testUser = { id: TEST_USER_ID, name: "Integration Test", descript: "", level: 1, role: "", comCode: "01" } as Users
 
     it("Database is payroll", async () => {
         const [rows] = await db.execute("SELECT DATABASE() AS db")
@@ -28,7 +29,7 @@ describe("Payroll MariaDB", async () => {
     })
 
     it("lookup() returns users excluding admin", async () => {
-        for (let i=0; i < 10; i++) {
+        for (let i = 0; i < 10; i++) {
             // await db.execute("select sleep(5)") // for debugging
             const users: LookupItem[] = await SqlUsers.lookup()
             expect(Array.isArray(users)).toBe(true)
@@ -51,5 +52,16 @@ describe("Payroll MariaDB", async () => {
         expect(result).toBe(true)
         const user = await SqlUsers.select(TEST_USER_ID)
         expect(user).toBeNull()
+    })
+
+    it("runTimeCard() && runAttendance()", async () => {
+        const dateTxt = "2024-12-04"
+        const x = await db.execute("call payroll.runTimeCard(?)", [dateTxt])
+        expect(x).not.toBeNull()
+        const result = await db.query("select * from payroll.attendance where dateTxt = ?", [dateTxt])
+        expect(result.length).toBeGreaterThan(0)
+        const y = await db.execute("call payroll.runAttendance(?)", [dateTxt])
+        expect(y).not.toBeNull()
+        await db.execute("delete from payroll.attendance where dateTxt = ?", [dateTxt])
     })
 })

@@ -23,7 +23,7 @@ export default {
     async insert(att: Attendance): Promise<boolean> {
         const [result] = await db.execute<ResultSetHeader>(
             `INSERT INTO attendance
-             VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?)`,
+             VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?)`,
             Object.values(att),
         )
         return result.affectedRows === 1
@@ -56,7 +56,8 @@ export default {
                 outTime3=?,
                 lateMin3=?,
                 workMin=?,
-                otMin=?
+                otMin=?,
+                lunchMin=?
              WHERE
                 comCode=? and empCode=? and dateTxt=?`,
             values,
