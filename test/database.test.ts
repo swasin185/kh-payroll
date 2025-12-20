@@ -3,7 +3,7 @@ import { getDB } from "../server/database/pool"
 import SqlUsers from "../server/database/SqlUsers"
 import { LookupItem } from "../shared/types"
 import { Users } from "../shared/schema"
-import SqlAttendance from "../server/database/SqlAttendance"
+import { ResultSetHeader } from "mysql2/promise"
 
 describe("Payroll MariaDB", async () => {
     const db = getDB()
@@ -56,12 +56,12 @@ describe("Payroll MariaDB", async () => {
 
     it("runTimeCard() && runAttendance()", async () => {
         const dateTxt = "2024-12-04"
-        const x = await db.execute("call payroll.runTimeCard(?)", [dateTxt])
+        const [x] = await db.execute<ResultSetHeader>("call payroll.runTimeCard(?)", [dateTxt])
         expect(x).not.toBeNull()
-        const result = await db.query("select * from payroll.attendance where dateTxt = ?", [dateTxt])
-        expect(result.length).toBeGreaterThan(0)
-        const y = await db.execute("call payroll.runAttendance(?)", [dateTxt])
+        expect(x.affectedRows).toBeGreaterThan(0)
+        const [y] = await db.execute<ResultSetHeader>("call payroll.runAttendance(?)", [dateTxt])
         expect(y).not.toBeNull()
+        expect(y.affectedRows).toBeGreaterThan(0)
         await db.execute("delete from payroll.attendance where dateTxt = ?", [dateTxt])
     })
 })

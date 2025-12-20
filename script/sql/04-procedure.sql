@@ -25,8 +25,6 @@ BEGIN
     JOIN employee e ON t.scanCode = e.scanCode 
     WHERE t.dateTxt = pDateTxt
     GROUP BY t.scanCode;
-
-    SELECT ROW_COUNT() AS records_imported;
 END;$$ 
 DELIMITER ;
 
@@ -61,6 +59,5 @@ BEGIN
         a.lunchMin = result.calc_lunchMin,
         a.workMin = result.calc_workMin,
         a.otMin = result.calc_otMin;
-    SELECT ROW_COUNT() AS records_updated;
 END;$$
 DELIMITER ;
