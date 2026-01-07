@@ -3,7 +3,7 @@ import SqlPermission from "../server/database/SqlPermission"
 import usePayrollMenu from "../app/composables/usePayrollMenu"
 import { LEVELS } from "../shared/utils"
 
-describe("Permission", async () => {
+describe("Permission", () => {
     const testCompany = "01"
     const testUser = "tom"
     it("insert() admin permission", async () => {

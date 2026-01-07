@@ -1,6 +1,6 @@
 DROP PROCEDURE IF EXISTS runTimeCard;
 DELIMITER $$
-CREATE PROCEDURE runTimeCard(in pDateTxt varchar(10))
+CREATE PROCEDURE runTimeCard(in pDateFrom varchar(10), in pDateTo varchar(10))
 BEGIN
     INSERT IGNORE INTO attendance (
         comCode, 
@@ -8,7 +8,8 @@ BEGIN
         dateTxt, 
         inTime1, outTime1, 
         inTime2, outTime2, 
-        inTime3, outTime3
+        inTime3, outTime3,
+        scanCount
     ) 
     SELECT 
         e.comCode, 
@@ -20,17 +21,18 @@ BEGIN
            MAX(IF(t.timeTxt > '11:30' AND t.timeTxt <= '15:00', t.timeTxt, NULL)), NULL) as inTime2,
         MIN(IF(t.timeTxt > '15:00', t.timeTxt, NULL)) as outTime2,
         MAX(IF(t.timeTxt > '18:00' AND t.timeTxt <= '19:00', t.timeTxt, NULL)) as inTime3,
-        MAX(IF(t.timeTxt > '19:00', t.timeTxt, NULL)) as outTime3
+        MAX(IF(t.timeTxt > '19:00', t.timeTxt, NULL)) as outTime3,
+        COUNT(*) as scanCount
     FROM timecard t
     JOIN employee e ON t.scanCode = e.scanCode 
-    WHERE t.dateTxt = pDateTxt
-    GROUP BY t.scanCode;
+    WHERE t.dateTxt BETWEEN pDateFrom AND pDateTo
+    GROUP BY t.scanCode, t.dateTxt;
 END;$$ 
 DELIMITER ;
 
 DROP PROCEDURE IF EXISTS runAttendance;
 DELIMITER $$
-CREATE PROCEDURE runAttendance(in pDateTxt varchar(10))
+CREATE PROCEDURE runAttendance(in pDateFrom varchar(10), in pDateTo varchar(10))
 BEGIN
     UPDATE attendance a
     JOIN (
@@ -51,7 +53,7 @@ BEGIN
             IF(TIME_TO_SEC(TIMEDIFF(outTime3, inTime3)) > 0, 
                TIME_TO_SEC(TIMEDIFF(outTime3, inTime3)) / 60, NULL) as calc_otMin
         FROM attendance
-        WHERE dateTxt = pDateTxt
+        WHERE dateTxt BETWEEN pDateFrom AND pDateTo
     ) as result ON a.comCode=result.comCode AND a.empCode = result.empCode AND a.dateTxt = result.dateTxt
     SET 
         a.lateMin1 = result.calc_lateMin1,

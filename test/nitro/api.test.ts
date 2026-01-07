@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest"
 import { $fetch } from "@nuxt/test-utils/e2e"
 import DateStr from "../../shared/DateStr"
 
-describe("API endpoints", async () => {
+describe("API endpoints", () => {
     it("GET /api/today " + DateStr.TODAY().isoDate, async () => {
         const res = await $fetch("/api/today")
         expect(res).toBe(DateStr.TODAY().isoDate)

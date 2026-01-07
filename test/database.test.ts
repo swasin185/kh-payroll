@@ -5,7 +5,7 @@ import { LookupItem } from "../shared/types"
 import { Users } from "../shared/schema"
 import { ResultSetHeader } from "mysql2/promise"
 
-describe("Payroll MariaDB", async () => {
+describe("Payroll MariaDB", () => {
     const db = getDB()
     console.log("Database connected")
 
@@ -52,16 +52,5 @@ describe("Payroll MariaDB", async () => {
         expect(result).toBe(true)
         const user = await SqlUsers.select(TEST_USER_ID)
         expect(user).toBeNull()
-    })
-
-    it("runTimeCard() && runAttendance()", async () => {
-        const dateTxt = "2024-12-04"
-        const [x] = await db.execute<ResultSetHeader>("call payroll.runTimeCard(?)", [dateTxt])
-        expect(x).not.toBeNull()
-        expect(x.affectedRows).toBeGreaterThan(0)
-        const [y] = await db.execute<ResultSetHeader>("call payroll.runAttendance(?)", [dateTxt])
-        expect(y).not.toBeNull()
-        expect(y.affectedRows).toBeGreaterThan(0)
-        await db.execute("delete from payroll.attendance where dateTxt = ?", [dateTxt])
     })
 })

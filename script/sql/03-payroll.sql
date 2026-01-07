@@ -157,6 +157,7 @@ create table attendance (
     workMin       smallint unsigned comment "จำนวนนาทีทำงาน",
     otMin         smallint unsigned comment "จำนวนนาทีล่วงเวลา",
     lunchMin      smallint unsigned comment "จำนวนนาทีพักกลางวัน",
+    scanCount     smallint unsigned comment "จำนวนการสแกน",
     foreign key (comCode, empCode) references employee(comCode, empCode),
     primary key (comCode, empCode, dateTxt)
 ) comment = "วันที่มาทำงาน เวลาเข้าออกงาน";
