@@ -133,12 +133,11 @@ create table holiday (
 ) comment = "รายการวันหยุดประจำปี";
 
 drop table if exists timecard;
-create table timecard (
-    dateTxt       varchar(10) comment "วันที่ text",
-    scanCode      varchar(5),
-    timeTxt       varchar(5) comment "เวลา text",
-    primary key (dateTxt, scanCode, timeTxt)
-) comment = "รายการลงเวลา";
+CREATE TABLE timecard (
+    scanCode   VARCHAR(5),
+    scanAt     DATETIME(0) COMMENT 'วันที่และเวลาลงเวลา (ถึงนาที)',
+    PRIMARY KEY (scanCode, scanAt)
+) COMMENT='รายการลงเวลา';
 
 drop table if exists attendance;
 create table attendance (

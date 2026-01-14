@@ -41,7 +41,7 @@ describe("Payroll MariaDB", () => {
 
             // Insert Timecards
             for (const t of s.times) {
-                await SqlTimeCard.insert({ dateTxt: s.date, scanCode: scanCode, timeTxt: t })
+                await SqlTimeCard.insert({ scanCode: scanCode, scanAt: `${s.date} ${t}` })
             }
         }
     }
@@ -75,7 +75,7 @@ describe("Payroll MariaDB", () => {
     })
 
     afterAll(async () => {
-        // if (scanCode) await tearDownData(scanCode)
+        if (scanCode) await tearDownData(scanCode)
     })
 
     for (const s of scenarios) {

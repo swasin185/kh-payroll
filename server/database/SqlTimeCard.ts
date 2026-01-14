@@ -10,7 +10,7 @@ export default {
         const [result] = await db.query<RowDataPacket[]>(
             `SELECT *
              FROM timecard
-             WHERE dateTxt=? and scanCode=?`,
+             WHERE DATE(scanAt)=? and scanCode=?`,
             [dateTxt, scanCode],
         )
         return TimeCardArraySchema.parse(result)
@@ -18,10 +18,10 @@ export default {
 
     async lookup(dateTxt: string, scanCode: string): Promise<LookupItem[]> {
         const [result] = await db.query(
-            `SELECT timeTxt AS id, concat(dateTxt, ' ', timeTxt) AS label 
+            `SELECT DATE_FORMAT(scanAt, '%H:%i') AS id, DATE_FORMAT(scanAt, '%Y-%m-%d %H:%i') AS label 
              FROM timecard
-             WHERE dateTxt=? and scanCode=?
-             ORDER BY timeTxt`,
+             WHERE DATE(scanAt)=? and scanCode=?
+             ORDER BY scanAt`,
             [dateTxt, scanCode],
         )
         return result as LookupItem[]
@@ -29,15 +29,15 @@ export default {
 
     async insert(timeCard: TimeCard): Promise<boolean> {
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT INTO timecard (dateTxt, scanCode, timeTxt) VALUES (?, ?, ?)`,
-            [timeCard.dateTxt, timeCard.scanCode, timeCard.timeTxt],
+            `INSERT INTO timecard (scanCode, scanAt) VALUES (?, ?)`,
+            [timeCard.scanCode, timeCard.scanAt],
         )
         return result.affectedRows === 1
     },
 
     async delete(dateTxt: string, scanCode: string): Promise<boolean> {
         const [result] = await db.execute<ResultSetHeader>(
-            `DELETE FROM timecard WHERE dateTxt=? and scanCode=?`,
+            `DELETE FROM timecard WHERE DATE(scanAt)=? and scanCode=?`,
             [dateTxt, scanCode],
         )
         return result.affectedRows > 0
