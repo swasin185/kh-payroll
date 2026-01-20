@@ -10,18 +10,18 @@ This document provides comprehensive guidelines for AI assistants (Claude, ChatG
 
 ### Tech Stack
 
--   **Framework**: Nuxt 4.2.1 (SSR disabled, SPA mode)
--   **Frontend**: Vue 3.5.25, Vue Router 4.6.3
--   **UI Library**: @nuxt/ui 4.2.1
--   **Styling**: TailwindCSS 4.1.17
--   **Backend**: Nitro (Nuxt server engine)
--   **Database**: MySQL 2 (via mysql2 package)
--   **Authentication**: nuxt-auth-utils 0.5.25
--   **Validation**: Zod 4.1.13
--   **Encryption**: crypto-js 4.2.0
--   **Testing**: Vitest 3.2.4, @nuxt/test-utils 3.20.1
--   **Package Manager**: pnpm
--   **Language**: TypeScript 5.9.3
+- **Framework**: Nuxt 4.2.1 (SSR disabled, SPA mode)
+- **Frontend**: Vue 3.5.25, Vue Router 4.6.3
+- **UI Library**: @nuxt/ui 4.2.1
+- **Styling**: TailwindCSS 4.1.17
+- **Backend**: Nitro (Nuxt server engine)
+- **Database**: MySQL 2 (via mysql2 package)
+- **Authentication**: nuxt-auth-utils 0.5.25
+- **Validation**: Zod 4.1.13
+- **Encryption**: crypto-js 4.2.0
+- **Testing**: Vitest 3.2.4, @nuxt/test-utils 3.20.1
+- **Package Manager**: pnpm
+- **Language**: TypeScript 5.9.3
 
 ---
 
@@ -126,29 +126,29 @@ kh-payroll/
 
 ### Nuxt Config (`nuxt.config.ts`)
 
--   **SSR**: Disabled (`ssr: false`) - runs as SPA
--   **Modules**: @nuxt/ui, nuxt-auth-utils, @nuxt/test-utils
--   **Session Storage**: Redis (production) or Memory (development)
--   **Session Max Age**: Configurable via `MAX_AGE` env variable (default: 36000s)
--   **Idle Limit**: 1/10th of MAX_AGE (default: 3600s)
--   **Report Proxy**: `/kxreport/**` proxies to external report server
+- **SSR**: Disabled (`ssr: false`) - runs as SPA
+- **Modules**: @nuxt/ui, nuxt-auth-utils, @nuxt/test-utils
+- **Session Storage**: Redis (production) or Memory (development)
+- **Session Max Age**: Configurable via `MAX_AGE` env variable (default: 36000s)
+- **Idle Limit**: 1/10th of MAX_AGE (default: 3600s)
+- **Report Proxy**: `/kxreport/**` proxies to external report server
 
 ### Environment Variables
 
 The project uses `.env` file (gitignored) with these expected variables:
 
--   `NODE_ENV`: Environment mode (production/development)
--   `MAX_AGE`: Session max age in seconds
--   `NUXT_SESSION_PASSWORD`: Session encryption password (min 32 chars)
--   `REDIS_URL`: Redis connection URL (optional, falls back to memory)
--   `KXREPORT`: Development report server URL
--   `KXREPORT_HTTPS`: Production report server URL
+- `NODE_ENV`: Environment mode (production/development)
+- `MAX_AGE`: Session max age in seconds
+- `NUXT_SESSION_PASSWORD`: Session encryption password (min 32 chars)
+- `REDIS_URL`: Redis connection URL (optional, falls back to memory)
+- `KXREPORT`: Development report server URL
+- `KXREPORT_HTTPS`: Production report server URL
 
 ### Database
 
--   **Type**: MySQL
--   **Connection**: Managed via `server/database/pool.ts`
--   **SQL Classes**: Each entity has a dedicated SQL class (e.g., `SqlEmployee.ts`)
+- **Type**: MySQL
+- **Connection**: Managed via `server/database/pool.ts`
+- **SQL Classes**: Each entity has a dedicated SQL class (e.g., `SqlEmployee.ts`)
 
 ---
 
@@ -164,33 +164,33 @@ server/api/{resource}/index.{method}.ts
 
 ### Methods
 
--   `index.get.ts` - GET (list/read)
--   `index.post.ts` - POST (create)
--   `index.put.ts` - PUT (update)
--   `index.delete.ts` - DELETE (remove)
+- `index.get.ts` - GET (list/read)
+- `index.post.ts` - POST (create)
+- `index.put.ts` - PUT (update)
+- `index.delete.ts` - DELETE (remove)
 
 ### Resources
 
--   **attendance** - Employee attendance records
--   **company** - Company/organization management
--   **employee** - Employee information
--   **holiday** - Holiday calendar
--   **incometype** - Income/payment types
--   **permission** - User permissions
--   **timecard** - Time tracking cards
--   **timetype** - Time entry types
--   **users** - User accounts
+- **attendance** - Employee attendance records
+- **company** - Company/organization management
+- **employee** - Employee information
+- **holiday** - Holiday calendar
+- **incometype** - Income/payment types
+- **permission** - User permissions
+- **timecard** - Time tracking cards
+- **timetype** - Time entry types
+- **users** - User accounts
 
 ### Special Endpoints
 
--   `POST /api/login` - Authentication
--   `GET /api/lookup` - Lookup/reference data
--   `GET /api/counter` - Counter/statistics
--   `GET /api/today` - Today's summary
--   `PUT /api/company/session` - Company session management
--   `PUT /api/permission/used` - Permission usage tracking
--   `GET /api/users/lookup` - User lookup
--   `PUT /api/users/password` - Password change
+- `POST /api/login` - Authentication
+- `GET /api/lookup` - Lookup/reference data
+- `GET /api/counter` - Counter/statistics
+- `GET /api/today` - Today's summary
+- `PUT /api/company/session` - Company session management
+- `PUT /api/permission/used` - Permission usage tracking
+- `GET /api/users/lookup` - User lookup
+- `PUT /api/users/password` - Password change
 
 ---
 
@@ -200,36 +200,36 @@ server/api/{resource}/index.{method}.ts
 
 Each page corresponds to a management interface:
 
--   **index.vue** - Dashboard/home page
--   **login.vue** - Authentication page
--   **company.vue** - Company CRUD interface
--   **employee.vue** - Employee CRUD interface
--   **user.vue** - User CRUD interface
--   **permission.vue** - Permission management
--   **timeinout.vue** - Time tracking interface
--   **timetype.vue** - Time type configuration
--   **holiday.vue** - Holiday calendar management
--   **incometype.vue** - Income type configuration
--   **password.vue** - Password change interface
+- **index.vue** - Dashboard/home page
+- **login.vue** - Authentication page
+- **company.vue** - Company CRUD interface
+- **employee.vue** - Employee CRUD interface
+- **user.vue** - User CRUD interface
+- **permission.vue** - Permission management
+- **timeinout.vue** - Time tracking interface
+- **timetype.vue** - Time type configuration
+- **holiday.vue** - Holiday calendar management
+- **incometype.vue** - Income type configuration
+- **password.vue** - Password change interface
 
 ### Components
 
 Reusable UI components:
 
--   **DBLookup.vue** - Database lookup/autocomplete
--   **DateInput.vue** - Date picker component
--   **MainMenu.vue** - Main navigation menu
--   **ModalDialog.vue** - Modal dialog wrapper
--   **MoneyInput.vue** - Currency input field
--   **ToolbarData.vue** - Data table toolbar
+- **DBLookup.vue** - Database lookup/autocomplete
+- **DateInput.vue** - Date picker component
+- **MainMenu.vue** - Main navigation menu
+- **ModalDialog.vue** - Modal dialog wrapper
+- **MoneyInput.vue** - Currency input field
+- **ToolbarData.vue** - Data table toolbar
 
 ### UI Configuration
 
 Custom @nuxt/ui theme in `app.config.ts`:
 
--   Custom table styling (yellow/blue light theme, sky/gray dark theme)
--   Cursor pointer on buttons and table cells
--   Full-width inputs by default
+- Custom table styling (yellow/blue light theme, sky/gray dark theme)
+- Cursor pointer on buttons and table cells
+- Full-width inputs by default
 
 ---
 
@@ -237,43 +237,39 @@ Custom @nuxt/ui theme in `app.config.ts`:
 
 ### Code Style
 
--   **Formatting**: Prettier configured (`.prettierrc.json`)
--   **TypeScript**: Strict typing enforced
--   **Validation**: Use Zod schemas for data validation
--   **Naming**: Use descriptive names, follow Vue/Nuxt conventions
+- **Formatting**: Prettier configured (`.prettierrc.json`)
+- **TypeScript**: Strict typing enforced
+- **Validation**: Use Zod schemas for data validation
+- **Naming**: Use descriptive names, follow Vue/Nuxt conventions
 
 ### File Naming Conventions
 
--   **Components**: PascalCase (e.g., `MainMenu.vue`)
--   **Pages**: lowercase (e.g., `employee.vue`)
--   **API Routes**: `{resource}/index.{method}.ts`
--   **Database**: `Sql{Entity}.ts` (e.g., `SqlEmployee.ts`)
--   **Types**: Descriptive names in `app/types/`
+- **Components**: PascalCase (e.g., `MainMenu.vue`)
+- **Pages**: lowercase (e.g., `employee.vue`)
+- **API Routes**: `{resource}/index.{method}.ts`
+- **Database**: `Sql{Entity}.ts` (e.g., `SqlEmployee.ts`)
+- **Types**: Descriptive names in `app/types/`
 
 ### Best Practices
 
 1. **Database Operations**
-
     - Always use the SQL classes in `server/database/`
     - Use connection pooling via `pool.ts`
     - Handle errors gracefully with try-catch
 
 2. **API Endpoints**
-
     - Validate input with Zod schemas
     - Return consistent response formats
     - Use proper HTTP status codes
     - Handle authentication/authorization
 
 3. **Frontend Components**
-
     - Use composables for shared logic
     - Keep components focused and reusable
     - Use @nuxt/ui components when possible
     - Follow Vue 3 Composition API patterns
 
 4. **Authentication**
-
     - Use nuxt-auth-utils for session management
     - Implement middleware for protected routes
     - Handle session expiry gracefully
@@ -318,9 +314,9 @@ SQL scripts are located in `script/sql/` directory.
 
 Reports use JasperReports:
 
--   Report definitions: `report/*.jrxml`
--   Compiled reports: `report/*.jasper`
--   Report server proxy: `/kxreport/**`
+- Report definitions: `report/*.jrxml`
+- Compiled reports: `report/*.jasper`
+- Report server proxy: `/kxreport/**`
 
 ---
 
@@ -329,21 +325,18 @@ Reports use JasperReports:
 ### When Making Changes
 
 1. **API Changes**
-
     - Update corresponding SQL class if database schema changes
     - Update Zod validation schemas
     - Test all CRUD operations
     - Update frontend components if response format changes
 
 2. **Frontend Changes**
-
     - Maintain responsive design
     - Test dark mode compatibility
     - Ensure accessibility
     - Update types if data structures change
 
 3. **Configuration Changes**
-
     - Document new environment variables
     - Update `.env.example` if it exists
     - Test in both development and production modes
@@ -356,20 +349,20 @@ Reports use JasperReports:
 
 ### Security Considerations
 
--   Never commit `.env` file
--   Use environment variables for sensitive data
--   Validate all user input
--   Sanitize database queries
--   Use HTTPS in production
--   Implement proper session management
--   Follow principle of least privilege for permissions
+- Never commit `.env` file
+- Use environment variables for sensitive data
+- Validate all user input
+- Sanitize database queries
+- Use HTTPS in production
+- Implement proper session management
+- Follow principle of least privilege for permissions
 
 ### Performance
 
--   Connection pooling is configured for database
--   Redis recommended for production sessions
--   Static assets served from `public/`
--   SPA mode for faster client-side navigation
+- Connection pooling is configured for database
+- Redis recommended for production sessions
+- Static assets served from `public/`
+- SPA mode for faster client-side navigation
 
 ---
 
@@ -378,19 +371,16 @@ Reports use JasperReports:
 ### Common Issues
 
 1. **Database Connection Errors**
-
     - Check MySQL server is running
     - Verify connection credentials in `.env`
     - Check `server/database/pool.ts` configuration
 
 2. **Session Issues**
-
     - Verify `NUXT_SESSION_PASSWORD` is set (min 32 chars)
     - Check Redis connection if using Redis storage
     - Clear browser cookies/storage
 
 3. **Build Errors**
-
     - Run `pnpm install` to ensure dependencies are up to date
     - Check TypeScript errors with `nuxt typecheck`
     - Clear `.nuxt` and `.output` directories
@@ -404,11 +394,11 @@ Reports use JasperReports:
 
 ## Additional Resources
 
--   [Nuxt 3 Documentation](https://nuxt.com)
--   [Vue 3 Documentation](https://vuejs.org)
--   [@nuxt/ui Documentation](https://ui.nuxt.com)
--   [nuxt-auth-utils](https://github.com/Atinux/nuxt-auth-utils)
--   [Zod Documentation](https://zod.dev)
+- [Nuxt 3 Documentation](https://nuxt.com)
+- [Vue 3 Documentation](https://vuejs.org)
+- [@nuxt/ui Documentation](https://ui.nuxt.com)
+- [nuxt-auth-utils](https://github.com/Atinux/nuxt-auth-utils)
+- [Zod Documentation](https://zod.dev)
 
 ---
 
@@ -452,3 +442,12 @@ When working with this project:
 **Last Updated**: 2025-12-30
 **Project Version**: Based on package.json dependencies
 **Nuxt Version**: 4.2.1
+
+---
+
+| กลุ่มรายงาน          | ประเภทรายงาน            | วัตถุประสงค์หลัก                    | ผู้ใช้งานหลัก          | ความถี่          |
+| -------------------- | ----------------------- | ----------------------------------- | ---------------------- | ---------------- |
+| ปฏิบัติการ           | ประจำวัน / รายคน        | เช็คความพร้อมหน้างานและตรวจสอบตนเอง | หัวหน้างาน / พนักงาน   | ทุกวัน           |
+| บริหารจัดการ         | รายเดือน / รายปี        | คำนวณเงินเดือน และประเมินผลงานปี    | HR / บัญชี / ผู้บริหาร | รายเดือน / ปี    |
+| วิเคราะห์ประสิทธิภาพ | เชิงกลยุทธ์ (Insight)   | บริหารต้นทุน OT และวางแผนกำลังคน    | ผู้บริหาร / HR Manager | รายไตรมาส        |
+| ตรวจสอบระบบ          | ข้อมูลผิดปกติ (Anomaly) | เช็คความสะอาดข้อมูลและป้องกันทุจริต | Developer / Admin      | ทุกวัน / สัปดาห์ |

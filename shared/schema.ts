@@ -161,8 +161,8 @@ export type TimeType = z.infer<typeof TimeTypeSchema>
 
 export const HolidaySchema = z.object({
     comCode: ComCodeAttr,
-    dateValue: DateAttr,
-    dateName: z.string().max(40).default(""),
+    day: DateAttr,
+    name: z.string().max(40).default(""),
 })
 export type Holiday = z.infer<typeof HolidaySchema>
 
@@ -190,6 +190,7 @@ export const AttendanceSchema = z.object({
     otMin: z.int().min(0).max(400).nullable().default(null),
     lunchMin: z.int().min(0).max(180).nullable().default(null),
     scanCount: z.int().min(0).max(10).nullable().default(null),
+    status: z.string().max(20).nullable().default(null),
 })
 export type Attendance = z.infer<typeof AttendanceSchema>
 export const AttendanceArraySchema = z.array(AttendanceSchema)

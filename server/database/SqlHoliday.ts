@@ -10,7 +10,7 @@ export default {
         const [result] = await db.query<RowDataPacket[]>(
             `SELECT *
              FROM holiday
-             WHERE comCode=? and dateValue=?`,
+             WHERE comCode=? and day=?`,
             [comCode, dateValue],
         )
         if (result.length !== 1) return null
@@ -19,10 +19,10 @@ export default {
 
     async lookup(comCode: string): Promise<LookupItem[]> {
         const [result] = await db.query(
-            `SELECT dateValue AS id, dateName AS label 
+            `SELECT day AS id, name AS label 
              FROM holiday
              WHERE comCode=?
-             ORDER BY dateValue`,
+             ORDER BY day`,
             [comCode],
         )
         return result as LookupItem[]
@@ -30,17 +30,17 @@ export default {
 
     async insert(day: Holiday): Promise<boolean> {
         const [result] = await db.execute(
-            `INSERT INTO holiday (comCode, dateValue, dateName) 
+            `INSERT INTO holiday (comCode, day, name) 
              VALUES (?,?,?)`,
             Object.values(day),
         )
         return (result as ResultSetHeader).affectedRows === 1
     },
 
-    async delete(comCode: string, dateValue: Date): Promise<boolean> {
+    async delete(comCode: string, day: Date): Promise<boolean> {
         const [result] = await db.execute<ResultSetHeader>(
-            `DELETE FROM holiday WHERE comCode=? and dateValue=?`,
-            [comCode, dateValue],
+            `DELETE FROM holiday WHERE comCode=? and day=?`,
+            [comCode, day],
         )
         return result.affectedRows === 1
     },
@@ -49,12 +49,12 @@ export default {
         const values = Object.values(day)
         values.shift()
         values.shift()
-        values.push(day.comCode, day.dateValue)
+        values.push(day.comCode, day.day)
 
         const [result] = await db.execute<ResultSetHeader>(
-            `UPDATE timetype 
-             SET dateName=?, 
-             WHERE comCode=? and dateValue=?`,
+            `UPDATE holiday 
+             SET name=?
+             WHERE comCode=? and day=?`,
             values,
         )
         return result.affectedRows === 1

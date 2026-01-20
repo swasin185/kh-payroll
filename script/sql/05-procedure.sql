@@ -1,12 +1,3 @@
-CREATE OR REPLACE
-ALGORITHM = UNDEFINED VIEW vTimeCard AS
-select
-    scanCode,
-    date_format(if(cast(scanAt as time) < '06:00', scanAt - interval 1 day, scanAt), '%Y-%m-%d') AS dateAt,
-    date_format(scanAt, '%H:%i') AS timeAt
-from
-    timecard;
-
 DROP PROCEDURE IF EXISTS runTimeCard;
 DELIMITER $$
 CREATE PROCEDURE runTimeCard(in pDateFrom varchar(10), in pDateTo varchar(10))
@@ -24,15 +15,14 @@ BEGIN
         e.comCode, 
         e.empCode, 
         dateAt,
-        MIN(IF(timeAt between '06:00' and '10:00', timeAt, NULL)) as inTime1,
-        MIN(IF(timeAt > '11:00' AND timeAt <= '13:30', timeAt, NULL)) as outTime1,
-        IF(COUNT(IF(timeAt > '11:00' AND timeAt <= '15:00', timeAt, NULL)) >= 2,
-           MAX(IF(timeAt > '11:30' AND timeAt <= '15:00', timeAt, NULL)), NULL) as inTime2,
-        MIN(IF(timeAt > '15:00', timeAt, NULL)) as outTime2,
-        MAX(IF(timeAt > '18:00' AND timeAt <= '19:00', timeAt, NULL)) as inTime3,
-        MAX(IF(timeAt < '06:00' OR timeAt > '19:00', timeAt, NULL)) as outTime3,
-        COUNT(timeAt) as scanCount
-    FROM vTimeCard t
+        morning,
+        lunch_out,
+        lunch_in,
+        evening,
+        night,
+        ifnull(early, night),
+        count
+    FROM vDailyTime t
     JOIN employee e ON t.scanCode = e.scanCode 
     WHERE dateAt BETWEEN pDateFrom AND pDateTo
     GROUP BY t.scanCode, dateAt;

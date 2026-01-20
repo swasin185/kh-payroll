@@ -14,11 +14,11 @@ describe("Payroll MariaDB", () => {
         { date: "2020-01-02", name: "Late1", times: ["08:10", "12:03", "13:05", "17:02"], expected: { inTime1: "08:10", outTime2: "17:02" } },
         { date: "2020-01-03", name: "Late2", times: ["07:59", "12:02", "13:15", "17:05"], expected: { inTime1: "07:59", outTime2: "17:05" } },
         { date: "2020-01-04", name: "Early", times: ["08:00", "11:55", "12:50", "16:55"], expected: { inTime1: "08:00", outTime2: "16:55" } },
-        { date: "2020-01-05", name: "OT", times: ["08:00", "17:00", "18:00", "20:30"], expected: { outTime2: "17:00", outTime3: "20:30" } },
+        { date: "2020-01-05", name: "OT", times: ["08:00", "20:30"], expected: { inTime1: "08:00", outTime3: "20:30" } },
         { date: "2020-01-10", name: "Missing Lunch", times: ["07:50", "17:01"], expected: { inTime1: "07:50", outTime2: "17:01" } },
-        { date: "2020-01-11", name: "Spam Times 1", times: ["07:59", "08:05", "08:08", "17:00"], expected: { inTime1: "07:59", outTime2: "17:00" } },
-        { date: "2020-01-12", name: "Spam Times 2", times: ["07:55", "07:59", "16:58", "17:00"], expected: { inTime1: "07:55", outTime2: "16:58" } },
-        { date: "2020-01-13", name: "Incomplete", times: ["07:59", "08:00", "12:08", "13:01"], expected: { inTime1: "07:59", outTime1: "12:08", inTime2: "13:01", outTime2: null } },
+        { date: "2020-01-11", name: "Spam Times 1", times: ["07:59", "08:05", "08:08", "17:00"], expected: { inTime1: "08:08", outTime2: "17:00" } },
+        { date: "2020-01-12", name: "Spam Times 2", times: ["07:55", "07:59", "16:58", "17:03"], expected: { inTime1: "07:59", outTime2: "17:03" } },
+        { date: "2020-01-13", name: "Incomplete", times: ["07:59", "08:00", "12:08", "13:01", "13:09"], expected: { inTime1: "08:00", outTime1: "12:08", inTime2: "13:09", outTime2: null } },
     ]
 
     async function getScanCode(): Promise<string> {

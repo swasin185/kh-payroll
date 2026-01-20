@@ -127,9 +127,9 @@ create table payroll (
 drop table if exists holiday;
 create table holiday (
     comCode       varchar(2),
-    dateValue     date comment "วันเดือนปีวันหยุด",
-    dateName      varchar(40) comment "ชื่อวันหยุด",
-    primary key (comCode, dateValue)
+    day           date comment "วันเดือนปีวันหยุด",
+    name          varchar(40) comment "ชื่อวันหยุด",
+    primary key (comCode, day)
 ) comment = "รายการวันหยุดประจำปี";
 
 drop table if exists timecard;
@@ -157,6 +157,7 @@ create table attendance (
     otMin         smallint unsigned comment "จำนวนนาทีล่วงเวลา",
     lunchMin      smallint unsigned comment "จำนวนนาทีพักกลางวัน",
     scanCount     smallint unsigned comment "จำนวนการสแกน",
+    status        varchar(20) comment "สถานะเวลางาน",
     foreign key (comCode, empCode) references employee(comCode, empCode),
     primary key (comCode, empCode, dateTxt)
 ) comment = "วันที่มาทำงาน เวลาเข้าออกงาน";
