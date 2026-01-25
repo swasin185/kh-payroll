@@ -451,3 +451,26 @@ When working with this project:
 | บริหารจัดการ         | รายเดือน / รายปี        | คำนวณเงินเดือน และประเมินผลงานปี    | HR / บัญชี / ผู้บริหาร | รายเดือน / ปี    |
 | วิเคราะห์ประสิทธิภาพ | เชิงกลยุทธ์ (Insight)   | บริหารต้นทุน OT และวางแผนกำลังคน    | ผู้บริหาร / HR Manager | รายไตรมาส        |
 | ตรวจสอบระบบ          | ข้อมูลผิดปกติ (Anomaly) | เช็คความสะอาดข้อมูลและป้องกันทุจริต | Developer / Admin      | ทุกวัน / สัปดาห์ |
+
+---
+
+```
+select count(*) as count
+from vAttendance
+where dateAt between '2025-01-01' and '2025-12-31' and
+      morning is not null and
+          (evening is not null || night is not null || early is not null) and
+          ((lunch_out is null && lunch_in is null) || lunch_in <> lunch_out);
+
+├── [เข้างาน] ── [ออกงาน] ── [พักเที่ยง]
+    └─ morning  ├─ evening  ├─ ไม่ออกเที่ยง
+                ├─ night    └─ ออกเข้าเที่ยง
+                └─ early
+
+
+```
+
+## MariadDB 11.x
+
+> บังคับให้ใช้ utf8mb4
+> SET NAMES utf8mb4 COLLATE utf8mb4_general_ci
