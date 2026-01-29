@@ -12,7 +12,7 @@
         "serve": "./script/serve.sh"
     },
     "dependencies": {
-        "@nuxt/test-utils": "3.20.1",
+        "@nuxt/test-utils": "3.23.0",
         "@nuxt/ui": "^4.2.1",
         "crypto-js": "^4.2.0",
         "mysql2": "^3.15.3",
