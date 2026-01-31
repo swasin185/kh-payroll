@@ -66,7 +66,7 @@ const ChangePasswordSchema = z
         newPassword: z.string().min(6, mesg),
         confirmPassword: z.string().min(6, mesg),
     })
-    .refine((data) => data.newPassword === data.confirmPassword, {
+    .refine((data: { currentPassword: string; newPassword: string; confirmPassword: string }) => data.newPassword === data.confirmPassword, {
         message: "รหัสผ่านใหม่และการยืนยันไม่ตรงกัน",
         path: ["confirmPassword"],
     })

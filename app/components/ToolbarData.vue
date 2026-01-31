@@ -115,7 +115,7 @@ const saveClick = async () => {
     else if (props.onUpdate && mode.value === DBMODE.Update) success = await props.onUpdate()
     else if (props.onDelete && mode.value === DBMODE.Delete) {
         success = await props.onDelete()
-        searchKey.value = ""
+        if (props.lookupName) searchKey.value = ""
     }
     if (success) {
         toast.add({

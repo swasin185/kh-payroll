@@ -39,7 +39,7 @@ const state = reactive({
     password: "",
 })
 
-import type { FormError } from "@nuxt/ui"
+import type { FormError } from "#ui/types"
 const validate = (state: any): FormError[] => {
     const errors = []
     if (!state.userid) errors.push({ name: "userid", message: "Required" })

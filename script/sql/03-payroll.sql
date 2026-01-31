@@ -10,7 +10,7 @@ create table deduction (
     deductChild    mediumint unsigned default 0 comment "ค่าลดหย่อนบุตรธิดา",
     deductChildEdu mediumint unsigned default 0 comment "ค่าลดหย่อนบุตรธิดา กำลังศึกษา"
 ) comment = "ประเภทเงินหักลดหย่อน ของกรมสรรพากร";
-insert into deduction values (50.0, 100000, 60000, 60000, 30000, 30000);
+insert ignore into deduction values (50.0, 100000, 60000, 60000, 30000, 30000);
 
 drop table if exists timetype;
 create table timetype (
@@ -31,9 +31,9 @@ create table timetype (
     flaxible       smallint unsigned default 0 comment "ระยะเวลาพักยืดหยุ่น (นาที)",
     primary key (timeCode)
 ) comment = "กำหนดค่าวิธีคิดเวลาทำงาน เบี้ยเลี้ยง OT";
-insert into timetype (descript) value ("เวลาทำงาน 1 ไม่มี OT/เบี้ยเลี้ยง");
-insert into timetype (descript, s1Finish, s2Start) value ("เวลาทำงาน 2 ไม่มี OT/เบี้ยเลี้ยง", "11:00", "12:00");
-insert into timetype (descript, s1Start, s1Finish, s2Start, s2Finish) value ("เวลาฝึกงาน 3 ไม่มี OT/เบี้ยเลี้ยง", "09:00", "12:00", "13:00", "16:30");
+insert ignore into timetype (descript) value ("เวลาทำงาน 1 ไม่มี OT/เบี้ยเลี้ยง");
+insert ignore into timetype (descript, s1Finish, s2Start) value ("เวลาทำงาน 2 ไม่มี OT/เบี้ยเลี้ยง", "11:00", "12:00");
+insert ignore into timetype (descript, s1Start, s1Finish, s2Start, s2Finish) value ("เวลาฝึกงาน 3 ไม่มี OT/เบี้ยเลี้ยง", "09:00", "12:00", "13:00", "16:30");
 
 
 drop table if exists employee;
@@ -87,7 +87,7 @@ create table taxrate (
 	rate           decimal(4,2) default 0 comment "อัตราภาษีเปอร์เซ็น",
 	primary key (total)
 ) comment = "อัตราการคำนวณภาษี";
-insert into taxrate values 
+insert ignore into taxrate values 
 ( 150000,  0.0),
 ( 300000,  5.0),
 ( 500000, 10.0),

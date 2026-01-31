@@ -29,7 +29,7 @@ export default {
         if (fromUser === toUser) return 0
         await db.execute(`DELETE FROM permission WHERE userId=? AND comCode=?`, [toUser, company])
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT INTO permission (comCode, userId, program, level, used)
+            `INSERT IGNORE INTO permission (comCode, userId, program, level, used)
              SELECT comCode, ?, program, level, used 
              FROM permission 
              WHERE comCode=? AND userId=?`,
@@ -68,7 +68,7 @@ export default {
                       ${item.used ?? 0})`,
             )
             await connect.execute(
-                `INSERT INTO permission (comCode, userId, program, level, used)
+                `INSERT IGNORE INTO permission (comCode, userId, program, level, used)
                  VALUES ${valuesList.join(",")}
                  ON DUPLICATE KEY UPDATE level=VALUES(level), used=VALUES(used)`,
             )

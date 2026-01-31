@@ -33,7 +33,12 @@ const openLookupDialog = async (open: boolean) => {
 const props = defineProps<{
     name?: string
     dialogName?: string
+    query?: Record<string, any>
 }>()
+
+watch(() => props.query, async () => {
+    await refresh()
+}, { deep: true })
 
 const lookupKey = defineModel<string | null>("lookupKey")
 
@@ -44,7 +49,7 @@ await refresh()
 
 async function refresh(): Promise<void> {
     data.value = props.name
-        ? await $fetch("/api/lookup", { method: "GET", query: { name: props.name } })
+        ? await $fetch("/api/lookup", { method: "GET", query: { name: props.name, ...props.query } })
         : []
 }
 

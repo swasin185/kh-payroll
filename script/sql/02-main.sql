@@ -16,7 +16,7 @@ create table company (
   mnPayroll     tinyint unsigned default month(curdate()) comment "เดือนปัจจุบันที่กำลังทำงาน",
   primary key (comCode)
 ) comment = "บริษัท-ข้อมูลของแต่ละบริษัท";
-insert into 
+insert ignore into 
   company(comCode, comName) 
 values
   ("00", "บจ.ทดสอบ KEEHIN Software"),
@@ -38,7 +38,7 @@ create table users (
   foreign key (comCode) references company(comCode),
   primary key (id)
 ) comment = "ผู้ใช้งานระบบ";
-insert into users
+insert ignore into users
   (id, name, descript, level)
 values 
   ("admin", "แอดมินไงจะใครละ", "ผู้สร้างระบบ", 9),

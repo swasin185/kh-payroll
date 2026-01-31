@@ -22,7 +22,7 @@ export default {
 
     async insert(att: Attendance): Promise<boolean> {
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT INTO attendance
+            `INSERT IGNORE INTO attendance
              VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?)`,
             Object.values(att),
         )

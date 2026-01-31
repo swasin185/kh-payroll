@@ -27,7 +27,7 @@ export default {
 
     async insert(inc: IncomeType): Promise<boolean> {
         const [result] = await db.execute(
-            `INSERT INTO incometype (inCode, inName, inType, isTax, isReset, initLimit, initPercent) 
+            `INSERT IGNORE INTO incometype (inCode, inName, inType, isTax, isReset, initLimit, initPercent) 
              VALUES (?,?,?,?,?,?,?)`,
             Object.values(inc),
         )

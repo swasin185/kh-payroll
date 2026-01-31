@@ -29,7 +29,7 @@ export default {
     async insert(user: Users): Promise<boolean> {
         user.id = user.id.toLowerCase().trim()
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT INTO users (id, name, descript, level, role, comCode) 
+            `INSERT IGNORE INTO users (id, name, descript, level, role, comCode) 
              VALUES (?,?,?,?,?,?)`,
             Object.values(user),
         )

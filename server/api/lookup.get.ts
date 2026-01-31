@@ -22,7 +22,8 @@ export default authEventHandler(async (event): Promise<LookupItem[]> => {
         result = await SqlEmployee.lookup((sess.user! as any).comCode!.toString())
     } else if (name === "holiday") {
         const sess = await getUserSession(event)
-        result = await SqlHoliday.lookup((sess.user! as any).comCode!.toString())
+        const year = query.year?.toString()
+        result = await SqlHoliday.lookup((sess.user! as any).comCode!.toString(), year)
     }
     return result
 })

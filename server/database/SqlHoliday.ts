@@ -17,27 +17,38 @@ export default {
         return HolidaySchema.parse(result[0])
     },
 
-    async lookup(comCode: string): Promise<LookupItem[]> {
-        const [result] = await db.query(
-            `SELECT day AS id, name AS label 
+    async lookup(comCode: string, year?: string): Promise<LookupItem[]> {
+        const query = `SELECT day AS id, concat(day, " : ", name) AS label 
              FROM holiday
-             WHERE comCode=?
-             ORDER BY day`,
-            [comCode],
-        )
+             WHERE comCode=? ${year ? "AND YEAR(day)=?" : ""}
+             ORDER BY day`
+        const params = year ? [comCode, year] : [comCode]
+        const [result] = await db.query(query, params)
         return result as LookupItem[]
+    },
+
+    async list(comCode: string, startDate: Date, endDate: Date): Promise<Holiday[]> {
+        const [result] = await db.query<RowDataPacket[]>(
+            `SELECT *
+             FROM holiday
+             WHERE comCode=? AND day >= ? AND day <= ?
+             ORDER BY day`,
+            [comCode, startDate, endDate],
+        )
+        return result.map(row => HolidaySchema.parse(row))
     },
 
     async insert(day: Holiday): Promise<boolean> {
         const [result] = await db.execute(
-            `INSERT INTO holiday (comCode, day, name) 
+            `INSERT IGNORE INTO holiday (comCode, day, name) 
              VALUES (?,?,?)`,
             Object.values(day),
         )
         return (result as ResultSetHeader).affectedRows === 1
     },
 
-    async delete(comCode: string, day: Date): Promise<boolean> {
+    async delete(comCode: string, day: string): Promise<boolean> {
+        console.log(day)
         const [result] = await db.execute<ResultSetHeader>(
             `DELETE FROM holiday WHERE comCode=? and day=?`,
             [comCode, day],

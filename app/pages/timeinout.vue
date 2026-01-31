@@ -86,7 +86,7 @@ const table = useTemplateRef("table")
 const rowSelection: Ref<any> = ref({})
 const attendance = reactive<Attendance[]>([])
 
-import type { TableRow } from "@nuxt/ui"
+import type { TableRow } from "#ui/types"
 
 const columns = [
     {

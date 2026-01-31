@@ -28,7 +28,7 @@ export default {
 
     async insert(time: TimeType): Promise<boolean> {
         const [result] = await db.execute(
-            `INSERT INTO timetype (
+            `INSERT IGNORE INTO timetype (
                 timeCode, descript, s1Start, s1Finish, s2Start, s2Finish, s3Start, s3Finish, 
                 otRate1, otRate2, otRate3, allowance1, allowance2, weekDay) 
              VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?)`,

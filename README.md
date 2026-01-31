@@ -445,6 +445,15 @@ When working with this project:
 
 ---
 
+## MariadDB 11.x
+
+> บังคับให้ใช้ utf8mb4
+> SET NAMES utf8mb4 COLLATE utf8mb4_general_ci
+
+---
+
+## Time Attendance Report
+
 | กลุ่มรายงาน          | ประเภทรายงาน            | วัตถุประสงค์หลัก                    | ผู้ใช้งานหลัก          | ความถี่          |
 | -------------------- | ----------------------- | ----------------------------------- | ---------------------- | ---------------- |
 | ปฏิบัติการ           | ประจำวัน / รายคน        | เช็คความพร้อมหน้างานและตรวจสอบตนเอง | หัวหน้างาน / พนักงาน   | ทุกวัน           |
@@ -454,23 +463,77 @@ When working with this project:
 
 ---
 
+เคสเขียวที่คำนวณเวลาได้เลย
+
 ```
 select count(*) as count
 from vAttendance
 where dateAt between '2025-01-01' and '2025-12-31' and
-      morning is not null and
-          (evening is not null || night is not null || early is not null) and
-          ((lunch_out is null && lunch_in is null) || lunch_in <> lunch_out);
+      (morning is not null and not (evening is null and night is null and early is null));
 
-├── [เข้างาน] ── [ออกงาน] ── [พักเที่ยง]
-    └─ morning  ├─ evening  ├─ ไม่ออกเที่ยง
-                ├─ night    └─ ออกเข้าเที่ยง
-                └─ early
-
-
+── [เข้างาน] ── [ออกงาน]
+   └─ morning  ├─ evening
+               ├─ night
+               └─ early
 ```
 
-## MariadDB 11.x
+เคสเหลืองที่ไม่คำนวณเวลา รอยืนย้น
+เหลือจากเคสเขียว ถ้ามีเที่ยง และ (ไม่มีเช้า หรือ(xor) ไม่มีออกงาน)
+แต่ ใช้ xor เพื่อตัดกรณีที่ (ไม่เช้า และ ไม่มีออกงาน)
 
-> บังคับให้ใช้ utf8mb4
-> SET NAMES utf8mb4 COLLATE utf8mb4_general_ci
+```
+select day_case, lunch_case, night_case, count(*) as count
+from vAttendance
+where dateAt between '2025-01-01' and '2025-12-31' and
+(
+    (lunch_out is not null or lunch_in is not null) and
+    (morning is not null xor not (evening is null and night is null and early is null))
+)
+group by day_case, lunch_case, night_case;
+
+├─ [มีเที่ยง]  ── [[เข้างาน] xor [ออกงาน]] --
+```
+
+เคสแดงที่ไม่คำนวณเวลา รอลบ
+
+```
+select day_case, lunch_case, night_case, count(*) as count
+from vAttendance
+where dateAt between '2025-01-01' and '2025-12-31' and
+(
+    lunch_out is null and lunch_in is null and
+    (morning is null or  (evening is null and night is null and early is null)) or
+    (morning is null && evening is null && night is null && early is null)
+)
+group by day_case, lunch_case, night_case;
+
+├─ [ไม่มีเที่ยง] ── [ไม่เข้า หรือ ไม่ออก]
+│               ├─ !morning
+│               └─ !evening ── !night ── !early
+└─ [ไม่มีเช้า เย็น ค่ำ ข้ามวัน ]
+   └─ !morning ── !evening ── !night ── !early
+```
+
+สรุปเคส Green, Yellow, Red
+
+```
+select
+	day_case,
+	lunch_case,
+	night_case,
+	if ( morning is not null and not (evening is null and night is null and early is null), "Green",
+    if ((morning is not null or  not (evening is null and night is null and early is null)) and
+        (lunch_out is not null or lunch_in is not null),
+            "Yellow", "Red")) status,
+	count(*) as count
+from
+	vAttendance
+where
+	dateAt between $P{startDate} and $P{endDate}
+group by
+	day_case,
+	lunch_case,
+	night_case
+order by
+    status, day_case, lunch_case, night_case
+```

@@ -14,12 +14,13 @@ export default function useCounter() {
                 if (loggedIn.value) {
                     await refreshSession()
                     if (!loggedIn.value && activeMenu.value.label! !== loginUrl) {
-                        useToast().add({
-                            title: `[${new Date()}] Session's Expired`,
-                            description: `Idel Time Limited ${idleLimit / 60} minute`,
-                            color: "error",
-                            duration: 10_000,
-                        })
+                        // useToast().add({
+                        //     title: `[${new Date()}] Session's Expired`,
+                        //     description: `Idel Time Limited ${idleLimit / 60} minute`,
+                        //     color: "error",
+                        //     duration: 10_000,
+                        // })
+                        console.log(`Idel Time Limited ${idleLimit / 60} minute`)
                         await navigateTo(loginUrl)
                     }
                 }

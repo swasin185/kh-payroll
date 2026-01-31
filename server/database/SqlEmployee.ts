@@ -42,7 +42,7 @@ export default {
                 })
 
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT INTO employee  
+            `INSERT IGNORE INTO employee  
              VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?)`,
             Object.values(emp),
         )

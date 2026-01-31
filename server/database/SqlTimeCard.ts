@@ -29,7 +29,7 @@ export default {
 
     async insert(timeCard: TimeCard): Promise<boolean> {
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT INTO timecard (scanCode, scanAt) VALUES (?, ?)`,
+            `INSERT IGNORE INTO timecard (scanCode, scanAt) VALUES (?, ?)`,
             [timeCard.scanCode, timeCard.scanAt],
         )
         return result.affectedRows === 1

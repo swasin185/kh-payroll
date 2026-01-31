@@ -21,7 +21,7 @@ export default {
 
     async insert(com: Company): Promise<boolean> {
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT INTO company (comCode, comName, taxId, address, phone, email1, email2, email3) 
+            `INSERT IGNORE INTO company (comCode, comName, taxId, address, phone, email1, email2, email3) 
              VALUES (?,?,?,?,?,?,?,?)`,
             Object.values(com),
         )

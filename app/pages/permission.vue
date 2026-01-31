@@ -58,7 +58,7 @@
 definePageMeta({ keepalive: true })
 
 import { DBMODE, LEVELS, LEVEL_ITEMS } from "~~/shared/utils"
-import type { NavigationMenuItem } from "@nuxt/ui"
+import type { NavigationMenuItem } from "#ui/types"
 
 const { $waitFetch } = useNuxtApp()
 const { user } = useUserSession()

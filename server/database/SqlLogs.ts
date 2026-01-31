@@ -7,7 +7,7 @@ const db = getDB()
 export default {
     async insert(logs: Logs): Promise<boolean> {
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT INTO logs (logTime, logType, userId, program, tableName, changed, comCode) 
+            `INSERT IGNORE INTO logs (logTime, logType, userId, program, tableName, changed, comCode) 
              VALUES (?,?,?,?,?,?,?)`,
             Object.values(logs),
         )
