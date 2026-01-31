@@ -463,77 +463,35 @@ When working with this project:
 
 ---
 
-เคสเขียวที่คำนวณเวลาได้เลย
+## การคำนวณเวลางาน
+  - วันทำงาน จันทร์ - เสาร์
+  - วันหยุด ทุกวันอาทิตย์ หรือวันหยุดประจำปี (13 วัน)
+  - เวลางานประจำวัน 8:00 - 17:00
+  - ช่วงเวลาสแกน *ถ้ามีหลายครั้ง ใช้ครั้งสุดท้าย*
+    - เวลาเข้า เช้า 06:00 - 10:00    
+    - เวลาออก เย็น 16:00 - 18:00
+    - เวลาออก ค่ำ 19:00 - 24:00
+    - เวลาออก ข้ามวัน 00:00 - 06:00 ใช้วันที่เมื่อวาน
+    - เวลา พักเที่ยง 11:00 - 13:30 *หลายครั้ง ใช้ครั้งแรก*
+    - เวลา กลับเที่ยง 11:30 - 14:00 
+  - หักเวลาพักเที่ยง 1 ชั่วโมง
+    - ไม่สแกนเที่ยง - หักเพิ่ม 4 ชั่วโมง
+    - สแกนเที่ยงไม่ครบ - หักเพิ่ม 2 ชั่วโมง
+    - สแกนออกเข้าเที่ยงเกิน - หักเพิ่มตามนาทีสาย
+  - เวลา OT คิดเมื่อ เข้าเช้าและมีเวลาออก ข้ามวัน หรือค่ำ
+    - หัก 1 ชั่วโมง หลัง 19:00
 
-```
-select count(*) as count
-from vAttendance
-where dateAt between '2025-01-01' and '2025-12-31' and
-      (morning is not null and not (evening is null and night is null and early is null));
+### 1 เต็มวัน (มีเวลาเข้างาน และ มีเวลาออกงาน)
+  > คำนวณเวลางาน เวลาสาย และ OT
+  - เงื่อนไข มีเวลาเข้าตอนเช้า และ (มีเวลาออกเย็น หรือ ค่ำ หรือ ข้ามวัน)
+  - (morning is not null and not (evening is null and night is null and early is null))
 
-── [เข้างาน] ── [ออกงาน]
-   └─ morning  ├─ evening
-               ├─ night
-               └─ early
-```
-
-เคสเหลืองที่ไม่คำนวณเวลา รอยืนย้น
-เหลือจากเคสเขียว ถ้ามีเที่ยง และ (ไม่มีเช้า หรือ(xor) ไม่มีออกงาน)
-แต่ ใช้ xor เพื่อตัดกรณีที่ (ไม่เช้า และ ไม่มีออกงาน)
-
-```
-select day_case, lunch_case, night_case, count(*) as count
-from vAttendance
-where dateAt between '2025-01-01' and '2025-12-31' and
-(
-    (lunch_out is not null or lunch_in is not null) and
+### 2 ครึ่งวัน (มีแค่เวลาเข้า หรือ มีแค่เวลาออก) และ มีเวลาพักเที่ยง
+  > ตรวจสอบการลา ครึ่งวัน
+  - เงื่อนไข มีการสแกนช่วงเที่ยง และ (มีเวลาเข้าตอนเช้า หรือ-xor (มีเวลาออกเย็น หรือ ค่ำ หรือ ข้ามวัน))
+  - (lunch_out is not null or lunch_in is not null) and
     (morning is not null xor not (evening is null and night is null and early is null))
-)
-group by day_case, lunch_case, night_case;
+  - ใช้ xor เพื่อตัดกรณีที่ (ไม่เช้า และ ไม่มีออกงาน)
 
-├─ [มีเที่ยง]  ── [[เข้างาน] xor [ออกงาน]] --
-```
-
-เคสแดงที่ไม่คำนวณเวลา รอลบ
-
-```
-select day_case, lunch_case, night_case, count(*) as count
-from vAttendance
-where dateAt between '2025-01-01' and '2025-12-31' and
-(
-    lunch_out is null and lunch_in is null and
-    (morning is null or  (evening is null and night is null and early is null)) or
-    (morning is null && evening is null && night is null && early is null)
-)
-group by day_case, lunch_case, night_case;
-
-├─ [ไม่มีเที่ยง] ── [ไม่เข้า หรือ ไม่ออก]
-│               ├─ !morning
-│               └─ !evening ── !night ── !early
-└─ [ไม่มีเช้า เย็น ค่ำ ข้ามวัน ]
-   └─ !morning ── !evening ── !night ── !early
-```
-
-สรุปเคส Green, Yellow, Red
-
-```
-select
-	day_case,
-	lunch_case,
-	night_case,
-	if ( morning is not null and not (evening is null and night is null and early is null), "Green",
-    if ((morning is not null or  not (evening is null and night is null and early is null)) and
-        (lunch_out is not null or lunch_in is not null),
-            "Yellow", "Red")) status,
-	count(*) as count
-from
-	vAttendance
-where
-	dateAt between $P{startDate} and $P{endDate}
-group by
-	day_case,
-	lunch_case,
-	night_case
-order by
-    status, day_case, lunch_case, night_case
-```
+### 3 อื่นๆ (ไม่นับวันเวลาทำงาน)
+  > ตรวจสอบการลา หรือไม่ก็นับว่าเป็นการขาดงาน
