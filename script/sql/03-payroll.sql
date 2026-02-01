@@ -144,15 +144,14 @@ create table attendance (
     comCode       varchar(2),
     empCode       smallint unsigned,
     dateTxt       varchar(10) comment "วันเดือนปีทำงาน",
-    inTime1       varchar(5) comment "เวลาเข้า เช้า",
-    outTime1      varchar(5) comment "เวลาออก เช้า",
+    morning       varchar(5) comment "เวลาเข้า เช้า 06:00 - 10:00 (last)",
+    evening       varchar(5) comment "เวลาออก เย็น 16:00 - 18:00 (last)",
+    night         varchar(5) comment "เวลาออก ค่ำ 19:00 - 24:00 (last)",
+    early         varchar(5) comment "เวลาออก ข้ามวัน 00:00 - 06:00 (last)",
+    lunch_out     varchar(5) comment "เวลาพักเที่ยง 11:00 - 13:30 (first)",
+    lunch_in      varchar(5) comment "เวลากลับเที่ยง 11:30 - 14:00 (last)",
     lateMin1      smallint unsigned comment "จำนวนนาทีมาสาย เช้า",
-    inTime2       varchar(5) comment "เวลาเข้า บ่าย",
-    outTime2      varchar(5) comment "เวลาออก บ่าย",
-    lateMin2      smallint comment "จำนวนนาทีมาสาย บ่าย",
-    inTime3       varchar(5) comment "เวลาเข้า ค่ำ",
-    outTime3      varchar(5) comment "เวลาออก ค่ำ",
-    lateMin3      smallint unsigned comment "จำนวนนาทีมาสาย ค่ำ",
+    lateMin2      smallint unsigned comment "จำนวนนาทีมาสาย บ่าย/เที่ยง",
     workMin       smallint unsigned comment "จำนวนนาทีทำงาน",
     otMin         smallint unsigned comment "จำนวนนาทีล่วงเวลา",
     lunchMin      smallint unsigned comment "จำนวนนาทีพักกลางวัน",
@@ -160,6 +159,6 @@ create table attendance (
     status        varchar(20) comment "สถานะเวลางาน",
     foreign key (comCode, empCode) references employee(comCode, empCode),
     primary key (comCode, empCode, dateTxt)
-) comment = "วันที่มาทำงาน เวลาเข้าออกงาน";
+) comment = "วันที่มาทำงาน เวลาเข้าออกงาน ตามการสแกน";
 
 set foreign_key_checks = 1;

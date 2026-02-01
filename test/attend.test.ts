@@ -10,15 +10,19 @@ describe("Payroll MariaDB", () => {
     const testComCode = "01"
     const testEmpCode = 2
     const scenarios = [
-        { date: "2020-01-01", name: "Normal", times: ["08:00", "12:00", "13:00", "17:00"], expected: { inTime1: "08:00", outTime2: "17:00" } },
-        { date: "2020-01-02", name: "Late1", times: ["08:10", "12:03", "13:05", "17:02"], expected: { inTime1: "08:10", outTime2: "17:02" } },
-        { date: "2020-01-03", name: "Late2", times: ["07:59", "12:02", "13:15", "17:05"], expected: { inTime1: "07:59", outTime2: "17:05" } },
-        { date: "2020-01-04", name: "Early", times: ["08:00", "11:55", "12:50", "16:55"], expected: { inTime1: "08:00", outTime2: "16:55" } },
-        { date: "2020-01-05", name: "OT", times: ["08:00", "20:30"], expected: { inTime1: "08:00", outTime3: "20:30" } },
-        { date: "2020-01-10", name: "Missing Lunch", times: ["07:50", "17:01"], expected: { inTime1: "07:50", outTime2: "17:01" } },
-        { date: "2020-01-11", name: "Spam Times 1", times: ["07:59", "08:05", "08:08", "17:00"], expected: { inTime1: "08:08", outTime2: "17:00" } },
-        { date: "2020-01-12", name: "Spam Times 2", times: ["07:55", "07:59", "16:58", "17:03"], expected: { inTime1: "07:59", outTime2: "17:03" } },
-        { date: "2020-01-13", name: "Incomplete", times: ["07:59", "08:00", "12:08", "13:01", "13:09"], expected: { inTime1: "08:00", outTime1: "12:08", inTime2: "13:09", outTime2: null } },
+        { date: "2020-01-01", name: "Normal", times: ["08:00", "12:00", "13:00", "17:00"], expected: { morning: "08:00", lunch_out: "12:00", lunch_in: "13:00", evening: "17:00", status: "Full Day", lunchMin: 60, workMin: 480 } },
+        { date: "2020-01-02", name: "Normal B", times: ["07:50", "12:04", "12:45", "17:30"], expected: { morning: "07:50", lunch_out: "12:04", lunch_in: "12:45", evening: "17:30", status: "Full Day", lunchMin: 60, workMin: 480 } },
+        { date: "2020-01-03", name: "OT Night", times: ["08:00", "12:00", "13:00", "21:00"], expected: { morning: "08:00", night: "21:00", status: "Full Day", lunchMin: 60, otMin: 180 } },
+        { date: "2020-01-05", name: "OT Early", times: ["08:00", "12:00", "13:00", "02:00"], expected: { morning: "08:00", early: "02:00", status: "Full Day", lunchMin: 60, otMin: 480 } },
+        { date: "2020-01-08", name: "Half Day Morning", times: ["08:00", "12:00"], expected: { morning: "08:00", lunch_out: "12:00", status: "Half Day" } },
+        { date: "2020-01-10", name: "Half Day Afternoon", times: ["13:00", "17:00"], expected: { lunch_in: "13:00", evening: "17:00", status: "Half Day" } },
+        { date: "2020-01-12", name: "Missing Lunch 1", times: ["08:00", "17:00"], expected: { morning: "08:00", lunch_out: null, lunch_in: null, evening: "17:00", status: "Full Day", lunchMin: 300, workMin: 240 } },
+        { date: "2020-01-13", name: "Missing Lunch 2", times: ["08:00", "12:00", "17:00"], expected: { morning: "08:00", lunch_out : "12:00", lunch_in : "12:00", evening: "17:00", status: "Full Day", lunchMin: 180, workMin: 360 } },
+        { date: "2020-01-14", name: "Late Morning", times: ["08:20", "12:00", "13:00", "17:00"], expected: { lateMin1: 20 } },
+        { date: "2020-01-16", name: "Late Lunch", times: ["08:00", "12:00", "13:15", "17:00"], expected: { lateMin2: 15 } },
+        { date: "2020-01-18", name: "Spam Morning", times: ["07:50", "08:00", "08:05"], expected: { morning: "08:05" } },
+        { date: "2020-01-20", name: "Spam Lunch Out", times: ["11:55", "12:05", "12:10"], expected: { lunch_out: "11:55" } },
+        { date: "2020-01-22", name: "Absent", times: ["11:15"], expected: { status: "Absent" } },
     ]
 
     async function getScanCode(): Promise<string> {
@@ -38,10 +42,19 @@ describe("Payroll MariaDB", () => {
         for (const s of scenarios) {
             await SqlAttendance.delete(testComCode, String(testEmpCode), s.date)
             await SqlTimeCard.delete(s.date, scanCode)
+            // Also cleanup the next day for potential cross-day scans
+            const d = new Date(s.date)
+            d.setDate(d.getDate() + 1)
+            const nextDay = d.toISOString().split("T")[0]
+            await SqlTimeCard.delete(nextDay, scanCode)
 
             // Insert Timecards
             for (const t of s.times) {
-                await SqlTimeCard.insert({ scanCode: scanCode, scanAt: `${s.date} ${t}` })
+                let scanAt = `${s.date} ${t}`
+                if (t < "06:00") {
+                    scanAt = `${nextDay} ${t}`
+                }
+                await SqlTimeCard.insert({ scanCode: scanCode, scanAt: scanAt })
             }
         }
     }

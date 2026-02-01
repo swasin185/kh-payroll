@@ -23,7 +23,7 @@ export default {
     async insert(att: Attendance): Promise<boolean> {
         const [result] = await db.execute<ResultSetHeader>(
             `INSERT IGNORE INTO attendance
-             VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?)`,
+             VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?)`,
             Object.values(att),
         )
         return result.affectedRows === 1
@@ -41,23 +41,24 @@ export default {
         const values = Object.values(att)
         values.shift() // remove comCode
         values.shift() // remove empCode
-        values.shift() // remove comCode
+        values.shift() // remove dateTxt
         values.push(att.comCode, att.empCode, att.dateTxt)
         const [result] = await db.execute<ResultSetHeader>(
             `UPDATE attendance
              SET
-                inTime1=?,
-                outTime1=?,
+                morning=?,
+                evening=?,
+                night=?,
+                early=?,
+                lunch_out=?,
+                lunch_in=?,
                 lateMin1=?,
-                inTime2=?,
-                outTime2=?,
                 lateMin2=?,
-                inTime3=?,
-                outTime3=?,
-                lateMin3=?,
                 workMin=?,
                 otMin=?,
-                lunchMin=?
+                lunchMin=?,
+                scanCount=?,
+                status=?
              WHERE
                 comCode=? and empCode=? and dateTxt=?`,
             values,

@@ -37,19 +37,25 @@
         <UFormField label="วันที่" name="dateTxt">
             <DateInput v-model="record.dateTxt" />
         </UFormField>
-        <UFormField label="เข้าเช้า" name="inTime1">
-            <UInput type="text" v-model="record.inTime1" class="w-15" maxlength="5" />
+        <UFormField label="เข้าเช้า" name="morning">
+            <UInput type="text" v-model="record.morning" class="w-18" maxlength="5" />
         </UFormField>
-        <UFormField label="ออกเช้า" name="outTime1">
-            <UInput type="text" v-model="record.outTime1" class="w-15" maxlength="5" />
+        <UFormField label="พักเที่ยง" name="lunch_out">
+            <UInput type="text" v-model="record.lunch_out" class="w-18" maxlength="5" />
         </UFormField>
-        <UFormField label="เข้าบ่าย" name="inTime2">
-            <UInput type="text" v-model="record.inTime2" class="w-15" maxlength="5" />
+        <UFormField label="กลับเที่ยง" name="lunch_in">
+            <UInput type="text" v-model="record.lunch_in" class="w-18" maxlength="5" />
         </UFormField>
-        <UFormField label="ออกบ่าย" name="outTime2">
-            <UInput type="text" v-model="record.outTime2" class="w-15" maxlength="5" />
+        <UFormField label="ออกเย็น" name="evening">
+            <UInput type="text" v-model="record.evening" class="w-18" maxlength="5" />
         </UFormField>
-        <UFormField label="รหัสพนักงาน" name="empCode">
+        <UFormField label="ออกค่ำ" name="night">
+            <UInput type="text" v-model="record.night" class="w-18" maxlength="5" />
+        </UFormField>
+        <UFormField label="ข้ามวัน" name="early">
+            <UInput type="text" v-model="record.early" class="w-18" maxlength="5" />
+        </UFormField>
+        <UFormField label="พนักงาน" name="empCode">
             <UInput type="number" v-model="record.empCode" disabled class="w-20" />
         </UFormField>
     </UForm>
@@ -61,7 +67,7 @@
         :row-selection="rowSelection"
         :data="attendance"
         :columns="columns"
-        class="w-140 h-50"
+        class="w-200 h-60"
     />
 </template>
 <script lang="ts" setup>
@@ -95,39 +101,49 @@ const columns = [
         class: "w-20"
     },
     {
-        accessorKey: "inTime1",
-        header: "เข้าเช้า",
+        accessorKey: "morning",
+        header: "Morning",
         class: "w-15"
     },
     {
-        accessorKey: "outTime1",
-        header: "ออกเช้า",
+        accessorKey: "lunch_out",
+        header: "L-Out",
         class: "w-15"
     },
     {
-        accessorKey: "lateMin1",
-        header: "สาย เช้า",
+        accessorKey: "lunch_in",
+        header: "L-In",
         class: "w-15"
     },
     {
-        accessorKey: "inTime2",
-        header: "เข้าบ่าย",
+        accessorKey: "evening",
+        header: "Evening",
         class: "w-15"
     },
     {
-        accessorKey: "outTime2",
-        header: "ออกบ่าย",
+        accessorKey: "night",
+        header: "Night",
         class: "w-15"
     },
     {
-        accessorKey: "lateMin2",
-        header: "สาย บ่าย",
+        accessorKey: "early",
+        header: "Early",
+        class: "w-15"
+    },
+    {
+        accessorKey: "workMin",
+        header: "นาทีงาน",
         class: "w-15"
     },
     {
         accessorKey: "otMin",
         header: "OT",
         class: "w-15"
+    },
+    {
+        accessorKey: "status",
+        header: "สถานะ",
+        class: "w-20"
     },
 ]
 
