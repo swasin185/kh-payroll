@@ -184,7 +184,7 @@ export const AttendanceSchema = z.object({
     lunch_out: ScanTimeAttr,
     lunch_in: ScanTimeAttr,
     lateMin1: z.int().min(0).max(120).nullable().default(null),
-    lateMin2: z.int().min(0).max(120).nullable().default(null),
+    lateMin2: z.int().min(0).max(600).nullable().default(null),
     workMin: z.int().min(0).max(1440).nullable().default(null),
     otMin: z.int().min(0).max(1440).nullable().default(null),
     lunchMin: z.int().min(0).max(300).nullable().default(null),

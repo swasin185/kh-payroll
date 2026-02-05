@@ -56,7 +56,7 @@ group by `v`.`dateAt`,
 --
 CREATE OR REPLACE VIEW `vAttendance` AS
 select 
-	`v`.`dateAt` AS `dateAt`,
+    `v`.`dateAt` AS `dateAt`,
 	`v`.`scanCode` AS `scanCode`,
 	`v`.`morning` AS `morning`,
 	`v`.`lunch_out` AS `lunch_out`,
@@ -67,20 +67,25 @@ select
 	`v`.`count` AS `scanCount`,
 	`v`.`rawTime` AS `rawTime`,
 	case
-		when `v`.`morning` is not null
-		and (
-			`v`.`evening` is not null
-			or `v`.`night` is not null
-			or `v`.`early` is not null
+		when (
+			`v`.`morning` is not null
+			and (
+				`v`.`evening` is not null
+				or `v`.`night` is not null
+				or `v`.`early` is not null
+			)
 		) then 'Full Day'
-		when (`v`.`lunch_out` is not null or `v`.`lunch_in` is not null)
-		and (
+		when (
 			(`v`.`morning` is not null)
 			xor (
 				`v`.`evening` is not null
 				or `v`.`night` is not null
 				or `v`.`early` is not null
 			)
+		)
+		and (
+			`v`.`lunch_out` is not null
+			or `v`.`lunch_in` is not null
 		) then 'Half Day'
 		else 'Absent'
 	end AS `status`
