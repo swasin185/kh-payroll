@@ -34,20 +34,20 @@ select `v`.`dateAt` AS `dateAt`,
 	max(
 		if(
 			`v`.`timeAt` >= '11:30'
-			and `v`.`timeAt` <= '14:00',
+			and `v`.`timeAt` <= '15:30',
 			`v`.`timeAt`,
 			NULL
 		)
 	) AS `lunch_in`,
 	max(
 		if(
-			`v`.`timeAt` >= '16:00'
+			`v`.`timeAt` >= '15:31'
 			and `v`.`timeAt` <= '18:00',
 			`v`.`timeAt`,
 			NULL
 		)
 	) AS `evening`,
-	max(if(`v`.`timeAt` >= '19:00', `v`.`timeAt`, NULL)) AS `night`,
+	max(if(`v`.`timeAt` >= '18:01', `v`.`timeAt`, NULL)) AS `night`,
 	count(0) AS `count`,
 	group_concat(`v`.`timeAt` separator ',') AS `rawTime`
 from `vTimeCard` v

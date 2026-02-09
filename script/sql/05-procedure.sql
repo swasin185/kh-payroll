@@ -81,7 +81,7 @@ BEGIN
     workMin = GREATEST(
         0,
         (
-            TIME_TO_SEC(LEAST(IFNULL(evening, '17:00'), '17:00')) - TIME_TO_SEC(GREATEST(IFNULL(morning, '08:00'), '08:00'))
+            TIME_TO_SEC(COALESCE(early, night, evening)) - TIME_TO_SEC(morning)
         ) / 60 - GREATEST(@lunch, 60)
     ),
     otMin = CASE

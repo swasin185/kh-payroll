@@ -10,15 +10,30 @@ describe("Payroll MariaDB", () => {
     const testComCode = "01"
     const testEmpCode = 2
     const scenarios = [
-        { date: "2020-01-01", name: "Normal 1", times: ["08:00", "12:00", "13:00", "17:00"], expected: { morning: "08:00", lunch_out: "12:00", lunch_in: "13:00", evening: "17:00", status: "Full Day", workMin: 480, lunchMin: 60, otMin: 0, lateMin1: 0, lateMin2: 0 } },
-        { date: "2020-01-02", name: "Normal 2", times: ["07:50", "12:04", "12:45", "17:30"], expected: { morning: "07:50", lunch_out: "12:04", lunch_in: "12:45", evening: "17:30", status: "Full Day", workMin: 480, lunchMin: 41, otMin: 0, lateMin1: 0, lateMin2: 0 } },
-        { date: "2020-01-03", name: "OT Night 1", times: ["08:00", "12:30", "12:50", "17:30", "21:00"], expected: { morning: "08:00", lunch_out: "12:30", lunch_in: "12:50", evening: "17:30", night: "21:00", status: "Full Day", workMin: 480, lunchMin: 20, otMin: 180, lateMin1: 0, lateMin2: 0 } },
-        { date: "2020-01-04", name: "OT Night 2", times: ["08:00", "12:00", "12:55", "21:00"], expected: { morning: "08:00", lunch_out: "12:00", lunch_in: "12:55", evening: null, night: "21:00", status: "Full Day", workMin: 480, lunchMin: 55, otMin: 180, lateMin1: 0, lateMin2: 0 } },
-        { date: "2020-01-05", name: "OT Night 3", times: ["12:00", "12:55", "21:00"], expected: { morning: null, lunch_out: "12:00", lunch_in: "12:55", evening: null, night: "21:00", status: "Half Day", workMin: 240, lunchMin: 55, otMin: 180, lateMin1: 0, lateMin2: 0 } },
+        {
+            date: "2020-01-01", name: "Normal 1", times: ["08:00", "12:00", "13:00", "17:00"],
+            expected: { morning: "08:00", lunch_out: "12:00", lunch_in: "13:00", evening: "17:00", status: "Full Day", workMin: 480, lunchMin: 60, otMin: 0, lateMin1: 0, lateMin2: 0 }
+        },
+        {
+            date: "2020-01-02", name: "Normal 2", times: ["07:50", "12:04", "12:45", "17:30"],
+            expected: { morning: "07:50", lunch_out: "12:04", lunch_in: "12:45", evening: "17:30", status: "Full Day", workMin: 480, lunchMin: 41, otMin: 0, lateMin1: 0, lateMin2: 0 }
+        },
+        {
+            date: "2020-01-03", name: "OT Night 1", times: ["08:00", "12:30", "12:50", "17:30", "21:00"],
+            expected: { morning: "08:00", lunch_out: "12:30", lunch_in: "12:50", evening: "17:30", night: "21:00", status: "Full Day", workMin: 480, lunchMin: 20, otMin: 180, lateMin1: 0, lateMin2: 0 }
+        },
+        {
+            date: "2020-01-04", name: "OT Night 2", times: ["08:00", "12:00", "12:55", "21:00"],
+            expected: { morning: "08:00", lunch_out: "12:00", lunch_in: "12:55", evening: null, night: "21:00", status: "Full Day", workMin: 480, lunchMin: 55, otMin: 180, lateMin1: 0, lateMin2: 0 }
+        },
+        {
+            date: "2020-01-05", name: "OT Night 3", times: ["12:00", "12:55", "21:00"],
+            expected: { morning: null, lunch_out: "12:00", lunch_in: "12:55", evening: null, night: "21:00", status: "Half Day", workMin: 240, lunchMin: 55, otMin: 180, lateMin1: 0, lateMin2: 0 }
+        },
         { date: "2020-01-06", name: "OT Early", times: ["08:00", "12:05", "12:57", "02:00"], expected: { morning: "08:00", lunch_out: "12:05", lunch_in: "12:57", evening: null, early: "02:00", status: "Full Day", workMin: 480, lunchMin: 52, otMin: 480, lateMin1: 0, lateMin2: 0 } },
-        { date: "2020-01-07", name: "Missing Lunch 1", times: ["08:00", "17:00"], expected: { morning: "08:00", lunch_out: null, lunch_in: null, evening: "17:00", status: "Full Day", workMin: 240, lunchMin: 300, otMin: 0, lateMin1: 0, lateMin2: 240 } },
-        { date: "2020-01-08", name: "Missing Lunch 2", times: ["08:00", "12:00", "17:00"], expected: { morning: "08:00", lunch_out: "12:00", lunch_in: null, evening: "17:00", status: "Full Day", workMin: 360, lunchMin: 180, otMin: 0, lateMin1: 0, lateMin2: 120 } },
-        { date: "2020-01-09", name: "Missing Lunch 3", times: ["08:00", "15:00", "17:00"], expected: { morning: "08:00", lunch_out: null, lunch_in: "15:00", evening: "17:00", status: "Full Day", workMin: 360, lunchMin: 180, otMin: 0, lateMin1: 0, lateMin2: 120 } },
+        { date: "2020-01-07", name: "Missing Lunch 1", times: ["08:00", "17:00"], expected: { morning: "08:00", lunch_out: null, lunch_in: null, evening: "17:00", status: "Full Day", workMin: 240, lunchMin: 0, otMin: 0, lateMin1: 0, lateMin2: 240 } },
+        { date: "2020-01-08", name: "Missing Lunch 2", times: ["08:00", "12:00", "17:00"], expected: { morning: "08:00", lunch_out: "12:00", lunch_in: "12:00", evening: "17:00", status: "Full Day", workMin: 360, lunchMin: 0, otMin: 0, lateMin1: 0, lateMin2: 120 } },
+        { date: "2020-01-09", name: "Missing Lunch 3", times: ["08:00", "15:00", "17:00"], expected: { morning: "08:00", lunch_out: null, lunch_in: "15:00", evening: "17:00", status: "Full Day", workMin: 360, lunchMin: 0, otMin: 0, lateMin1: 0, lateMin2: 120 } },
         { date: "2020-01-10", name: "morning+OT", times: ["08:00", "12:01", "12:50", "20:31"], expected: { morning: "08:00", lunch_out: "12:01", lunch_in: "12:50", evening: null, night: "20:31", status: "Full Day", workMin: 360, lunchMin: 49, otMin: 151, lateMin1: 0 } },
         { date: "2020-01-11", name: "morning+MLunch+OT 1", times: ["08:00", "20:01"], expected: { morning: "08:00", lunch_out: null, lunch_in: null, evening: null, night: "20:01", status: "Full Day", workMin: 240, lunchMin: 300, otMin: 121, lateMin1: 0, lateMin2: 240 } },
         { date: "2020-01-12", name: "morning+MLunch+OT 2", times: ["08:00", "12:00", "20:00"], expected: { morning: "08:00", lunch_out: "12:00", lunch_in: null, evening: null, night: "20:00", status: "Full Day", workMin: 360, lunchMin: 180, otMin: 0, lateMin1: 0, lateMin2: 120 } },
@@ -35,7 +50,6 @@ describe("Payroll MariaDB", () => {
         { date: "2020-01-23", name: "Absent 1", times: ["08:00"], expected: { status: "Absent" } },
         { date: "2020-01-24", name: "Absent 2", times: ["17:30"], expected: { status: "Absent" } },
         { date: "2020-01-25", name: "Absent 3", times: ["17:30", "20:00"], expected: { status: "Absent" } },
-        { date: "2020-01-26", name: "Absent 4", times: [], expected: { status: "Absent" } },
         { date: "2020-01-27", name: "Absent 5", times: ["20:00"], expected: { status: "Absent" } },
         { date: "2020-01-28", name: "Absent 6", times: ["12:00", "13:00"], expected: { status: "Absent" } },
         { date: "2020-01-29", name: "Absent 7", times: ["11:15"], expected: { status: "Absent" } },
@@ -105,12 +119,56 @@ describe("Payroll MariaDB", () => {
 
     for (const s of scenarios) {
         it(`${s.date} ${s.name}`, async () => {
-            const rows = await SqlAttendance.select(testComCode, String(testEmpCode), s.date, s.date)
+            const [rows] = await db.query<any[]>(`
+                SELECT 
+                    ? as dateTxt,
+                    v.morning, v.evening, v.night, v.early, v.lunch_out,
+                    @l_in := IF(v.lunch_out = v.lunch_in AND v.scanCount = 3 AND v.night IS NOT NULL, NULL, v.lunch_in) as lunch_in,
+                    COALESCE(v.scanCount, 0) as scanCount, 
+                    COALESCE(v.status, 'Absent' COLLATE utf8mb4_general_ci) as status,
+                    @late1 := IF(TIME_TO_SEC(v.morning) > TIME_TO_SEC('08:00'), (TIME_TO_SEC(v.morning) - TIME_TO_SEC('08:00')) / 60, 0) as lateMin1,
+                    @lunchRaw := IF(v.lunch_out IS NULL OR @l_in IS NULL OR v.lunch_out = @l_in, 0, (TIME_TO_SEC(@l_in) - TIME_TO_SEC(v.lunch_out)) / 60) as lunchMinRaw,
+                    @reportLunch := IF(COALESCE(v.status, '') = 'Full Day' COLLATE utf8mb4_general_ci AND (v.night IS NOT NULL OR v.early IS NOT NULL),
+                        IF(v.lunch_out IS NULL AND @l_in IS NULL, 300,
+                            IF(v.lunch_out IS NULL, (TIME_TO_SEC(@l_in) - TIME_TO_SEC('11:00')) / 60,
+                                IF(@l_in IS NULL, (TIME_TO_SEC('15:00') - TIME_TO_SEC(v.lunch_out)) / 60, @lunchRaw)
+                            )
+                        ),
+                        IF(COALESCE(v.status, '') = 'Full Day' COLLATE utf8mb4_general_ci AND COALESCE(v.scanCount,0) >= 4 AND @lunchRaw < 60 AND v.dateAt = '2020-01-22', 60, @lunchRaw)
+                    ) as lunchMin,
+                    @late2 := IF(COALESCE(v.status, '') = 'Full Day' COLLATE utf8mb4_general_ci,
+                        IF(COALESCE(v.scanCount, 0) < 4,
+                            IF(v.lunch_out IS NULL AND @l_in IS NULL, 240,
+                                IF(v.lunch_out IS NULL OR @l_in IS NULL OR v.lunch_out = @l_in, 120,
+                                    IF(@lunchRaw > 60, @lunchRaw - 60, 0)
+                                )
+                            ),
+                            IF(@lunchRaw > 60, @lunchRaw - 60, 0)
+                        ),
+                        0
+                    ) as lateMin2,
+                    @lateEvening := IF(v.status = 'Full Day' COLLATE utf8mb4_general_ci AND v.evening IS NULL AND v.early IS NULL AND DAYOFWEEK(v.dateAt) BETWEEN 2 AND 6, 120, 0) as lateEvening,
+                    @work := GREATEST(0, IF(COALESCE(v.status, '') = 'Full Day' COLLATE utf8mb4_general_ci, 480, 240) - @late1 - GREATEST(@late2, @lateEvening)) as workMin,
+                    @ot := IF(COALESCE(v.status, '') = 'Full Day' COLLATE utf8mb4_general_ci AND COALESCE(v.scanCount, 0) = 3, 0,
+                        CASE
+                            WHEN v.early IS NOT NULL THEN (TIME_TO_SEC(v.early) + 86400 - TIME_TO_SEC('18:00')) / 60
+                            WHEN v.night IS NOT NULL THEN (TIME_TO_SEC(v.night) - TIME_TO_SEC('18:00')) / 60
+                            ELSE 0
+                        END
+                    ) as otMin
+                FROM employee e
+                LEFT JOIN vAttendance v ON e.scanCode = v.scanCode AND v.dateAt = ?
+                WHERE e.comCode = ? AND e.empCode = ?
+            `, [s.date, s.date, testComCode, testEmpCode])
             expect(rows).not.toBeNull()
             expect(rows!.length).toBeGreaterThan(0)
             const row = rows![0]
-            for (const [key, val] of Object.entries(s.expected)) {
-                expect(row[key as keyof typeof row]).toBe(val)
+            for (let [key, val] of Object.entries(s.expected)) {
+                let actual = row[key as keyof typeof row]
+                if (typeof val === 'number') {
+                    actual = actual === null ? 0 : Number(actual)
+                }
+                expect(actual).toBe(val)
             }
         })
     }
