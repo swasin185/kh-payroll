@@ -11,48 +11,125 @@ describe("Payroll MariaDB", () => {
     const testEmpCode = 2
     const scenarios = [
         {
-            date: "2020-01-01", name: "Normal 1", times: ["08:00", "12:00", "13:00", "17:00"],
-            expected: { morning: "08:00", lunch_out: "12:00", lunch_in: "13:00", evening: "17:00", status: "Full Day", workMin: 480, lunchMin: 60, otMin: 0, lateMin1: 0, lateMin2: 0 }
+            date: "2020-01-01", name: "Normal 1", times: ["07:52", "12:12", "13:12", "17:05"],
+            expected: { morning: "07:52", lunch_out: "12:12", lunch_in: "13:12", evening: "17:05", status: "FullDay", workMin: 480, lunchMin: 60, otMin: 0, lateMin1: 0, lateMin2: 0 }
         },
         {
-            date: "2020-01-02", name: "Normal 2", times: ["07:50", "12:04", "12:45", "17:30"],
-            expected: { morning: "07:50", lunch_out: "12:04", lunch_in: "12:45", evening: "17:30", status: "Full Day", workMin: 480, lunchMin: 41, otMin: 0, lateMin1: 0, lateMin2: 0 }
+            date: "2020-01-02", name: "Normal 2", times: ["07:50", "12:14", "12:45", "17:30"],
+            expected: { morning: "07:50", lunch_out: "12:14", lunch_in: "12:45", evening: "17:30", status: "FullDay", workMin: 480, lunchMin: 31, otMin: 0, lateMin1: 0, lateMin2: 0 }
         },
         {
-            date: "2020-01-03", name: "OT Night 1", times: ["08:00", "12:30", "12:50", "17:30", "21:00"],
-            expected: { morning: "08:00", lunch_out: "12:30", lunch_in: "12:50", evening: "17:30", night: "21:00", status: "Full Day", workMin: 480, lunchMin: 20, otMin: 180, lateMin1: 0, lateMin2: 0 }
+            date: "2020-01-03", name: "Normal 3", times: ["07:50", "12:11", "12:51", "16:30"],
+            expected: { morning: "07:50", lunch_out: "12:11", lunch_in: "12:51", evening: "16:30", status: "FullDay", workMin: 450, lunchMin: 40, otMin: 0, lateMin1: 0, lateMin2: 30 }
         },
         {
-            date: "2020-01-04", name: "OT Night 2", times: ["08:00", "12:00", "12:55", "21:00"],
-            expected: { morning: "08:00", lunch_out: "12:00", lunch_in: "12:55", evening: null, night: "21:00", status: "Full Day", workMin: 480, lunchMin: 55, otMin: 180, lateMin1: 0, lateMin2: 0 }
+            date: "2020-01-04", name: "OT Night 1", times: ["06:54", "12:32", "12:54", "17:31", "21:12"],
+            expected: { morning: "06:54", lunch_out: "12:32", lunch_in: "12:54", evening: "17:31", night: "21:12", status: "FullDay", workMin: 480, lunchMin: 22, otMin: 192, lateMin1: 0, lateMin2: 0 }
         },
         {
-            date: "2020-01-05", name: "OT Night 3", times: ["12:00", "12:55", "21:00"],
-            expected: { morning: null, lunch_out: "12:00", lunch_in: "12:55", evening: null, night: "21:00", status: "Half Day", workMin: 240, lunchMin: 55, otMin: 180, lateMin1: 0, lateMin2: 0 }
+            date: "2020-01-05", name: "OT Night 2", times: ["07:32", "12:10", "12:55", "21:10"],
+            expected: { morning: "07:32", lunch_out: "12:10", lunch_in: "12:55", evening: null, night: "21:10", status: "FullDay", workMin: 480, lunchMin: 45, otMin: 190, lateMin1: 0, lateMin2: 0 }
         },
-        { date: "2020-01-06", name: "OT Early", times: ["08:00", "12:05", "12:57", "02:00"], expected: { morning: "08:00", lunch_out: "12:05", lunch_in: "12:57", evening: null, early: "02:00", status: "Full Day", workMin: 480, lunchMin: 52, otMin: 480, lateMin1: 0, lateMin2: 0 } },
-        { date: "2020-01-07", name: "Missing Lunch 1", times: ["08:00", "17:00"], expected: { morning: "08:00", lunch_out: null, lunch_in: null, evening: "17:00", status: "Full Day", workMin: 240, lunchMin: 0, otMin: 0, lateMin1: 0, lateMin2: 240 } },
-        { date: "2020-01-08", name: "Missing Lunch 2", times: ["08:00", "12:00", "17:00"], expected: { morning: "08:00", lunch_out: "12:00", lunch_in: "12:00", evening: "17:00", status: "Full Day", workMin: 360, lunchMin: 0, otMin: 0, lateMin1: 0, lateMin2: 120 } },
-        { date: "2020-01-09", name: "Missing Lunch 3", times: ["08:00", "15:00", "17:00"], expected: { morning: "08:00", lunch_out: null, lunch_in: "15:00", evening: "17:00", status: "Full Day", workMin: 360, lunchMin: 0, otMin: 0, lateMin1: 0, lateMin2: 120 } },
-        { date: "2020-01-10", name: "morning+OT", times: ["08:00", "12:01", "12:50", "20:31"], expected: { morning: "08:00", lunch_out: "12:01", lunch_in: "12:50", evening: null, night: "20:31", status: "Full Day", workMin: 360, lunchMin: 49, otMin: 151, lateMin1: 0 } },
-        { date: "2020-01-11", name: "morning+MLunch+OT 1", times: ["08:00", "20:01"], expected: { morning: "08:00", lunch_out: null, lunch_in: null, evening: null, night: "20:01", status: "Full Day", workMin: 240, lunchMin: 300, otMin: 121, lateMin1: 0, lateMin2: 240 } },
-        { date: "2020-01-12", name: "morning+MLunch+OT 2", times: ["08:00", "12:00", "20:00"], expected: { morning: "08:00", lunch_out: "12:00", lunch_in: null, evening: null, night: "20:00", status: "Full Day", workMin: 360, lunchMin: 180, otMin: 0, lateMin1: 0, lateMin2: 120 } },
-        { date: "2020-01-13", name: "morning+MLunch+OT 3", times: ["08:00", "14:00", "20:00"], expected: { morning: "08:00", lunch_out: null, lunch_in: "14:00", evening: null, night: "20:00", status: "Full Day", workMin: 360, lunchMin: 180, otMin: 0, lateMin1: 0, lateMin2: 120 } },
-        { date: "2020-01-14", name: "morning+MLunch+early", times: ["08:00", "02:00"], expected: { morning: "08:00", early: "02:00", status: "Full Day", workMin: 240, lunchMin: 300, otMin: 480, lateMin1: 0, lateMin2: 240 } },
-        { date: "2020-01-15", name: "Half Day Morning 1", times: ["08:00", "12:05"], expected: { morning: "08:00", lunch_out: "12:05", status: "Half Day", workMin: 240, lunchMin: 0, lateMin1: 0, lateMin2: 0 } },
-        { date: "2020-01-16", name: "Half Day Morning 2", times: ["08:00", "12:00", "12:30"], expected: { morning: "08:00", lunch_out: "12:00", lunch_in: "12:30", status: "Half Day", workMin: 240, lateMin1: 0, lateMin2: 0 } },
-        { date: "2020-01-17", name: "Half Day Afternoon 1", times: ["13:00", "17:00"], expected: { lunch_in: "13:00", evening: "17:00", status: "Half Day", workMin: 240, lateMin1: 0, lateMin2: 0 } },
-        { date: "2020-01-18", name: "Half Day Afternoon 2", times: ["12:00", "13:00", "17:00"], expected: { lunch_out: "12:00", lunch_in: "13:00", evening: "17:00", status: "Half Day", workMin: 240, lateMin1: 0, lateMin2: 0 } },
-        { date: "2020-01-19", name: "Late Morning", times: ["08:20", "12:00", "13:00", "17:00"], expected: { morning: "08:20", lunch_out: "12:00", lunch_in: "13:00", evening: "17:00", status: "Full Day", workMin: 460, lunchMin: 60, lateMin1: 20, lateMin2: 0 } },
-        { date: "2020-01-20", name: "Late Lunch", times: ["08:00", "12:00", "13:15", "17:00"], expected: { morning: "08:00", lunch_out: "12:00", lunch_in: "13:15", evening: "17:00", status: "Full Day", workMin: 465, lunchMin: 75, lateMin1: 0, lateMin2: 15 } },
-        { date: "2020-01-21", name: "Spam Morning", times: ["07:50", "08:00", "08:05", "17:05"], expected: { morning: "08:05", evening: "17:05", status: "Full Day", workMin: 475, lateMin1: 5 } },
-        { date: "2020-01-22", name: "Spam Lunch Out", times: ["07:00", "11:55", "12:05", "12:10", "17:09"], expected: { morning: "07:00", lunch_out: "11:55", lunch_in: "12:10", evening: "17:09", status: "Full Day", workMin: 480, lunchMin: 60 } },
-        { date: "2020-01-23", name: "Absent 1", times: ["08:00"], expected: { status: "Absent" } },
-        { date: "2020-01-24", name: "Absent 2", times: ["17:30"], expected: { status: "Absent" } },
-        { date: "2020-01-25", name: "Absent 3", times: ["17:30", "20:00"], expected: { status: "Absent" } },
-        { date: "2020-01-27", name: "Absent 5", times: ["20:00"], expected: { status: "Absent" } },
-        { date: "2020-01-28", name: "Absent 6", times: ["12:00", "13:00"], expected: { status: "Absent" } },
-        { date: "2020-01-29", name: "Absent 7", times: ["11:15"], expected: { status: "Absent" } },
+        {
+            date: "2020-01-06", name: "OT Night 3", times: ["12:12", "12:55", "21:30"],
+            expected: { morning: null, lunch_out: "12:12", lunch_in: "12:55", evening: null, night: "21:30", status: "HalfDay", workMin: 240, lunchMin: 43, otMin: 0, lateMin1: 0, lateMin2: 0 }
+        },
+        {
+            date: "2020-01-07", name: "OT Early", times: ["07:35", "12:05", "12:57", "02:02"],
+            expected: { morning: "07:35", lunch_out: "12:05", lunch_in: "12:57", evening: null, early: "02:02", status: "FullDay", workMin: 480, lunchMin: 52, otMin: 482, lateMin1: 0, lateMin2: 0 }
+        },
+        {
+            date: "2020-01-08", name: "Missing Lunch 1", times: ["07:38", "17:03"],
+            expected: { morning: "07:38", lunch_out: null, lunch_in: null, evening: "17:03", status: "FullDay", workMin: 240, lunchMin: 0, otMin: 0, lateMin1: 0, lateMin2: 240 }
+        },
+        {
+            date: "2020-01-09", name: "Missing Lunch 2", times: ["07:50", "12:34", "17:05"],
+            expected: { morning: "07:50", lunch_out: "12:34", lunch_in: "12:34", evening: "17:05", status: "FullDay", workMin: 360, lunchMin: 0, otMin: 0, lateMin1: 0, lateMin2: 120 }
+        },
+        {
+            date: "2020-01-10", name: "Missing Lunch 3", times: ["07:12", "14:39", "17:32"],
+            expected: { morning: "07:12", lunch_out: null, lunch_in: "14:39", evening: "17:32", status: "FullDay", workMin: 360, lunchMin: 0, otMin: 0, lateMin1: 0, lateMin2: 120 }
+        },
+        {
+            date: "2020-01-11", name: "morning+OT", times: ["07:44", "12:01", "12:49", "20:31"],
+            expected: { morning: "07:44", lunch_out: "12:01", lunch_in: "12:49", evening: null, night: "20:31", status: "FullDay", workMin: 480, lunchMin: 48, otMin: 151, lateMin1: 0, lateMin2: 0 }
+        },
+        {
+            date: "2020-01-12", name: "morning+MLunch+OT 1", times: ["07:39", "20:11"],
+            expected: { morning: "07:39", lunch_out: null, lunch_in: null, evening: null, night: "20:11", status: "FullDay", workMin: 240, lunchMin: 0, otMin: 131, lateMin1: 0, lateMin2: 240 }
+        },
+        {
+            date: "2020-01-13", name: "morning+MLunch+OT 2", times: ["07:23", "12:22", "20:58"],
+            expected: { morning: "07:23", lunch_out: "12:22", lunch_in: "12:22", evening: null, night: "20:58", status: "FullDay", workMin: 360, lunchMin: 0, otMin: 178, lateMin1: 0, lateMin2: 120 }
+        },
+        {
+            date: "2020-01-14", name: "morning+MLunch+OT 3", times: ["07:23", "14:02", "20:05"],
+            expected: { morning: "07:23", lunch_out: null, lunch_in: "14:02", evening: null, night: "20:05", status: "FullDay", workMin: 360, lunchMin: 0, otMin: 125, lateMin1: 0, lateMin2: 120 }
+        },
+        {
+            date: "2020-01-15", name: "morning+MLunch+early", times: ["07:21", "02:08"],
+            expected: { morning: "07:21", lunch_out: null, lunch_in: null, evening: null, early: "02:08", status: "FullDay", workMin: 240, lunchMin: 0, otMin: 488, lateMin1: 0, lateMin2: 240 }
+        },
+        {
+            date: "2020-01-16", name: "HalfDay Morning 1", times: ["07:41", "11:45"],
+            expected: { morning: "07:41", lunch_out: "11:45", status: "HalfDay", workMin: 225, lateMin1: 0, lateMin2: 15 }
+        },
+        {
+            date: "2020-01-17", name: "HalfDay Morning 2", times: ["07:41", "12:23", "12:51"],
+            expected: { morning: "07:41", lunch_out: "12:23", lunch_in: "12:51", status: "HalfDay", workMin: 240, lateMin1: 0, lateMin2: 0 }
+        },
+        {
+            date: "2020-01-18", name: "HalfDay Afternoon 1", times: ["13:10", "17:05"],
+            expected: { morning: null, lunch_out: "13:10", lunch_in: "13:10", evening: "17:05", status: "HalfDay", workMin: 235, lateMin1: 0, lateMin2: 5 }
+        },
+        {
+            date: "2020-01-19", name: "HalfDay Afternoon 2", times: ["12:20", "12:50", "16:50"],
+            expected: { morning: null, lunch_out: "12:20", lunch_in: "12:50", evening: "16:50", status: "HalfDay", workMin: 230, lateMin1: 0, lateMin2: 10 }
+        },
+        {
+            date: "2020-01-20", name: "Late Morning", times: ["08:20", "12:10", "13:01", "16:55"],
+            expected: { morning: "08:20", lunch_out: "12:10", lunch_in: "13:01", evening: "16:55", status: "FullDay", workMin: 455, lunchMin: 51, lateMin1: 20, lateMin2: 5 }
+        },
+        {
+            date: "2020-01-21", name: "Late Morning Half", times: ["08:30", "11:50"],
+            expected: { morning: "08:30", lunch_out: "11:50", status: "HalfDay", workMin: 200, lateMin1: 30, lateMin2: 10 }
+        },
+        {
+            date: "2020-01-22", name: "Late Lunch", times: ["07:30", "12:01", "13:23", "17:03"],
+            expected: { morning: "07:30", lunch_out: "12:01", lunch_in: "13:23", evening: "17:03", status: "FullDay", workMin: 458, lunchMin: 82, lateMin1: 0, lateMin2: 22 }
+        },
+        {
+            date: "2020-01-23", name: "Spam Morning", times: ["07:50", "08:02", "08:05", "16:55"],
+            expected: { morning: "08:05", evening: "16:55", status: "FullDay", workMin: 230, lunchMin: 0, lateMin1: 5, lateMin2: 245 }
+        },
+        {
+            date: "2020-01-24", name: "Spam Lunch Out", times: ["07:30", "11:54", "12:05", "12:10", "17:09"],
+            expected: { morning: "07:30", lunch_out: "11:54", lunch_in: "12:10", evening: "17:09", status: "FullDay", workMin: 480, lunchMin: 16, otMin: 0, lateMin1: 0, lateMin2: 0 }
+        },
+        {
+            date: "2020-01-25", name: "Absent 1", times: ["07:31"],
+            expected: { morning: "07:31", status: "Absent" }
+        },
+        {
+            date: "2020-01-26", name: "Absent 2", times: ["17:30"],
+            expected: { evening: "17:30", status: "Absent" }
+        },
+        {
+            date: "2020-01-27", name: "Absent 3", times: ["17:30", "20:02"],
+            expected: { evening: "17:30", night: "20:02", status: "Absent" }
+        },
+        {
+            date: "2020-01-28", name: "Absent 4", times: ["20:02"],
+            expected: { night: "20:02", status: "Absent" }
+        },
+        {
+            date: "2020-01-29", name: "Absent 5", times: ["12:01", "13:01"],
+            expected: { lunch_out: "12:01", lunch_in: "13:01", status: "Absent" }
+        },
+        {
+            date: "2020-01-30", name: "Absent 6", times: ["11:15"],
+            expected: { lunch_out: "11:15", status: "Absent" }
+        }
     ]
 
     // Get min and max dates from scenarios
@@ -91,7 +168,7 @@ describe("Payroll MariaDB", () => {
 
     async function tearDownData(scanCode: string) {
         await db.execute(
-            "DELETE FROM attendance WHERE comCode=? AND empCode=? AND dateTxt BETWEEN ? AND ?",
+            "DELETE FROM attendance WHERE comCode=? AND empCode=? AND dateAt BETWEEN ? AND ?",
             [testComCode, testEmpCode, minDate, maxDate]
         )
         await db.execute(
@@ -121,45 +198,11 @@ describe("Payroll MariaDB", () => {
         it(`${s.date} ${s.name}`, async () => {
             const [rows] = await db.query<any[]>(`
                 SELECT 
-                    ? as dateTxt,
-                    v.morning, v.evening, v.night, v.early, v.lunch_out,
-                    @l_in := IF(v.lunch_out = v.lunch_in AND v.scanCount = 3 AND v.night IS NOT NULL, NULL, v.lunch_in) as lunch_in,
-                    COALESCE(v.scanCount, 0) as scanCount, 
-                    COALESCE(v.status, 'Absent' COLLATE utf8mb4_general_ci) as status,
-                    @late1 := IF(TIME_TO_SEC(v.morning) > TIME_TO_SEC('08:00'), (TIME_TO_SEC(v.morning) - TIME_TO_SEC('08:00')) / 60, 0) as lateMin1,
-                    @lunchRaw := IF(v.lunch_out IS NULL OR @l_in IS NULL OR v.lunch_out = @l_in, 0, (TIME_TO_SEC(@l_in) - TIME_TO_SEC(v.lunch_out)) / 60) as lunchMinRaw,
-                    @reportLunch := IF(COALESCE(v.status, '') = 'Full Day' COLLATE utf8mb4_general_ci AND (v.night IS NOT NULL OR v.early IS NOT NULL),
-                        IF(v.lunch_out IS NULL AND @l_in IS NULL, 300,
-                            IF(v.lunch_out IS NULL, (TIME_TO_SEC(@l_in) - TIME_TO_SEC('11:00')) / 60,
-                                IF(@l_in IS NULL, (TIME_TO_SEC('15:00') - TIME_TO_SEC(v.lunch_out)) / 60, @lunchRaw)
-                            )
-                        ),
-                        IF(COALESCE(v.status, '') = 'Full Day' COLLATE utf8mb4_general_ci AND COALESCE(v.scanCount,0) >= 4 AND @lunchRaw < 60 AND v.dateAt = '2020-01-22', 60, @lunchRaw)
-                    ) as lunchMin,
-                    @late2 := IF(COALESCE(v.status, '') = 'Full Day' COLLATE utf8mb4_general_ci,
-                        IF(COALESCE(v.scanCount, 0) < 4,
-                            IF(v.lunch_out IS NULL AND @l_in IS NULL, 240,
-                                IF(v.lunch_out IS NULL OR @l_in IS NULL OR v.lunch_out = @l_in, 120,
-                                    IF(@lunchRaw > 60, @lunchRaw - 60, 0)
-                                )
-                            ),
-                            IF(@lunchRaw > 60, @lunchRaw - 60, 0)
-                        ),
-                        0
-                    ) as lateMin2,
-                    @lateEvening := IF(v.status = 'Full Day' COLLATE utf8mb4_general_ci AND v.evening IS NULL AND v.early IS NULL AND DAYOFWEEK(v.dateAt) BETWEEN 2 AND 6, 120, 0) as lateEvening,
-                    @work := GREATEST(0, IF(COALESCE(v.status, '') = 'Full Day' COLLATE utf8mb4_general_ci, 480, 240) - @late1 - GREATEST(@late2, @lateEvening)) as workMin,
-                    @ot := IF(COALESCE(v.status, '') = 'Full Day' COLLATE utf8mb4_general_ci AND COALESCE(v.scanCount, 0) = 3, 0,
-                        CASE
-                            WHEN v.early IS NOT NULL THEN (TIME_TO_SEC(v.early) + 86400 - TIME_TO_SEC('18:00')) / 60
-                            WHEN v.night IS NOT NULL THEN (TIME_TO_SEC(v.night) - TIME_TO_SEC('18:00')) / 60
-                            ELSE 0
-                        END
-                    ) as otMin
-                FROM employee e
-                LEFT JOIN vAttendance v ON e.scanCode = v.scanCode AND v.dateAt = ?
-                WHERE e.comCode = ? AND e.empCode = ?
-            `, [s.date, s.date, testComCode, testEmpCode])
+                    dateAt, morning, evening, night, early, lunch_out, lunch_in, scanCount, status,
+                    lateMin1, lunchMin, lateMin2, workMin, otMin
+                FROM attendance
+                WHERE comCode = ? AND empCode = ? AND dateAt = ?
+            `, [testComCode, testEmpCode, s.date])
             expect(rows).not.toBeNull()
             expect(rows!.length).toBeGreaterThan(0)
             const row = rows![0]

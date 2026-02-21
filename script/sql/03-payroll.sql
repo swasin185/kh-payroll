@@ -143,7 +143,7 @@ drop table if exists attendance;
 create table attendance (
     comCode       varchar(2),
     empCode       smallint unsigned,
-    dateTxt       varchar(10) comment "วันเดือนปีทำงาน",
+    dateAt       varchar(10) comment "วันเดือนปีทำงาน",
     morning       varchar(5) comment "เวลาเข้า เช้า 06:00 - 10:00 (last)",
     evening       varchar(5) comment "เวลาออก เย็น 16:00 - 18:00 (last)",
     night         varchar(5) comment "เวลาออก ค่ำ 19:00 - 24:00 (last)",
@@ -158,7 +158,7 @@ create table attendance (
     scanCount     smallint unsigned comment "จำนวนการสแกน",
     status        varchar(20) comment "สถานะเวลางาน",
     foreign key (comCode, empCode) references employee(comCode, empCode),
-    primary key (comCode, empCode, dateTxt)
+    primary key (comCode, empCode, dateAt)
 ) comment = "วันที่มาทำงาน เวลาเข้าออกงาน ตามการสแกน";
 
 set foreign_key_checks = 1;
