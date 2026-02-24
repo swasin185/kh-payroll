@@ -117,7 +117,7 @@ from
                         when v.lunch_in_m is not null
                         and coalesce(v.early_m, v.night_m, v.evening_m) is not null then least(
                             v.halfWorkMin,
-                            coalesce(v.early_m, v.night_m, v.evening_m) - greatest(v.lunch_in_m, 780)
+                            least(coalesce(v.early_m, v.night_m, v.evening_m), 1020) - greatest(v.lunch_in_m, 780)
                         )
                         else 0
                     end

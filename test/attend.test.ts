@@ -76,15 +76,15 @@ describe("Payroll MariaDB", () => {
         },
         {
             date: "2020-01-17", name: "HalfDay Morning 2", times: ["07:41", "12:23", "12:51"],
-            expected: { morning: "07:41", lunch_out: "12:23", lunch_in: "12:51", status: "HalfDay", workMin: 240, lateMin1: 0, lateMin2: 0 }
+            expected: { morning: "07:41", lunch_out: "12:23", lunch_in: "12:51", status: "HalfDay", workMin: 240, lateMin1: 0, lateMin2: 0, lunchMin: 28 }
         },
         {
             date: "2020-01-18", name: "HalfDay Afternoon 1", times: ["13:10", "17:05"],
-            expected: { morning: null, lunch_out: "13:10", lunch_in: "13:10", evening: "17:05", status: "HalfDay", workMin: 235, lateMin1: 0, lateMin2: 5 }
+            expected: { morning: null, lunch_out: "13:10", lunch_in: "13:10", evening: "17:05", status: "HalfDay", workMin: 230, lateMin1: 0, lateMin2: 10, lunchMin: 0 }
         },
         {
             date: "2020-01-19", name: "HalfDay Afternoon 2", times: ["12:20", "12:50", "16:50"],
-            expected: { morning: null, lunch_out: "12:20", lunch_in: "12:50", evening: "16:50", status: "HalfDay", workMin: 230, lateMin1: 0, lateMin2: 10 }
+            expected: { morning: null, lunch_out: "12:20", lunch_in: "12:50", evening: "16:50", status: "HalfDay", workMin: 230, lateMin1: 0, lateMin2: 10, lunchMin: 30 }
         },
         {
             date: "2020-01-20", name: "Late Morning", times: ["08:20", "12:10", "13:01", "16:55"],
