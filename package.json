@@ -26,6 +26,8 @@
     "devDependencies": {
         "@types/crypto-js": "^4.2.2",
         "@types/node": "^24.10.9",
+        "prettier": "^3.8.1",
+        "prettier-plugin-sql": "^0.19.2",
         "tailwindcss": "^4.1.18",
         "vitest": "^3.2.4"
     },
