@@ -20,14 +20,14 @@ async function preview(params: ReportParameter, saveFile: string = "") {
         body: params,
     })
 
-    if (pdfResponse)
-        win!.location.href = params.saveFile
+    if (pdfResponse && win)
+        win.location.href = params.saveFile
             ? `${kxreport}${pdfResponse}`
             : URL.createObjectURL(pdfResponse)
     else
         useToast().add({
             title: "Report Status",
-            description: "Local JasperReport Server Error!",
+            description: "Local JasperReport Error!",
             color: "warning",
         })
 }

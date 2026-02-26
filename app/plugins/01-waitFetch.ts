@@ -11,7 +11,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         },
         onResponseError(event) {
             isWaiting.value = false
-            showError(event.response!)
+            showError(event.response)
         },
         onRequestError(event) {
             isWaiting.value = false

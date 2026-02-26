@@ -41,7 +41,7 @@ export async function sessionCountByUser() {
     for (const sessId of allSessionKeys)
         try {
             const sess = await storage.getItem<SessItem>(sessId)
-            if (sess && sess.userId)
+            if (sess?.userId)
                 userSessionCounts[sess.userId] = (userSessionCounts[sess.userId] || 0) + 1
             else console.warn(`Session ID ${sessId} found but data is missing or corrupted.`)
         } catch (error) {

@@ -3,7 +3,6 @@ import { getDB } from "../server/database/pool"
 import SqlUsers from "../server/database/SqlUsers"
 import { LookupItem } from "../shared/types"
 import { Users } from "../shared/schema"
-import { ResultSetHeader } from "mysql2/promise"
 
 describe("Payroll MariaDB", () => {
     const db = getDB()

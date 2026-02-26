@@ -68,6 +68,6 @@ export default {
             `SELECT id FROM users WHERE id=? AND (passwd IS null OR passwd=?)`,
             [userId, pwd],
         )
-        return result && result.length === 1
+        return result?.length === 1
     },
 }

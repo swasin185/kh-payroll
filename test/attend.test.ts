@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest"
 import { getDB } from "../server/database/pool"
-import SqlAttendance from "../server/database/SqlAttendance"
 import SqlTimeCard from "../server/database/SqlTimeCard"
 
 describe("Payroll MariaDB", () => {
@@ -133,9 +132,12 @@ describe("Payroll MariaDB", () => {
     ]
 
     // Get min and max dates from scenarios
-    const dates = scenarios.map(s => s.date)
-    const minDate = dates.reduce((min, date) => date < min ? date : min)
-    const maxDate = dates.reduce((max, date) => date > max ? date : max)
+    let minDate = scenarios[0].date
+    let maxDate = scenarios[0].date
+    for (const s of scenarios) {
+        if (s.date < minDate) minDate = s.date
+        if (s.date > maxDate) maxDate = s.date
+    }
 
     async function getScanCode(): Promise<string> {
         const [rows] = await db.query<any[]>("SELECT scanCode FROM employee WHERE comCode=? AND empCode=?", [testComCode, testEmpCode])

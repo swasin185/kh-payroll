@@ -1,7 +1,6 @@
 DROP PROCEDURE IF EXISTS payroll.runTimeCard;
 
-
-DELIMITER $$ $$
+DELIMITER $$
 CREATE PROCEDURE payroll.runTimeCard (in pDateFrom varchar(10), in pDateTo varchar(10))
 BEGIN
 INSERT INTO
@@ -34,14 +33,14 @@ FROM
 WHERE
     t.dateAt BETWEEN pDateFrom AND pDateTo;
 
+END $$
 
-END $$ DELIMITER;
+DELIMITER ;
 
 
 DROP PROCEDURE IF EXISTS payroll.runAttendance;
 
-
-DELIMITER $$ $$
+DELIMITER $$
 CREATE PROCEDURE payroll.runAttendance (in pDateFrom varchar(10), in pDateTo varchar(10))
 BEGIN
 UPDATE attendance a
@@ -50,16 +49,14 @@ AND v.empCode = a.empCode
 AND v.dateAt = a.dateAt
 SET
     a.status = v.status,
-    a.lunch_out = v.lunch_out,
-    a.lunch_in = v.lunch_in,
-    a.evening = v.evening,
     a.lateMin1 = v.lateMin1,
     a.lunchMin = v.lunchMin,
     a.lateMin2 = v.lateMin2,
-    a.workMin = v.workMin,
-    a.otMin = v.otMin
+    a.otMin = v.otMin,
+    a.workMin = v.baseWorkMin - v.lateMin1 - v.lateMin2
 WHERE
     a.dateAt BETWEEN pDateFrom AND pDateTo;
 
+END $$
 
-END $$ DELIMITER;
+DELIMITER ;
