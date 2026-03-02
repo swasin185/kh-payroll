@@ -1,7 +1,7 @@
 import { H3Event} from "h3"
 import { renewSession } from "./sessions"
 
-export function authEventHandler(handler: (event: H3Event) => Promise<H3Event> | any) {
+export function authEventHandler(handler: (event: H3Event) => Promise<H3Event>) {
     return defineEventHandler(async (event) => {
         const session = await validateSession(event)
         if (session?.user) 

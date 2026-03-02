@@ -8,6 +8,8 @@ const config: mysql.PoolOptions = {
     database: process.env.DB_NAME ?? "payroll",
     connectionLimit: Number.parseInt(process.env.DB_CONNECTION_LIMIT ?? "100"),
     waitForConnections: true,
+    enableKeepAlive: true,
+    idleTimeout: 60000,
     queueLimit: 0,
     timezone: "+07:00",
 }
@@ -16,7 +18,6 @@ if (process.env.DB_HOST && process.env.DB_HOST != "localhost" && process.env.DB_
     config.ssl = {
         rejectUnauthorized: true,
     }
-
 
 const poolConnection: mysql.Pool = mysql.createPool(config)
 
