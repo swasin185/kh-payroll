@@ -119,23 +119,25 @@ select
         else 0
     end as lateMin2,
     if (
-        v.morning_m is null
-        or (
-            v.status = 'FullDay'
-            and v.night_m is null
-            and v.early_m is null
-        ),
-        0,
+        v.status = 'Holiday'
+        or v.status = 'Sunday',
+        coalesce(early_m, night_m, evening_m, lunch_in_m, lunch_out_m) -
+        coalesce(morning_m, lunch_out_m, lunch_in_m, evening_m),
         case
+            when v.morning_m is null
+            or (
+                v.status = 'FullDay'
+                and v.night_m is null
+                and v.early_m is null
+            ) then 0
             when v.early_m is not null then v.early_m - 1080
             when v.night_m is not null then v.night_m - 1080
             else 0
         end
     ) as otMin,
     case
-        when v.status = 'FullDay' then v.fullWorkMin
         when v.status = 'HalfDay' then v.halfWorkMin
-        else 0
+        else v.fullWorkMin
     end as baseWorkMin
 from
     (
@@ -157,29 +159,7 @@ from
             evening,
             night,
             early,
-            case
-                when (
-                    `a`.`morning` is not null
-                    and (
-                        `a`.`evening` is not null
-                        or `a`.`night` is not null
-                        or `a`.`early` is not null
-                    )
-                ) then 'FullDay'
-                when (
-                    (`a`.`morning` is not null)
-                    xor (
-                        `a`.`evening` is not null
-                        or `a`.`night` is not null
-                        or `a`.`early` is not null
-                    )
-                )
-                and (
-                    `a`.`lunch_out` is not null
-                    or `a`.`lunch_in` is not null
-                ) then 'HalfDay'
-                else 'Absent'
-            end as `status`
+            status
         from
             `attendance` `a`
     ) v;

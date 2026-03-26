@@ -143,7 +143,7 @@ drop table if exists attendance;
 create table attendance (
     comCode       varchar(2),
     empCode       smallint unsigned,
-    dateAt       varchar(10) comment "วันเดือนปีทำงาน",
+    dateAt        varchar(10) comment "วันเดือนปีทำงาน",
     morning       varchar(5) comment "เวลาเข้า เช้า 06:00 - 10:00 (last)",
     evening       varchar(5) comment "เวลาออก เย็น 16:00 - 18:00 (last)",
     night         varchar(5) comment "เวลาออก ค่ำ 19:00 - 24:00 (last)",
