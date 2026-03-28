@@ -43,7 +43,7 @@ DELIMITER $$
 $$
 create procedure payroll.runAttendance (in pDateFrom varchar(10), in pDateTo varchar(10))
 begin
-insert into
+insert ignore into
     attendance (
         comCode,
         empCode,
@@ -66,7 +66,7 @@ select
     e.comCode,
     e.empCode,
     dateAt,
-    if (h.day is null, "Absent", "HOLIDAY") status
+    "Absent" status
 from
     dates
     join employee e
@@ -76,8 +76,7 @@ where
     dayofweek(dateAt) <> 1
     and e.timeCode is not null
     and e.endDate is null
-on duplicate key update
-    status = value(status);
+    and h.day is null;
 
 UPDATE attendance AS a
 LEFT JOIN holiday AS h ON a.comCode = h.comCode AND a.dateAt = h.day
