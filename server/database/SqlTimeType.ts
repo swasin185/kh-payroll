@@ -10,7 +10,8 @@ export default {
         const [result] = await db.query<RowDataPacket[]>(
             `SELECT *
              FROM timetype
-             WHERE timeCode=?`,
+             WHERE timeCode=?
+             LIMIT 1`,
             [timeCode],
         )
         if (result.length !== 1) return null

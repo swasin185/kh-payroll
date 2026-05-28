@@ -9,7 +9,7 @@ function toLocaleDate(date: Date | null | undefined) {
     return date ? formatDate(date) : null
 }
 
-const ComCodeAttr = z.string().min(2).max(2).default("")
+const ComCodeAttr = z.string().default("")
 
 const UserIdAttr = z.string().max(16)
 
@@ -17,13 +17,13 @@ const DateAttr = z.coerce.date().nullable().default(null).transform(toLocaleDate
 
 const TimeAttr = z.coerce.date().nullable().default(null).optional().transform(toLocaleDateTime)
 
-const MoneyAttr = z.coerce.number().min(-999_999_999).max(+999_999_999).nullable().default(null)
+const MoneyAttr = z.coerce.number().min(-999_999_999).max(+999_999_999).nullable().default(0)
 
 const PercentAttr = z.coerce.number().min(0).max(100).nullable().optional().default(null)
 
 const BooleanAttr = z.coerce.boolean().optional().default(false)
 
-const EmployeeAttr = z.int().positive().max(9999).default(0)
+const EmployeeAttr = z.int().min(0).max(9999).default(0)
 
 const TIME_HH_MM_REGEX = /^(?:[01]\d|2[0-3]):[0-5]\d$/
 
@@ -117,21 +117,25 @@ export const EmployeeSchema = z.object({
     taxId: z.string().max(100).nullable().default(null),
     prefix: z.string().max(16).nullable().default(null),
     name: z.string().max(20).nullable().default(null),
+
     surName: z.string().max(30).nullable().default(null),
     nickName: z.string().max(20).nullable().default(null),
     birthDate: DateAttr,
     department: z.string().max(20).nullable().default(null),
     timeCode: z.int().nullable().default(null),
+
     beginDate: DateAttr,
     endDate: DateAttr,
-    empType: z.string().max(10).nullable().default(null).optional(),
+    empType: z.string().max(10).nullable().default(null),
     bankAccount: z.string().max(20).nullable().default(null),
     address: z.string().max(100).nullable().default(null),
+
     phone: z.string().max(20).nullable().default(null),
-    childAll: z.int().min(0).max(10).nullable().default(0),
-    childEdu: z.int().min(0).max(10).nullable().default(0),
+    childAll: z.int().min(0).max(10).default(0),
+    childEdu: z.int().min(0).max(10).default(0),
     isSpouse: BooleanAttr,
     isChildShare: BooleanAttr,
+
     isExcSocialIns: BooleanAttr,
     deductInsure: MoneyAttr,
     deductHome: MoneyAttr,
@@ -176,7 +180,7 @@ export const TimeCardArraySchema = z.array(TimeCardSchema)
 export const AttendanceSchema = z.object({
     comCode: ComCodeAttr,
     empCode: EmployeeAttr,
-    dateTxt: ScanDateAttr,
+    dateAt: ScanDateAttr,
     morning: ScanTimeAttr,
     evening: ScanTimeAttr,
     night: ScanTimeAttr,

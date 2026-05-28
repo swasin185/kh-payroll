@@ -1,23 +1,12 @@
 <template>
-    <ToolbarData
-        lookupName="employee"
-        v-model:searchKey="search"
-        v-model:mode="mode"
-        :newRecord="
-            () => {
-                Object.assign(record, AttendanceSchema.parse({}))
-                record.comCode = comCode
-                record.empCode = Number.parseInt(search)
-                record.dateTxt = DateStr.TODAY().isoDate
-            }
-        "
-        :onSelect="onSelect"
-        :onInsert="onInsert"
-        :onUpdate="onUpdate"
-        :onDelete="onDelete"
-        :onPrint="onPrint"
-        :form="form!"
-    />
+    <ToolbarData lookupName="" dialogName="Employee" v-model:searchKey="search" v-model:mode="mode" :newRecord="() => {
+        Object.assign(record, AttendanceSchema.parse({}))
+        record.comCode = comCode
+        record.empCode = Number.parseInt(search)
+        record.dateAt = DateStr.TODAY().isoDate
+    }
+        " :onSelect="onSelect" :onInsert="onInsert" :onUpdate="onUpdate" :onDelete="onDelete" :onPrint="onPrint"
+        :form="form!" />
     <div class="flex gap-x-2 mb-4">
         <UFormField label="ตั้งแต่วันที่" name="fromDate">
             <DateInput v-model="fromDate" />
@@ -27,48 +16,35 @@
         </UFormField>
     </div>
     <USeparator />
-    <UForm
-        ref="form"
-        :state="record"
-        :schema="AttendanceSchema"
-        class="flex gap-x-2 mb-4"
-        :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update || !record.empCode"
-    >
+    <UForm ref="form" :state="record" :schema="AttendanceSchema" class="flex gap-x-2 mb-4"
+        :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update || !record.empCode">
         <UFormField label="วันที่" name="dateTxt">
-            <DateInput v-model="record.dateTxt" />
+            <DateInput v-model="record.dateAt" />
         </UFormField>
         <UFormField label="เข้าเช้า" name="morning">
-            <UInput type="text" v-model="record.morning" class="w-18" maxlength="5" />
+            <UInput type="text" v-model="record.morning!" class="w-18" maxlength="5" />
         </UFormField>
         <UFormField label="พักเที่ยง" name="lunch_out">
-            <UInput type="text" v-model="record.lunch_out" class="w-18" maxlength="5" />
+            <UInput type="text" v-model="record.lunch_out!" class="w-18" maxlength="5" />
         </UFormField>
         <UFormField label="กลับเที่ยง" name="lunch_in">
-            <UInput type="text" v-model="record.lunch_in" class="w-18" maxlength="5" />
+            <UInput type="text" v-model="record.lunch_in!" class="w-18" maxlength="5" />
         </UFormField>
         <UFormField label="ออกเย็น" name="evening">
-            <UInput type="text" v-model="record.evening" class="w-18" maxlength="5" />
+            <UInput type="text" v-model="record.evening!" class="w-18" maxlength="5" />
         </UFormField>
         <UFormField label="ออกค่ำ" name="night">
-            <UInput type="text" v-model="record.night" class="w-18" maxlength="5" />
+            <UInput type="text" v-model="record.night!" class="w-18" maxlength="5" />
         </UFormField>
         <UFormField label="ข้ามวัน" name="early">
-            <UInput type="text" v-model="record.early" class="w-18" maxlength="5" />
+            <UInput type="text" v-model="record.early!" class="w-18" maxlength="5" />
         </UFormField>
         <UFormField label="พนักงาน" name="empCode">
             <UInput type="number" v-model="record.empCode" disabled class="w-20" />
         </UFormField>
     </UForm>
-    <UTable
-        ref="table"
-        sticky
-        @select="onSelectRow"
-        @key.enter="onSelectRow"
-        :row-selection="rowSelection"
-        :data="attendance"
-        :columns="columns"
-        class="w-200 h-60"
-    />
+    <UTable ref="table" sticky @select="onSelectRow" @key.enter="onSelectRow" :row-selection="rowSelection"
+        :data="attendance" :columns="columns" class="w-200 h-60" />
 </template>
 <script lang="ts" setup>
 definePageMeta({ keepalive: true })
@@ -180,11 +156,11 @@ async function onUpdate() {
 async function onDelete() {
     return await $waitFetch("/api/attendance", {
         method: "DELETE",
-        query: { comCode: record.comCode, empCode: record.empCode, dateTxt: record.dateTxt },
+        query: { comCode: record.comCode, empCode: record.empCode, dateAt: record.dateAt },
     })
 }
 
-function onPrint() {}
+function onPrint() { }
 
 function onSelectRow(e: Event, row: TableRow<Attendance>) {
     if (!rowSelection.value[row.index])

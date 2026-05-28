@@ -12,8 +12,7 @@ async function fetchPdf(url: string, reportBody: any): Promise<Blob> {
         body: JSON.stringify(reportBody),
     })
 
-    if (!response.ok)
-        throw new Error("Failed to fetch PDF")
+    if (!response.ok) throw new Error("Failed to fetch PDF")
 
     return response.blob()
 }
@@ -28,7 +27,7 @@ async function fetchJson(url: string): Promise<any> {
 
 describe("KxReport API openPDF", () => {
     it("should fetch PDF from openPDF endpoint and return a Blob", async () => {
-        const reportUrl =  kxhost + "openPDF"
+        const reportUrl = kxhost + "openPDF"
         const reportBody = { report: "A00", app: "kh-payroll", db: "payroll" }
         const result = await fetchPdf(reportUrl, reportBody)
         expect(result).toBeInstanceOf(Blob)
@@ -38,7 +37,7 @@ describe("KxReport API openPDF", () => {
 
 describe("KxReport API json", () => {
     it("should fetch json endpoint", async () => {
-        const reportUrl =  kxhost + "json"
+        const reportUrl = kxhost + "json"
         const result = await fetchJson(reportUrl)
         expect(result).toBeInstanceOf(Array)
         expect(result.length).toBeGreaterThan(2)

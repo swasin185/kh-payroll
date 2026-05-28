@@ -33,8 +33,15 @@ export default defineNuxtConfig({
         "/kxreport/**": {
             // proxy to report server https://192.168.1.12:8443/kxreport/**
             proxy: isDev
-                ? process.env.KXREPORT ?? mockReportApi
-                : process.env.KXREPORT_HTTPS ?? mockReportApi,
+                ? (process.env.KXREPORT ?? mockReportApi)
+                : (process.env.KXREPORT_HTTPS ?? mockReportApi),
+        },
+    },
+    vite: {
+        optimizeDeps: {
+            include: [
+                "crypto-js", // CJS
+            ],
         },
     },
 })

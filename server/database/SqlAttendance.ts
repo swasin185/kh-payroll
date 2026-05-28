@@ -14,7 +14,7 @@ export default {
         const [result] = await db.query<RowDataPacket[]>(
             `SELECT *
              FROM attendance 
-             WHERE comCode=? and empCode=? and dateTxt between ? and ?`,
+             WHERE comCode=? and empCode=? and dateAt between ? and ?`,
             [comCode, empCode, fromDate, toDate],
         )
         return AttendanceArraySchema.parse(result)
@@ -29,10 +29,10 @@ export default {
         return result.affectedRows === 1
     },
 
-    async delete(comCode: string, empCode: string, dateTxt: string): Promise<boolean> {
+    async delete(comCode: string, empCode: string, dateAt: string): Promise<boolean> {
         const [result] = await db.execute<ResultSetHeader>(
-            `DELETE FROM attendance WHERE comCode=? and empCode=? and dateTxt=?`,
-            [comCode, empCode, dateTxt],
+            `DELETE FROM attendance WHERE comCode=? and empCode=? and dateAt=?`,
+            [comCode, empCode, dateAt],
         )
         return result.affectedRows === 1
     },
@@ -41,8 +41,8 @@ export default {
         const values = Object.values(att)
         values.shift() // remove comCode
         values.shift() // remove empCode
-        values.shift() // remove dateTxt
-        values.push(att.comCode, att.empCode, att.dateTxt)
+        values.shift() // remove dateAt
+        values.push(att.comCode, att.empCode, att.dateAt)
         const [result] = await db.execute<ResultSetHeader>(
             `UPDATE attendance
              SET

@@ -10,7 +10,8 @@ export default {
         const [result] = await db.query<RowDataPacket[]>(
             `SELECT id, name, descript, level, role, 
                  passwdTime, created, stoped, comCode
-             FROM users WHERE id=?`,
+             FROM users WHERE id=?
+             LIMIT 1`,
             [userId],
         )
         if (result.length !== 1) return null

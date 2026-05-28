@@ -7,7 +7,7 @@ const db = getDB()
 
 export default {
     async select(comCode: string): Promise<Company | null> {
-        const [result] = await db.query<RowDataPacket[]>(`SELECT * FROM company WHERE comCode=?`, [
+        const [result] = await db.query<RowDataPacket[]>(`SELECT * FROM company WHERE comCode=? LIMIT 1`, [
             comCode,
         ])
         if (result.length !== 1) return null

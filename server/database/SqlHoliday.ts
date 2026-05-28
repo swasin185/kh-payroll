@@ -10,7 +10,8 @@ export default {
         const [result] = await db.query<RowDataPacket[]>(
             `SELECT *
              FROM holiday
-             WHERE comCode=? and day=?`,
+             WHERE comCode=? and day=?
+             LIMIT 1`,
             [comCode, dateValue],
         )
         if (result.length !== 1) return null

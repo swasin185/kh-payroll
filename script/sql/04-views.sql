@@ -1,3 +1,5 @@
+use payroll;
+
 create or replace view `vTimeCard` as
 select
     `v`.`scanCode` as `scanCode`,

@@ -12,32 +12,23 @@
         "serve": "./script/serve.sh"
     },
     "dependencies": {
-        "@nuxt/test-utils": "3.20.1",
-        "@nuxt/ui": "^4.7.1",
+        "@nuxt/test-utils": "4.0.3",
+        "@nuxt/ui": "^4.8.0",
         "crypto-js": "^4.2.0",
-        "mysql2": "^3.22.3",
-        "nuxt": "^4.4.4",
-        "nuxt-auth-utils": "0.5.27",
-        "typescript": "^5.9.3",
+        "mysql2": "^3.22.4",
+        "nuxt": "^4.4.6",
+        "nuxt-auth-utils": "0.5.29",
+        "typescript": "^6.0.3",
         "vue": "^3.5.34",
-        "vue-router": "^4.6.4",
+        "vue-router": "^5.0.7",
         "zod": "^4.4.3"
     },
     "devDependencies": {
         "@types/crypto-js": "^4.2.2",
-        "@types/node": "^24.12.3",
+        "@types/node": "^25.9.1",
         "prettier": "^3.8.3",
-        "prettier-plugin-sql": "^0.19.2",
+        "prettier-plugin-sql": "^0.20.0",
         "tailwindcss": "^4.3.0",
-        "vitest": "^3.2.4"
-    },
-    "pnpm": {
-        "onlyBuiltDependencies": [
-            "@parcel/watcher",
-            "esbuild",
-            "vue-demi",
-            "oxc-parser"
-        ]
-    },
-    "packageManager": "pnpm@10.30.0+sha512.2b5753de015d480eeb88f5b5b61e0051f05b4301808a82ec8b840c9d2adf7748eb352c83f5c1593ca703ff1017295bc3fdd3119abb9686efc96b9fcb18200937"
+        "vitest": "^4.1.7"
+    }
 }

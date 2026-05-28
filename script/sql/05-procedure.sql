@@ -1,3 +1,5 @@
+use payroll;
+
 drop procedure if exists payroll.runTimeCard;
 
 DELIMITER $$

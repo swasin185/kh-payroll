@@ -9,7 +9,7 @@ export default defineConfig({
         projects: [
             {
                 test: {
-                    name: "test",
+                    name: "default",
                     include: ["test/*.{test,spec}.ts"],
                     environment: "node",
                 },

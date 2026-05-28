@@ -10,7 +10,8 @@ export default {
         const [result] = await db.query<RowDataPacket[]>(
             `SELECT *
              FROM employee 
-             WHERE comCode=? and empCode=?`,
+             WHERE comCode=? and empCode=?
+             LIMIT 1`,
             [comCode, empCode],
         )
         if (result.length !== 1) return null
@@ -28,7 +29,39 @@ export default {
         return result as LookupItem[]
     },
 
-    async insert(emp: Employee): Promise<boolean> {
+    async list(
+        comCode: string,
+        limit: number,
+        offset: number,
+        search?: string,
+    ): Promise<{ rows: Employee[]; total: number }> {
+        let whereClause = `WHERE comCode=?`
+        const params: (string | number)[] = [comCode]
+
+        if (search) {
+            whereClause += ` AND (CAST(empCode AS CHAR) LIKE ? OR name LIKE ? OR surName LIKE ? OR nickName LIKE ? OR department LIKE ?)`
+            const like = `%${search}%`
+            params.push(like, like, like, like, like)
+        }
+
+        const [[countResult]] = await db.query<RowDataPacket[]>(
+            `SELECT COUNT(*) AS total FROM employee ${whereClause}`,
+            params,
+        )
+        const total = countResult!.total as number
+
+        const [rows] = await db.query<RowDataPacket[]>(
+            `SELECT * FROM employee ${whereClause} ORDER BY empCode LIMIT ? OFFSET ?`,
+            [...params, limit, offset],
+        )
+
+        return {
+            rows: rows.map((row) => EmployeeSchema.parse(row)),
+            total,
+        }
+    },
+
+    async insert(emp: Employee): Promise<number> {
         if (!emp.empCode || emp.empCode === 0)
             emp.empCode = await db
                 .query<RowDataPacket[]>(
@@ -38,7 +71,7 @@ export default {
                     [emp.comCode],
                 )
                 .then(([rows]) => {
-                    return rows[0].nextCode as number
+                    return rows[0]!.nextCode as number
                 })
 
         const [result] = await db.execute<ResultSetHeader>(
@@ -46,12 +79,12 @@ export default {
              VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?)`,
             Object.values(emp),
         )
-        return result.affectedRows === 1
+        return emp.empCode
     },
 
     async delete(comCode: string, empCode: string): Promise<boolean> {
         const [result] = await db.execute<ResultSetHeader>(
-            `DELETE FROM employee WHERE comCode=? and empCode=?`,
+            `update employee set endDate=now(), empType=null WHERE comCode=? and empCode=?`,
             [comCode, empCode],
         )
         return result.affectedRows === 1

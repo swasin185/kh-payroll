@@ -9,7 +9,8 @@ export default {
     async select(inCode: string): Promise<IncomeType | null> {
         const [result] = await db.query<RowDataPacket[]>(
             `SELECT inCode, inName, inType, isTax, isReset, initLimit, initPercent
-             FROM incometype WHERE inCode=?`,
+             FROM incometype WHERE inCode=?
+             LIMIT 1`,
             [inCode],
         )
         if (result.length !== 1) return null
