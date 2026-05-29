@@ -197,3 +197,12 @@ export const AttendanceSchema = z.object({
 })
 export type Attendance = z.infer<typeof AttendanceSchema>
 export const AttendanceArraySchema = z.array(AttendanceSchema)
+
+export const EmployeePhotoSchema = z.object({
+    comCode: ComCodeAttr,
+    empCode: EmployeeAttr,
+    mimeType: z.string().max(30).default("image/jpeg"),
+    uploadedAt: TimeAttr,
+})
+export type EmployeePhoto = z.infer<typeof EmployeePhotoSchema>
+

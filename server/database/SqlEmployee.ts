@@ -9,7 +9,7 @@ export default {
     async select(comCode: string, empCode: string): Promise<Employee | null> {
         const [result] = await db.query<RowDataPacket[]>(
             `SELECT *
-             FROM employee 
+             FROM employee
              WHERE comCode=? and empCode=?
              LIMIT 1`,
             [comCode, empCode],
@@ -20,8 +20,8 @@ export default {
 
     async lookup(comCode: string): Promise<LookupItem[]> {
         const [result] = await db.query(
-            `SELECT CAST(empCode AS CHAR) AS id, concat(empCode, " : ", name, " ", ifnull(surname,'')) AS label 
-             FROM employee 
+            `SELECT CAST(empCode AS CHAR) AS id, concat(empCode, " : ", name, " ", ifnull(surname,'')) AS label
+             FROM employee
              WHERE comCode=?
              ORDER BY empCode`,
             [comCode],
@@ -61,12 +61,12 @@ export default {
         }
     },
 
-    async insert(emp: Employee): Promise<number> {
+    async insert(emp: Employee): Promise<string | null> {
         if (!emp.empCode || emp.empCode === 0)
             emp.empCode = await db
                 .query<RowDataPacket[]>(
-                    `SELECT IFNULL(MAX(empCode), 0) + 1 AS nextCode 
-                     FROM employee 
+                    `SELECT IFNULL(MAX(empCode), 0) + 1 AS nextCode
+                     FROM employee
                      WHERE comCode=?`,
                     [emp.comCode],
                 )
@@ -75,11 +75,12 @@ export default {
                 })
 
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT IGNORE INTO employee  
+            `INSERT IGNORE INTO employee
              VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?)`,
             Object.values(emp),
         )
-        return emp.empCode
+        if (result.affectedRows === 1) return emp.empCode.toString()
+        else return null
     },
 
     async delete(comCode: string, empCode: string): Promise<boolean> {

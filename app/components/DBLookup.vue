@@ -5,9 +5,12 @@
         value-key="id"
         :class="name ? 'w-50' : 'w-30'"
         :items="data"
-        @update:modelValue="(item:string) => { if (props.name && lookupKey === item) lookupKey = null }"
-        @update:open="openLookupDialog"
-    />
+        @update:modelValue="
+            (item: string) => {
+                if (props.name && lookupKey === item) lookupKey = null
+            }
+        "
+        @update:open="openLookupDialog" />
 </template>
 
 <script setup lang="ts">
@@ -36,9 +39,13 @@ const props = defineProps<{
     query?: Record<string, any>
 }>()
 
-watch(() => props.query, async () => {
-    await refresh()
-}, { deep: true })
+watch(
+    () => props.query,
+    async () => {
+        await refresh()
+    },
+    { deep: true },
+)
 
 const lookupKey = defineModel<string | null>("lookupKey")
 
@@ -49,7 +56,10 @@ await refresh()
 
 async function refresh(): Promise<void> {
     data.value = props.name
-        ? await $fetch("/api/lookup", { method: "GET", query: { name: props.name, ...props.query } })
+        ? await $fetch("/api/lookup", {
+              method: "GET",
+              query: { name: props.name, ...props.query },
+          })
         : []
 }
 

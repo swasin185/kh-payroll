@@ -12,5 +12,6 @@ mysql < script/sql/02-main.sql
 mysql < script/sql/03-payroll.sql
 mysql < script/sql/04-views.sql
 mysql < script/sql/05-procedure.sql
+mysql < script/sql/06-photos.sql
 
 echo "Database initialization completed successfully!"

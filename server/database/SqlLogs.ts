@@ -7,7 +7,7 @@ const db = getDB()
 export default {
     async insert(logs: Logs): Promise<boolean> {
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT IGNORE INTO logs (logTime, logType, userId, program, tableName, changed, comCode) 
+            `INSERT IGNORE INTO logs (logTime, logType, userId, program, tableName, changed, comCode)
              VALUES (?,?,?,?,?,?,?)`,
             Object.values(logs),
         )
@@ -16,7 +16,7 @@ export default {
 
     async selectLogsType(type: string): Promise<Logs[]> {
         const [rows] = await db.query<RowDataPacket[]>(
-            `SELECT * FROM logs 
+            `SELECT * FROM logs
              WHERE logType = ?
              ORDER BY logTime
              LIMIT 100`,
@@ -27,7 +27,7 @@ export default {
 
     async selectLogsLogin(userId: string): Promise<Logs[]> {
         const [rows] = await db.query<RowDataPacket[]>(
-            `SELECT * FROM logs 
+            `SELECT * FROM logs
              WHERE logType='login' and userId=?
              ORDER BY logTime
              LIMIT 20`,

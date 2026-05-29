@@ -10,15 +10,13 @@
         :onUpdate="onUpdate"
         :onDelete="onDelete"
         :onPrint="onPrint"
-        :form="form!"
-    />
+        :form="form!" />
     <UForm
         ref="form"
         :state="record"
         :schema="CompanySchema"
         class="space-y-2"
-        :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
-    >
+        :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update">
         <UFormField label="ComCode" name="comCode">
             <UInput v-model="record.comCode" :disabled="mode !== DBMODE.Insert" class="w-15" />
         </UFormField>
@@ -26,22 +24,22 @@
             <UInput v-model="record.comName" class="w-80" />
         </UFormField>
         <UFormField label="TaxID" name="taxId">
-            <UInput v-model="record.taxId" class="w-40" />
+            <UInput v-model="record.taxId!" class="w-40" />
         </UFormField>
         <UFormField label="Address" name="address">
-            <UInput v-model="record.address" class="w-150" />
+            <UInput v-model="record.address!" class="w-150" />
         </UFormField>
         <UFormField label="Phone" name="phone">
-            <UInput v-model="record.phone" class="w-80" />
+            <UInput v-model="record.phone!" class="w-80" />
         </UFormField>
         <UFormField label="Email 1" name="email1">
-            <UInput v-model="record.email1" class="w-50" />
+            <UInput v-model="record.email1!" class="w-50" />
         </UFormField>
         <UFormField label="Email 2" name="email2">
-            <UInput v-model="record.email2" class="w-50" />
+            <UInput v-model="record.email2!" class="w-50" />
         </UFormField>
         <UFormField label="Email 3" name="email3">
-            <UInput v-model="record.email3" class="w-50" />
+            <UInput v-model="record.email3!" class="w-50" />
         </UFormField>
     </UForm>
 </template>

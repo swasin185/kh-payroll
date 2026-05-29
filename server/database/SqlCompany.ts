@@ -7,9 +7,10 @@ const db = getDB()
 
 export default {
     async select(comCode: string): Promise<Company | null> {
-        const [result] = await db.query<RowDataPacket[]>(`SELECT * FROM company WHERE comCode=? LIMIT 1`, [
-            comCode,
-        ])
+        const [result] = await db.query<RowDataPacket[]>(
+            `SELECT * FROM company WHERE comCode=? LIMIT 1`,
+            [comCode],
+        )
         if (result.length !== 1) return null
         return CompanySchema.parse(result[0])
     },
@@ -19,13 +20,14 @@ export default {
         return CompanyArraySchema.parse(rows)
     },
 
-    async insert(com: Company): Promise<boolean> {
+    async insert(com: Company): Promise<string | null> {
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT IGNORE INTO company (comCode, comName, taxId, address, phone, email1, email2, email3) 
+            `INSERT IGNORE INTO company (comCode, comName, taxId, address, phone, email1, email2, email3)
              VALUES (?,?,?,?,?,?,?,?)`,
             Object.values(com),
         )
-        return result.affectedRows === 1
+        if (result.affectedRows === 1) return com.comCode.toString()
+        else return null
     },
 
     async update(com: Company): Promise<boolean> {
@@ -34,8 +36,8 @@ export default {
         values.push(com.comCode)
 
         const [result] = await db.execute<ResultSetHeader>(
-            `UPDATE company 
-             SET comName=?, taxId=?, address=?, phone=?, email1=?, email2=?, email3=?, 
+            `UPDATE company
+             SET comName=?, taxId=?, address=?, phone=?, email1=?, email2=?, email3=?,
                  yrPayroll=?, mnPayroll=?
              WHERE comCode=?`,
             values,
@@ -45,7 +47,7 @@ export default {
 
     async lookup(): Promise<LookupItem[]> {
         const [rows] = await db.query<RowDataPacket[]>(
-            `SELECT comCode AS id, CONCAT(comCode, ' : ', comName) AS label 
+            `SELECT comCode AS id, CONCAT(comCode, ' : ', comName) AS label
              FROM company
              ORDER BY comCode`,
         )

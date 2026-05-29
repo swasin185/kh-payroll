@@ -19,24 +19,28 @@ export default {
 
     async lookup(): Promise<LookupItem[]> {
         const [result] = await db.query(
-            `SELECT inCode AS id, inName AS label 
-             FROM incometype 
+            `SELECT inCode AS id, inName AS label
+             FROM incometype
              ORDER BY inCode`,
         )
         return result as LookupItem[]
     },
 
-    async insert(inc: IncomeType): Promise<boolean> {
+    async insert(inc: IncomeType): Promise<string | null> {
         const [result] = await db.execute(
-            `INSERT IGNORE INTO incometype (inCode, inName, inType, isTax, isReset, initLimit, initPercent) 
+            `INSERT IGNORE INTO incometype (inCode, inName, inType, isTax, isReset, initLimit, initPercent)
              VALUES (?,?,?,?,?,?,?)`,
             Object.values(inc),
         )
-        return (result as ResultSetHeader).affectedRows === 1
+        if ((result as ResultSetHeader).affectedRows === 1) return inc.inCode.toString()
+        else return null
     },
 
     async delete(inCode: string): Promise<boolean> {
-        const [result] = await db.execute<ResultSetHeader>(`DELETE FROM incometype WHERE inCode=?`, [inCode])
+        const [result] = await db.execute<ResultSetHeader>(
+            `DELETE FROM incometype WHERE inCode=?`,
+            [inCode],
+        )
         return result.affectedRows === 1
     },
 

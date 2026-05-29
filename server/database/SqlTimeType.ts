@@ -20,26 +20,30 @@ export default {
 
     async lookup(): Promise<LookupItem[]> {
         const [result] = await db.query(
-            `SELECT CAST(timeCode AS CHAR) AS id, descript AS label 
+            `SELECT CAST(timeCode AS CHAR) AS id, descript AS label
              FROM timetype
              ORDER BY timeCode`,
         )
         return result as LookupItem[]
     },
 
-    async insert(time: TimeType): Promise<boolean> {
+    async insert(time: TimeType): Promise<string | null> {
         const [result] = await db.execute(
             `INSERT IGNORE INTO timetype (
-                timeCode, descript, s1Start, s1Finish, s2Start, s2Finish, s3Start, s3Finish, 
-                otRate1, otRate2, otRate3, allowance1, allowance2, weekDay) 
+                timeCode, descript, s1Start, s1Finish, s2Start, s2Finish, s3Start, s3Finish,
+                otRate1, otRate2, otRate3, allowance1, allowance2, weekDay)
              VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?)`,
             Object.values(time),
         )
-        return (result as ResultSetHeader).affectedRows === 1
+        if ((result as ResultSetHeader).affectedRows === 1) return time.timeCode.toString()!
+        else return null
     },
 
     async delete(timeCode: string): Promise<boolean> {
-        const [result] = await db.execute<ResultSetHeader>(`DELETE FROM incometype WHERE inCode=?`, [timeCode])
+        const [result] = await db.execute<ResultSetHeader>(
+            `DELETE FROM incometype WHERE inCode=?`,
+            [timeCode],
+        )
         return result.affectedRows === 1
     },
 
@@ -49,8 +53,8 @@ export default {
         values.push(time.timeCode)
 
         const [result] = await db.execute<ResultSetHeader>(
-            `UPDATE timetype 
-             SET descript=?, s1Start=?, s1Finish=?, s2Start=?, s2Finish=?, s3Start=?, s3Finish=?, 
+            `UPDATE timetype
+             SET descript=?, s1Start=?, s1Finish=?, s2Start=?, s2Finish=?, s3Start=?, s3Finish=?,
                  otRate1=?, otRate2=?, otRate3=?, allowance1=?, allowance2=?, weekDay=? WHERE timeCode=?`,
             values,
         )

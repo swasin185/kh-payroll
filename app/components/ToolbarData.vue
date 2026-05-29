@@ -1,24 +1,63 @@
 <template>
     <div class="flex space-x-2 border-b-1 pb-2 mb-2">
-        <DBLookup ref="lookup" v-model:lookupKey="searchKey" :name="lookupName" :dialogName="dialogName"
+        <DBLookup
+            ref="lookup"
+            v-model:lookupKey="searchKey"
+            :name="lookupName"
+            :dialogName="dialogName"
             :disabled="isModeActive || level < LEVELS.Officer" />
         <USeparator orientation="vertical" class="h-8" />
-        <UButton label="New" icon="i-lucide-plus-circle" class="bg-pink-500 w-10" @click="setMode(DBMODE.Insert)"
-            title="New" :variant="isModeActive ? (mode == DBMODE.Insert ? 'outline' : 'ghost') : 'solid'"
+        <UButton
+            label="New"
+            icon="i-lucide-plus-circle"
+            class="bg-pink-500 w-10"
+            @click="setMode(DBMODE.Insert)"
+            title="New"
+            :variant="isModeActive ? (mode == DBMODE.Insert ? 'outline' : 'ghost') : 'solid'"
             :disabled="isModeActive || level < LEVELS.Entry || onInsert == undefined" />
-        <UButton label="Edit" icon="i-lucide-pencil" class="bg-yellow-500 w-10" @click="setMode(DBMODE.Update)"
-            title="Edit" :variant="isModeActive ? (mode == DBMODE.Update ? 'outline' : 'ghost') : 'solid'" :disabled="isModeActive || level < LEVELS.Officer || onUpdate == undefined || !searchKey
-                " />
-        <UButton label="Delete" icon="i-lucide-trash-2" class="bg-red-500 w-10" @click="setMode(DBMODE.Delete)"
-            title="Delete" :variant="isModeActive ? (mode == DBMODE.Delete ? 'outline' : 'ghost') : 'solid'" :disabled="isModeActive || level < LEVELS.Supervisor || onDelete == undefined || !searchKey
-                " />
-        <UButton label="Print" icon="i-lucide-printer" class="bg-sky-500 w-10" @click="onPrint!()" title="Print"
-            :variant="isModeActive ? 'ghost' : 'solid'" :disabled="isModeActive || onPrint == undefined" />
+        <UButton
+            label="Edit"
+            icon="i-lucide-pencil"
+            class="bg-yellow-500 w-10"
+            @click="setMode(DBMODE.Update)"
+            title="Edit"
+            :variant="isModeActive ? (mode == DBMODE.Update ? 'outline' : 'ghost') : 'solid'"
+            :disabled="
+                isModeActive || level < LEVELS.Officer || onUpdate == undefined || !searchKey
+            " />
+        <UButton
+            label="Delete"
+            icon="i-lucide-trash-2"
+            class="bg-red-500 w-10"
+            @click="setMode(DBMODE.Delete)"
+            title="Delete"
+            :variant="isModeActive ? (mode == DBMODE.Delete ? 'outline' : 'ghost') : 'solid'"
+            :disabled="
+                isModeActive || level < LEVELS.Supervisor || onDelete == undefined || !searchKey
+            " />
+        <UButton
+            label="Print"
+            icon="i-lucide-printer"
+            class="bg-sky-500 w-10"
+            @click="onPrint!()"
+            title="Print"
+            :variant="isModeActive ? 'ghost' : 'solid'"
+            :disabled="isModeActive || onPrint == undefined" />
         <USeparator orientation="vertical" class="h-8" />
-        <UButton label="Save" class="bg-sky-500 w-25" icon="i-lucide-database-zap" @click="saveClick" title="Alt+S"
+        <UButton
+            label="Save"
+            class="bg-sky-500 w-25"
+            icon="i-lucide-database-zap"
+            @click="saveClick"
+            title="Alt+S"
             v-if="isModeActive" />
-        <UButton label="Cancel" class="bg-gray-500 w-25" icon="i-lucide-x-circle" @click="setMode(DBMODE.Select)"
-            title="ESC" v-if="isModeActive" />
+        <UButton
+            label="Cancel"
+            class="bg-gray-500 w-25"
+            icon="i-lucide-x-circle"
+            @click="setMode(DBMODE.Select)"
+            title="ESC"
+            v-if="isModeActive" />
     </div>
 </template>
 
@@ -73,10 +112,9 @@ const saveClick = async () => {
     let success = false
     if (props.onInsert && mode.value === DBMODE.Insert) {
         const newKey = await props.onInsert()
-        success = newKey > 0
+        success = newKey != null
         searchKey.value = newKey.toString()
-    }
-    else if (props.onUpdate && mode.value === DBMODE.Update) success = await props.onUpdate()
+    } else if (props.onUpdate && mode.value === DBMODE.Update) success = await props.onUpdate()
     else if (props.onDelete && mode.value === DBMODE.Delete) {
         success = await props.onDelete()
         searchKey.value = ""

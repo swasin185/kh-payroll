@@ -8,7 +8,7 @@ const db = getDB()
 export default {
     async select(userId: string): Promise<Users | null> {
         const [result] = await db.query<RowDataPacket[]>(
-            `SELECT id, name, descript, level, role, 
+            `SELECT id, name, descript, level, role,
                  passwdTime, created, stoped, comCode
              FROM users WHERE id=?
              LIMIT 1`,
@@ -20,21 +20,22 @@ export default {
 
     async lookup(): Promise<LookupItem[]> {
         const [result] = await db.query<RowDataPacket[]>(`
-            SELECT id, CONCAT(id, ' : ', name) AS label 
-            FROM users 
-            WHERE id!='admin' 
+            SELECT id, CONCAT(id, ' : ', name) AS label
+            FROM users
+            WHERE id!='admin'
             ORDER BY id`)
         return result as LookupItem[]
     },
 
-    async insert(user: Users): Promise<boolean> {
+    async insert(user: Users): Promise<string> {
         user.id = user.id.toLowerCase().trim()
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT IGNORE INTO users (id, name, descript, level, role, comCode) 
+            `INSERT IGNORE INTO users (id, name, descript, level, role, comCode)
              VALUES (?,?,?,?,?,?)`,
             Object.values(user),
         )
-        return result.affectedRows === 1
+        if (result.affectedRows === 1) return user.id
+        else return ""
     },
 
     async delete(userId: string): Promise<boolean> {

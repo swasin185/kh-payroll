@@ -18,7 +18,7 @@ export default {
 
     async lookup(dateTxt: string, scanCode: string): Promise<LookupItem[]> {
         const [result] = await db.query(
-            `SELECT DATE_FORMAT(scanAt, '%H:%i') AS id, DATE_FORMAT(scanAt, '%Y-%m-%d %H:%i') AS label 
+            `SELECT DATE_FORMAT(scanAt, '%H:%i') AS id, DATE_FORMAT(scanAt, '%Y-%m-%d %H:%i') AS label
              FROM timecard
              WHERE DATE(scanAt)=? and scanCode=?
              ORDER BY scanAt`,
@@ -27,12 +27,13 @@ export default {
         return result as LookupItem[]
     },
 
-    async insert(timeCard: TimeCard): Promise<boolean> {
+    async insert(timeCard: TimeCard): Promise<string | null> {
         const [result] = await db.execute<ResultSetHeader>(
             `INSERT IGNORE INTO timecard (scanCode, scanAt) VALUES (?, ?)`,
             [timeCard.scanCode, timeCard.scanAt],
         )
-        return result.affectedRows === 1
+        if (result.affectedRows === 1) return timeCard.scanAt?.toString()!
+        else return null
     },
 
     async delete(dateTxt: string, scanCode: string): Promise<boolean> {
