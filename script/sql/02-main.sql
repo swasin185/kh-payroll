@@ -12,12 +12,12 @@ create table company (
   email1        varchar(30) comment "email 1",
   email2        varchar(30) comment "email 2",
   email3        varchar(30) comment "email 3",
-  yrPayroll     year default year(curdate()) comment "ปีปัจจุบันที่กำลังทำงาน",
-  mnPayroll     tinyint unsigned default month(curdate()) comment "เดือนปัจจุบันที่กำลังทำงาน",
+  yrPayroll     year comment "ปีปัจจุบันที่กำลังทำงาน",
+  mnPayroll     tinyint unsigned comment "เดือนปัจจุบันที่กำลังทำงาน",
   primary key (comCode)
 ) comment = "บริษัท-ข้อมูลของแต่ละบริษัท";
-insert ignore into 
-  company(comCode, comName) 
+insert ignore into
+  company(comCode, comName)
 values
   ("00", "บจ.ทดสอบ KEEHIN Software"),
   ("01", "บจ กี่หิ้นการไฟฟ้าภูเก็ต"),
@@ -40,11 +40,11 @@ create table users (
 ) comment = "ผู้ใช้งานระบบ";
 insert ignore into users
   (id, name, descript, level)
-values 
+values
   ("admin", "แอดมินไงจะใครละ", "ผู้สร้างระบบ", 9),
   ("tom", "วศิน เสงี่ยมกุล", "ทดสอบผู้ใช้แอดมิน", 7),
   ("jerry", "จิรายุทธ ใจดี", "ทดสอบผู้ใช้พนักงาน", 3),
-  ("guest", "แขกผู้แวะมาดู", "ทดสอบผู้ใช้ทั่วไป", 0);  
+  ("guest", "แขกผู้แวะมาดู", "ทดสอบผู้ใช้ทั่วไป", 0);
 
 drop table if exists permission;
 create table permission (
@@ -62,7 +62,7 @@ drop table if exists logs;
 create table logs (
   logNr         int unsigned auto_increment,
   logTime       timestamp not null default current_timestamp,
-  logType       varchar(8) comment "insert delete update query rollback login logfail execute",   
+  logType       varchar(8) comment "insert delete update query rollback login logfail execute",
   userId        varchar(16) comment "user ที่ส่งคำสั่งทำงาน",
   program       varchar(20) comment "ชื่อโปรแกรม URL.to",
   tableName     varchar(20) comment "ไฟล์ ที่มีผลกระทบ",
