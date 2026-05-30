@@ -1,5 +1,7 @@
 drop database if exists payroll;
-create database payroll;
+create database payroll
+DEFAULT CHARACTER SET utf8mb4
+DEFAULT COLLATE utf8mb4_unicode_ci;
 
 drop user if exists 'pr-report'@'%';
 create user 'pr-report'@'%' identified by 'A1b2C3d4#';

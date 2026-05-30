@@ -10,8 +10,8 @@ select
             `v`.`scanAt`
         ),
         '%Y-%m-%d'
-    ) collate utf8mb4_general_ci as `dateAt`,
-    date_format(`v`.`scanAt`, '%H:%i') collate utf8mb4_general_ci as `timeAt`
+    ) as `dateAt`,
+    date_format(`v`.`scanAt`, '%H:%i') as `timeAt`
 from
     `timecard` v;
 
