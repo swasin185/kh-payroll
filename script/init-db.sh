@@ -17,4 +17,4 @@ mysql < script/sql/06-photos.sql
 
 echo "Database initialization completed successfully!"
 
-unalis mysql
+unalias mysql
