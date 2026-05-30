@@ -12,8 +12,8 @@ create table company (
   email1        varchar(30) comment "email 1",
   email2        varchar(30) comment "email 2",
   email3        varchar(30) comment "email 3",
-  yrPayroll     year comment "ปีปัจจุบันที่กำลังทำงาน",
-  mnPayroll     tinyint unsigned comment "เดือนปัจจุบันที่กำลังทำงาน",
+  yrPayroll     year default (year(curdate())) comment "ปีปัจจุบันที่กำลังทำงาน",
+  mnPayroll     tinyint unsigned default (month(curdate())) comment "เดือนปัจจุบันที่กำลังทำงาน",
   primary key (comCode)
 ) comment = "บริษัท-ข้อมูลของแต่ละบริษัท";
 insert ignore into
@@ -32,7 +32,7 @@ create table users (
   role          varchar(16) comment "หน้าที่",
   passwd        varchar(32) comment "รหัสผ่านเข้าใช้งาน",
   passwdTime    date comment "วันที่ตั้งรหัสผ่าน",
-  created       date default current_timestamp comment "วันที่สร้างผู้ใช้",
+  created       date default (curdate()) comment "วันที่สร้างผู้ใช้",
   stoped        date comment "วันที่สิ้นสุดการทำงาน",
   comCode       varchar(2) not null default "01" comment "บริษัทที่ใช้งาน",
   foreign key (comCode) references company(comCode),
