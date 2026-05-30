@@ -28,3 +28,4 @@ report/.settings
 script/attexport/package-lock.json
 pnpm-lock.yaml
 pnpm-workspace.yaml
+script/payroll.sql.gz
