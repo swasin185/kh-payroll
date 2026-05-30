@@ -5,15 +5,13 @@
         :state="state"
         :schema="ChangePasswordSchema"
         @submit="changePassword"
-        class="space-y-4 w-[300px]"
-    >
+        class="space-y-4 w-75">
         <UFormField label="รหัสผ่านปัจจุบัน" name="currentPassword">
             <UInput
                 v-model="state.currentPassword"
                 type="password"
                 icon="i-lucide-lock-keyhole"
-                placeholder="ป้อนรหัสผ่านปัจจุบัน"
-            />
+                placeholder="ป้อนรหัสผ่านปัจจุบัน" />
         </UFormField>
 
         <UFormField label="รหัสผ่านใหม่" name="newPassword">
@@ -21,8 +19,7 @@
                 v-model="state.newPassword"
                 type="password"
                 icon="i-lucide-lock"
-                placeholder="ป้อนรหัสผ่านใหม่"
-            />
+                placeholder="ป้อนรหัสผ่านใหม่" />
         </UFormField>
 
         <UFormField label="ยืนยันรหัสผ่านใหม่" name="confirmPassword">
@@ -30,8 +27,7 @@
                 v-model="state.confirmPassword"
                 type="password"
                 icon="i-lucide-lock"
-                placeholder="ยืนยันรหัสผ่านใหม่"
-            />
+                placeholder="ยืนยันรหัสผ่านใหม่" />
         </UFormField>
 
         <UButton type="submit" label="เปลี่ยนรหัสผ่าน" icon="i-lucide-rotate-ccw" />
@@ -66,10 +62,14 @@ const ChangePasswordSchema = z
         newPassword: z.string().min(6, mesg),
         confirmPassword: z.string().min(6, mesg),
     })
-    .refine((data: { currentPassword: string; newPassword: string; confirmPassword: string }) => data.newPassword === data.confirmPassword, {
-        message: "รหัสผ่านใหม่และการยืนยันไม่ตรงกัน",
-        path: ["confirmPassword"],
-    })
+    .refine(
+        (data: { currentPassword: string; newPassword: string; confirmPassword: string }) =>
+            data.newPassword === data.confirmPassword,
+        {
+            message: "รหัสผ่านใหม่และการยืนยันไม่ตรงกัน",
+            path: ["confirmPassword"],
+        },
+    )
 
 type ChangePasswordData = z.infer<typeof ChangePasswordSchema>
 
