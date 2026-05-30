@@ -1,7 +1,5 @@
 # KH-Payroll Project - AI Assistant Guidelines
 
-This document provides comprehensive guidelines for AI assistants (Claude, ChatGPT, etc.) working with the **kh-payroll** project.
-
 ---
 
 ## Project Overview
