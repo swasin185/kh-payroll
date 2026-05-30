@@ -1,10 +1,10 @@
 use payroll;
 
-drop procedure if exists payroll.runTimeCard;
+drop procedure if exists runTimeCard;
 
 DELIMITER $$
 $$
-create procedure payroll.runTimeCard (in pDateFrom varchar(10), in pDateTo varchar(10))
+create procedure runTimeCard (in pDateFrom varchar(10), in pDateTo varchar(10))
 begin
 insert ignore into
     attendance (
@@ -43,7 +43,7 @@ drop procedure if exists payroll.runAttendance;
 
 DELIMITER $$
 $$
-create procedure payroll.runAttendance (in pDateFrom varchar(10), in pDateTo varchar(10))
+create procedure runAttendance (in pDateFrom varchar(10), in pDateTo varchar(10))
 begin
 insert ignore into
     attendance (
@@ -85,24 +85,24 @@ LEFT JOIN holiday AS h ON a.comCode = h.comCode AND a.dateAt = h.day
 SET a.status = CASE
     -- 1. Check if it's a Holiday first (Highest Priority)
     WHEN h.day IS NOT NULL THEN 'Holiday'
-    
+
     -- 2. Check for Sunday
     WHEN DAYOFWEEK(a.dateAt) = 1 THEN 'Sunday'
-    
+
     -- 3. Full Day Logic (Morning + any late shift)
     WHEN a.morning IS NOT NULL AND (
          a.evening IS NOT NULL OR a.night IS NOT NULL OR a.early IS NOT NULL
     ) THEN 'FullDay'
-    
+
     -- 4. Half Day Logic (XOR start/end + Lunch punch)
     WHEN (
-         (a.morning IS NOT NULL) 
-         XOR 
+         (a.morning IS NOT NULL)
+         XOR
          (a.evening IS NOT NULL OR a.night IS NOT NULL OR a.early IS NOT NULL)
-    ) 
-    AND (a.lunch_out IS NOT NULL OR a.lunch_in IS NOT NULL) 
+    )
+    AND (a.lunch_out IS NOT NULL OR a.lunch_in IS NOT NULL)
     THEN 'HalfDay'
-    
+
     -- 5. Default
     ELSE 'Absent'
 END
