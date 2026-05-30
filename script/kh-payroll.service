@@ -1,18 +1,24 @@
 [Unit]
-Description=KH Payroll
+Description=KH Payroll (Bun backend behind Nginx)
 After=network-online.target
 
 [Service]
 WorkingDirectory=/home/tom/kh-payroll
-ExecStart=/home/tom/kh-payroll/script/serve.sh
+# ExecStart uses env to find bun and execute the production server entry point
+ExecStart=/usr/bin/env bun .output/server/index.mjs
 
 User=tom
 Group=tom
-Environment=NODE_ENV=production
-Environment=PATH=/usr/local/bin:/usr/bin
-
 Restart=always
 RestartSec=5
+
+# Environment variables
+Environment=NODE_ENV=production
+Environment=NITRO_PORT=3443
+Environment=NITRO_HOST=127.0.0.1
+Environment=NODE_TLS_REJECT_UNAUTHORIZED=0
+# Include common paths where bun might be installed (e.g., ~/.bun/bin or /usr/local/bin)
+Environment=PATH=/usr/local/bin:/usr/bin:/bin:/home/tom/.bun/bin
 
 [Install]
 WantedBy=multi-user.target
