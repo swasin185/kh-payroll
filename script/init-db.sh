@@ -1,9 +1,7 @@
 #!/bin/bash
-set -e
-
-# Enable alias expansion in non-interactive shell and define database alias
-shopt -s expand_aliases
-alias mysql="mysql -uadmin -pTom1973# -h 10.0.0.245"
+# set -e
+# shopt -s expand_aliases
+# alias mysql="mysql -uadmin -pTom1973# -h 10.0.0.245"
 
 echo "Starting database schema initialization..."
 
@@ -17,4 +15,4 @@ mysql < script/sql/06-photos.sql
 
 echo "Database initialization completed successfully!"
 
-unalias mysql
+# unalias mysql
