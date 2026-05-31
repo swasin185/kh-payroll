@@ -1,5 +1,5 @@
 #!/bin/bash
 KXREPORT=$HOME/kxreport/report
-ln -s ../report $KXREPORT/kh-payroll
+ln -s $HOME/kh-payroll/report $KXREPORT/kh-payroll
 cd $KXREPORT/..
-./build.sh
+./script/build.sh
