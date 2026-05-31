@@ -14,12 +14,11 @@ const config: mysql.PoolOptions = {
     timezone: "+07:00",
 }
 
-console.log("DB config:", config)
-
-if (process.env.DB_HOST && process.env.DB_HOST != "localhost" && process.env.DB_HOST != "mariadb")
-    config.ssl = {
-        rejectUnauthorized: true,
-    }
+config.ssl = {
+    rejectUnauthorized:
+        process.env.DB_SSL_REJECT_UNAUTHORIZED !== "false" &&
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED !== "0",
+}
 
 const poolConnection: mysql.Pool = mysql.createPool(config)
 
