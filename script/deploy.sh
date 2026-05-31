@@ -1,5 +1,6 @@
 #!/bin/bash
 # deploy.sh - Builds the Nuxt application and prints instructions to restart the service
+mv .env.example .env
 
 # Exit on error
 set -e
@@ -17,7 +18,7 @@ echo ""
 echo "Option A: Use systemd (Recommended, already configured in script/kh-payroll.service)"
 echo "----------------------------------------------------------------------------------"
 echo "1. Copy the systemd service file:"
-sudo cp script/kh-payroll.service /etc/systemd/system/kh-payroll.service
+sudo cp ./script/kh-payroll.service /etc/systemd/system/kh-payroll.service
 sudo systemctl daemon-reload
 sudo systemctl enable kh-payroll
 sudo systemctl restart kh-payroll
