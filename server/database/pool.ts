@@ -14,6 +14,8 @@ const config: mysql.PoolOptions = {
     timezone: "+07:00",
 }
 
+console.log("DB config:", config)
+
 if (process.env.DB_HOST && process.env.DB_HOST != "localhost" && process.env.DB_HOST != "mariadb")
     config.ssl = {
         rejectUnauthorized: true,

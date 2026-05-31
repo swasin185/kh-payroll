@@ -14,7 +14,7 @@ RestartSec=5
 
 # Environment variables
 Environment=NODE_ENV=production
-Environment=NITRO_PORT=3443
+Environment=NITRO_PORT=3000
 Environment=NITRO_HOST=127.0.0.1
 Environment=NODE_TLS_REJECT_UNAUTHORIZED=0
 # Include common paths where bun might be installed (e.g., ~/.bun/bin or /usr/local/bin)
