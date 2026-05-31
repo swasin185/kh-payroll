@@ -1,4 +1,5 @@
 import SqlEmployeePhoto from "~~/server/database/SqlEmployeePhoto"
+import SqlEmployee from "~~/server/database/SqlEmployee"
 
 export default authEventHandler(async (event) => {
     const query = getQuery(event)
@@ -18,8 +19,19 @@ export default authEventHandler(async (event) => {
         return {
             hasPhoto: true,
             mimeType: metadata.mimeType,
-            uploadedAt: metadata.uploadedAt
+            uploadedAt: metadata.uploadedAt,
         }
+    }
+
+    // If the client requested a small thumbnail, try to serve the denormalized thumbnail
+    if (query.thumb === "1" || query.thumb === "true") {
+        const thumb = await SqlEmployee.selectPhotoThumb(comCode, empCode)
+        if (thumb) {
+            setHeader(event, "Content-Type", "image/webp")
+            setHeader(event, "Cache-Control", "private, max-age=3600")
+            return thumb
+        }
+        // fallthrough to fetch full photo if no thumbnail available
     }
 
     // Otherwise, return the raw binary photo data

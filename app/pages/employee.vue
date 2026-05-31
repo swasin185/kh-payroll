@@ -163,8 +163,8 @@ const { user } = useUserSession()
 const comCode = ref(user.value.comCode)
 
 // Photo handling state & derived properties
-const fileSize = 500
-const photoSize = 1000
+const fileSize = 250
+const photoSize = 600
 const hasPhoto = ref(false)
 const photoVersion = ref(0)
 const photoUrl = computed(

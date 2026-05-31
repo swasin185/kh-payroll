@@ -62,7 +62,8 @@ create table employee (
     deductInsure   decimal(9,2) default 0 comment "ลดหย่อนประกันชีวิต",
     deductHome     decimal(9,2) default 0 comment "ลดหย่อนผ่อนที่อยู่อาศัย",
     deductElse     decimal(9,2) default 0 comment "ลดหย่อนอื่นๆ",
-    scanCode       varchar(5) comment "รหัสสแกนลายนิ้วมือ" ,
+    scanCode       varchar(5) comment "รหัสสแกนลายนิ้วมือ",
+    photoThumb     MEDIUMBLOB NULL COMMENT "small thumbnail of employee photo",
     unique (comCode, scanCode),
     foreign key (comCode) references company(comCode),
     foreign key (timeCode) references timetype(timeCode),
@@ -87,7 +88,7 @@ create table taxrate (
 	rate           decimal(4,2) default 0 comment "อัตราภาษีเปอร์เซ็น",
 	primary key (total)
 ) comment = "อัตราการคำนวณภาษี";
-insert ignore into taxrate values 
+insert ignore into taxrate values
 ( 150000,  0.0),
 ( 300000,  5.0),
 ( 500000, 10.0),

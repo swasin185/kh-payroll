@@ -8,14 +8,18 @@ const db = getDB()
 export default {
     async select(comCode: string, empCode: string): Promise<Employee | null> {
         const [result] = await db.query<RowDataPacket[]>(
-            `SELECT *
-             FROM employee
-             WHERE comCode=? and empCode=?
-             LIMIT 1`,
+            `SELECT * FROM employee WHERE comCode=? and empCode=? LIMIT 1`,
             [comCode, empCode],
         )
         if (result.length !== 1) return null
-        return EmployeeSchema.parse(result[0])
+        const row = result[0]!
+        const emp = EmployeeSchema.parse(row)
+        // Provide URLs to image endpoints instead of embedding blobs
+        const c = encodeURIComponent(row.comCode)
+        const e = encodeURIComponent(String(row.empCode))
+        ;(emp as any).photoUrl = `/api/employee/photo?comCode=${c}&empCode=${e}`
+        ;(emp as any).photoThumbUrl = `/api/employee/photo?comCode=${c}&empCode=${e}&thumb=1`
+        return emp
     },
 
     async lookup(comCode: string): Promise<LookupItem[]> {
@@ -56,7 +60,15 @@ export default {
         )
 
         return {
-            rows: rows.map((row) => EmployeeSchema.parse(row)),
+            rows: rows.map((row) => {
+                const emp = EmployeeSchema.parse(row)
+                const c = encodeURIComponent(row.comCode)
+                const e = encodeURIComponent(String(row.empCode))
+                ;(emp as any).photoUrl = `/api/employee/photo?comCode=${c}&empCode=${e}`
+                ;(emp as any).photoThumbUrl =
+                    `/api/employee/photo?comCode=${c}&empCode=${e}&thumb=1`
+                return emp
+            }),
             total,
         }
     },
@@ -74,9 +86,15 @@ export default {
                     return rows[0]!.nextCode as number
                 })
 
+        // Explicit column list makes the insert resilient to additional columns (e.g. photoThumb)
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT IGNORE INTO employee
-             VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?)`,
+            `INSERT IGNORE INTO employee (
+                comCode, empCode, taxId, prefix, name, surName, nickName,
+                birthDate, department, timeCode, beginDate, endDate, empType,
+                bankAccount, address, phone, childAll, childEdu, isSpouse,
+                isChildShare, isExcSocialIns, deductInsure, deductHome, deductElse,
+                scanCode
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
             Object.values(emp),
         )
         if (result.affectedRows === 1) return emp.empCode.toString()
@@ -127,5 +145,30 @@ export default {
             values,
         )
         return result.affectedRows === 1
+    },
+
+    // Save or clear the small thumbnail on the employee row. thumbData can be null to clear it.
+    async updatePhotoThumb(
+        comCode: string,
+        empCode: number,
+        thumbData: Buffer | null,
+    ): Promise<boolean> {
+        const [result] = await db.execute<ResultSetHeader>(
+            `UPDATE employee SET photoThumb = ? WHERE comCode=? and empCode=?`,
+            [thumbData, comCode, empCode],
+        )
+        return result.affectedRows === 1
+    },
+
+    // Retrieve thumbnail from employee table (fast, denormalized)
+    async selectPhotoThumb(comCode: string, empCode: number): Promise<Buffer | null> {
+        const [result] = await db.query<RowDataPacket[]>(
+            `SELECT photoThumb FROM employee WHERE comCode = ? AND empCode = ?`,
+            [comCode, empCode],
+        )
+        if (result.length !== 1) return null
+        const row = result[0]!
+        if (!row.photoThumb) return null
+        return row.photoThumb as Buffer
     },
 }
