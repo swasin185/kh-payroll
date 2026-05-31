@@ -28,7 +28,7 @@ async function fetchJson(url: string): Promise<any> {
 describe("KxReport API openPDF", () => {
     it("should fetch PDF from openPDF endpoint and return a Blob", async () => {
         const reportUrl = kxhost + "openPDF"
-        const reportBody = { report: "A00", app: "kh-payroll", db: "payroll" }
+        const reportBody = { report: "A00", app: "kh-payroll", db: "payroll", option: 1 }
         const result = await fetchPdf(reportUrl, reportBody)
         expect(result).toBeInstanceOf(Blob)
         expect(result.type).toBe("application/pdf")
