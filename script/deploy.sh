@@ -11,7 +11,12 @@ bun install --linker hoisted
 echo "=== 2. Building production bundle ==="
 bun run build
 
-echo "=== 3. Build finished successfully ==="
+echo "=== 3. Copying build output to /var/www/kh-payroll ==="
+sudo mkdir -p /var/www/kh-payroll
+sudo cp -r .output/* /var/www/kh-payroll/
+sudo chown -R root:root /var/www/kh-payroll
+
+echo "=== 4. Build finished successfully ==="
 echo ""
 echo "To run this application using Bun behind Nginx, you have two options to keep it running:"
 echo ""
