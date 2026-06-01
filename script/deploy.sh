@@ -6,7 +6,7 @@ mv .env.example .env
 set -e
 
 echo "=== 1. Installing dependencies ==="
-bun install --frozen-lockfile
+bun install --linker hoisted
 
 echo "=== 2. Building production bundle ==="
 bun run build
