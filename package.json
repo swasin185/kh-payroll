@@ -18,6 +18,7 @@
         "mysql2": "^3.22.4",
         "nuxt": "^4.4.6",
         "nuxt-auth-utils": "0.5.29",
+        "sharp": "^0.34.5",
         "typescript": "^6.0.3",
         "vue": "^3.5.34",
         "vue-router": "^5.0.7",
@@ -30,5 +31,11 @@
         "prettier-plugin-sql": "^0.20.0",
         "tailwindcss": "^4.3.0",
         "vitest": "^4.1.7"
+    },
+    "packageManager": "pnpm@11.5.0+sha512.dbfcc4f81cf48597afd4bc391ffdf12c11f1a9fb83a395bfa6b0a2d9cc2fd8ffebafdb1ccbd529632153f793904c2615b7f09fe1a345473fd1c35845172a8eb1",
+    "pnpm": {
+        "onlyBuiltDependencies": [
+            "sharp"
+        ]
     }
 }

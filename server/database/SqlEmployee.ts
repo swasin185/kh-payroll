@@ -146,29 +146,4 @@ export default {
         )
         return result.affectedRows === 1
     },
-
-    // Save or clear the small thumbnail on the employee row. thumbData can be null to clear it.
-    async updatePhotoThumb(
-        comCode: string,
-        empCode: number,
-        thumbData: Buffer | null,
-    ): Promise<boolean> {
-        const [result] = await db.execute<ResultSetHeader>(
-            `UPDATE employee SET photoThumb = ? WHERE comCode=? and empCode=?`,
-            [thumbData, comCode, empCode],
-        )
-        return result.affectedRows === 1
-    },
-
-    // Retrieve thumbnail from employee table (fast, denormalized)
-    async selectPhotoThumb(comCode: string, empCode: number): Promise<Buffer | null> {
-        const [result] = await db.query<RowDataPacket[]>(
-            `SELECT photoThumb FROM employee WHERE comCode = ? AND empCode = ?`,
-            [comCode, empCode],
-        )
-        if (result.length !== 1) return null
-        const row = result[0]!
-        if (!row.photoThumb) return null
-        return row.photoThumb as Buffer
-    },
 }

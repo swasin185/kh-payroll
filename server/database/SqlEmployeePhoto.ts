@@ -8,30 +8,38 @@ export default {
     async selectPhoto(
         comCode: string,
         empCode: number,
-    ): Promise<{ photoData: Buffer; mimeType: string } | null> {
+    ): Promise<Buffer | null> {
         const [result] = await db.query<RowDataPacket[]>(
-            `SELECT photoData, mimeType FROM employee_photo WHERE comCode = ? AND empCode = ?`,
+            `SELECT photoData FROM employee_photo WHERE comCode = ? AND empCode = ?`,
             [comCode, empCode],
         )
         if (result.length !== 1) return null
-        return {
-            photoData: result[0]!.photoData as Buffer,
-            mimeType: result[0]!.mimeType as string,
-        }
+        return result[0]!.photoData as Buffer
+    },
+
+    // Retrieve thumbnail from employee_photo table
+    async selectPhotoThumb(comCode: string, empCode: number): Promise<Buffer | null> {
+        const [result] = await db.query<RowDataPacket[]>(
+            `SELECT photoThumb FROM employee_photo WHERE comCode = ? AND empCode = ?`,
+            [comCode, empCode],
+        )
+        if (result.length !== 1) return null
+        const row = result[0]!
+        if (!row.photoThumb) return null
+        return row.photoThumb as Buffer
     },
 
     // Check if photo exists and get its metadata (without retrieving the heavy blob data)
     async getPhotoMetadata(
         comCode: string,
         empCode: number,
-    ): Promise<{ mimeType: string; uploadedAt: string } | null> {
+    ): Promise<{ uploadedAt: string } | null> {
         const [result] = await db.query<RowDataPacket[]>(
-            `SELECT mimeType, uploadedAt FROM employee_photo WHERE comCode = ? AND empCode = ?`,
+            `SELECT uploadedAt FROM employee_photo WHERE comCode = ? AND empCode = ?`,
             [comCode, empCode],
         )
         if (result.length !== 1) return null
         return {
-            mimeType: result[0]!.mimeType as string,
             uploadedAt: result[0]!.uploadedAt as string,
         }
     },
@@ -41,13 +49,13 @@ export default {
         comCode: string,
         empCode: number,
         photoData: Buffer,
-        mimeType: string,
+        photoThumb: Buffer | null,
     ): Promise<boolean> {
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT INTO employee_photo (comCode, empCode, photoData, mimeType)
+            `INSERT INTO employee_photo (comCode, empCode, photoData, photoThumb)
              VALUES (?, ?, ?, ?)
-             ON DUPLICATE KEY UPDATE photoData = VALUES(photoData), mimeType = VALUES(mimeType)`,
-            [comCode, empCode, photoData, mimeType],
+             ON DUPLICATE KEY UPDATE photoData = VALUES(photoData), photoThumb = VALUES(photoThumb)`,
+            [comCode, empCode, photoData, photoThumb],
         )
         return result.affectedRows >= 1
     },

@@ -1,5 +1,4 @@
 import SqlEmployeePhoto from "~~/server/database/SqlEmployeePhoto"
-import SqlEmployee from "~~/server/database/SqlEmployee"
 
 export default authEventHandler(async (event) => {
     const formData = await readMultipartFormData(event)
@@ -10,7 +9,6 @@ export default authEventHandler(async (event) => {
     let comCode = ""
     let empCode = 0
     let photoBuffer: Buffer | null = null
-    let mimeType = "image/jpeg"
 
     for (const field of formData) {
         if (field.name === "comCode") {
@@ -19,7 +17,6 @@ export default authEventHandler(async (event) => {
             empCode = Number.parseInt(field.data.toString())
         } else if (field.name === "photo") {
             photoBuffer = field.data
-            mimeType = field.type || "image/jpeg"
         }
     }
 
@@ -51,19 +48,6 @@ export default authEventHandler(async (event) => {
         thumbBuffer = null
     }
 
-    const success = await SqlEmployeePhoto.upsertPhoto(comCode, empCode, photoBuffer, mimeType)
-    if (!success) return { success: false }
-
-    // Try to save thumbnail into employee table; don't fail the whole upload if this step fails
-    let thumbSuccess = true
-    try {
-        if (thumbBuffer) {
-            thumbSuccess = await SqlEmployee.updatePhotoThumb(comCode, empCode, thumbBuffer)
-        }
-    } catch (err: any) {
-        console.error("Failed to update employee thumbnail:", err)
-        thumbSuccess = false
-    }
-
-    return { success: success && thumbSuccess }
+    const success = await SqlEmployeePhoto.upsertPhoto(comCode, empCode, photoBuffer, thumbBuffer)
+    return { success }
 })

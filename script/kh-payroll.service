@@ -7,8 +7,8 @@ WorkingDirectory=/home/tom/kh-payroll
 # ExecStart uses env to find bun and execute the production server entry point
 ExecStart=/usr/bin/env bun .output/server/index.mjs
 
-User=tom
-Group=tom
+User=root
+Group=root
 Restart=always
 RestartSec=5
 

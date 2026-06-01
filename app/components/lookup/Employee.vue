@@ -17,6 +17,7 @@
 import type { Employee } from "~~/shared/schema"
 import type { TableColumn, TableRow } from "@nuxt/ui"
 
+const UAvatar = resolveComponent("UAvatar")
 const { $waitFetch } = useNuxtApp()
 const { user } = useUserSession()
 const comCode = user.value.comCode
@@ -35,6 +36,20 @@ const rowIdx = ref(-1)
 const totalPages = computed(() => Math.max(1, Math.ceil(total.value / pageSize.value)))
 
 const columns: TableColumn<Employee>[] = [
+    {
+        id: "photo",
+        header: "",
+        cell: ({ row }) => {
+            const emp = row.original
+            const fallbackText = emp.name ? emp.name.charAt(0) : "?"
+            return h(UAvatar, {
+                src: (emp as any).photoThumbUrl,
+                alt: emp.name || "",
+                size: "sm",
+                text: fallbackText,
+            })
+        },
+    },
     {
         accessorKey: "empCode",
         header: "รหัส",
