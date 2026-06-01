@@ -1,14 +1,30 @@
 <template>
     <div class="flex flex-col h-full">
-        <UInput ref="searchInput" v-model="searchText" placeholder="ค้นหาพนักงาน..." icon="i-lucide-search" class="mb-3"
+        <UInput
+            ref="searchInput"
+            v-model="searchText"
+            placeholder="ค้นหาพนักงาน..."
+            icon="i-lucide-search"
+            class="mb-3"
             @keydown.down.prevent="focusTable" />
-        <UTable ref="table" sticky @select="onSelect" :row-selection="rowSelection" :data="employees" :columns="columns"
+        <UTable
+            ref="table"
+            sticky
+            @select="onSelect"
+            :row-selection="rowSelection"
+            :data="employees"
+            :columns="columns"
             class="flex-1 min-h-0" />
         <div class="flex items-center justify-between mt-3 pt-3 border-t">
             <span class="text-sm text-gray-500">
                 {{ (page - 1) * pageSize + rowIdx + 1 }} / {{ total }} รายการ
             </span>
-            <UPagination v-model:page="page" :items-per-page="pageSize" :total="total" show-controls show-edges />
+            <UPagination
+                v-model:page="page"
+                :items-per-page="pageSize"
+                :total="total"
+                show-controls
+                show-edges />
         </div>
     </div>
 </template>
@@ -37,6 +53,11 @@ const totalPages = computed(() => Math.max(1, Math.ceil(total.value / pageSize.v
 
 const columns: TableColumn<Employee>[] = [
     {
+        accessorKey: "empCode",
+        header: "รหัส",
+        cell: ({ row }) => h("div", { class: "font-mono" }, row.getValue("empCode")),
+    },
+    {
         id: "photo",
         header: "",
         cell: ({ row }) => {
@@ -45,15 +66,10 @@ const columns: TableColumn<Employee>[] = [
             return h(UAvatar, {
                 src: (emp as any).photoThumbUrl,
                 alt: emp.name || "",
-                size: "sm",
+                size: "xl",
                 text: fallbackText,
             })
         },
-    },
-    {
-        accessorKey: "empCode",
-        header: "รหัส",
-        cell: ({ row }) => h("div", { class: "font-mono" }, row.getValue("empCode")),
     },
     {
         accessorKey: "name",
@@ -94,9 +110,7 @@ async function fetchEmployees() {
     rowIdx.value = -1
     rowSelection.value = {}
     if (lookupKey.value) {
-        const i = employees.value.findIndex(
-            (e) => String(e.empCode) === lookupKey.value,
-        )
+        const i = employees.value.findIndex((e) => String(e.empCode) === lookupKey.value)
         if (i >= 0) {
             rowIdx.value = i
             rowSelection.value = { [i]: true }

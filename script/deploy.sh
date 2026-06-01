@@ -1,7 +1,4 @@
 #!/bin/bash
-# deploy.sh - Builds the Nuxt application and prints instructions to restart the service
-mv .env.example .env
-
 # Exit on error
 set -e
 
@@ -14,6 +11,7 @@ bun run build
 echo "=== 3. Copying build output to /var/www/kh-payroll ==="
 sudo mkdir -p /var/www/kh-payroll
 sudo cp -r .output/* /var/www/kh-payroll/
+sudo cp .env.example /var/www/kh-payroll/.env
 sudo chown -R root:root /var/www/kh-payroll
 
 echo "=== 4. Build finished successfully ==="

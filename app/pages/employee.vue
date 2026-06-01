@@ -24,9 +24,6 @@
             <UFormField label="Employee Code" name="empCode">
                 <UInput type="number" v-model="record.empCode" disabled class="w-20" />
             </UFormField>
-            <UFormField label="เลขที่ผู้เสียภาษี" name="taxId">
-                <UInput type="text" v-model="record.taxId!" class="w-40" />
-            </UFormField>
             <UFormField label="คำนำหน้า" name="prefix">
                 <USelect
                     type="text"
@@ -42,6 +39,9 @@
             </UFormField>
             <UFormField label="ชื่อเล่น" name="nickName">
                 <UInput type="text" v-model="record.nickName!" class="w-30" />
+            </UFormField>
+            <UFormField label="เลขที่ผู้เสียภาษี" name="taxId">
+                <UInput type="text" v-model="record.taxId!" class="w-40" />
             </UFormField>
             <UFormField label="วันเกิด" name="birthDate">
                 <DateInput v-model="record.birthDate" />
