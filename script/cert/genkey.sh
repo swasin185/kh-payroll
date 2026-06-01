@@ -1,46 +1,84 @@
-#!/bin/bash
-# Generate Local Root CA and sign localhost SSL certificate
+#!/usr/bin/env bash
+# Generate self-signed server certificate (server.key + server.crt)
+# Creates server.key and server.crt, and copies them to /etc/cert (requires sudo)
+# Uses a single temporary OpenSSL config with SANs.
 
-set -e
+set -euo pipefail
 
-# Go to the directory of this script
+# Work from the script directory
 cd "$(dirname "$0")"
 
-echo "=== 1. Generating Root CA private key ==="
-openssl genrsa -out rootCA.key 4096
+# Hosts can be provided as arguments, otherwise default to common localhost names
+if [ "$#" -gt 0 ]; then
+  HOSTS=("$@")
+else
+  HOSTS=(localhost 127.0.0.1 ::1)
+fi
 
-echo "=== 2. Generating Root CA self-signed certificate ==="
-openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 3650 -config ca.conf -out rootCA.crt
+echo "Generating self-signed server certificate for: ${HOSTS[*]}"
 
-echo "=== 3. Generating Server private key ==="
-openssl genrsa -out server.key 2048
+# First host used as CN
+CN=${HOSTS[0]}
 
-echo "=== 4. Generating Certificate Signing Request (CSR) for Server ==="
-openssl req -new -key server.key -config server.conf -out server.csr
+# Create a single temporary OpenSSL config file containing DN and SANs
+CONF=$(mktemp)
+cat > "$CONF" <<EOF
+[ req ]
+default_bits       = 2048
+prompt             = no
+default_md         = sha256
+distinguished_name = dn
+req_extensions     = v3_req
 
-echo "=== 5. Signing Server Certificate using the Root CA and ext.conf ==="
-openssl x509 -req \
-  -in server.csr \
-  -CA rootCA.crt \
-  -CAkey rootCA.key \
-  -CAcreateserial \
-  -out server.crt \
-  -days 825 \
-  -sha256 \
-  -extfile ext.conf
+[ dn ]
+CN = $CN
 
-echo "=== 6. Copying keys to match system cert names (key.pem, cert.pem) ==="
-cp server.crt cert.pem
-cp server.key key.pem
+[ v3_req ]
+subjectAltName = @alt_names
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
 
-echo "=== 7. Copying to system certificate storage (/etc/cert) ==="
-sudo mkdir -p /etc/cert
-sudo cp -ur rootCA.crt server.crt server.key cert.pem key.pem /etc/cert/
+[ alt_names ]
+EOF
 
-echo "=== Success! ==="
-echo "Files created in script/cert/:"
-echo "  - rootCA.key / rootCA.crt (Your local Root CA)"
-echo "  - server.key / server.crt (Your signed SSL certificate for localhost)"
-echo "  - key.pem / cert.pem (Copies for backward compatibility)"
-echo ""
-echo "Note: Import 'rootCA.crt' into your browser/OS Trusted Root authorities to avoid SSL warnings."
+IDX=1
+for H in "${HOSTS[@]}"; do
+  # IPv4: contains dots; IPv6: contains ':'; otherwise DNS
+  if echo "$H" | grep -Eq '^[0-9]+(\.[0-9]+){3}$'; then
+    echo "IP.$IDX = $H" >> "$CONF"
+  elif echo "$H" | grep -q ':'; then
+    echo "IP.$IDX = $H" >> "$CONF"
+  else
+    echo "DNS.$IDX = $H" >> "$CONF"
+  fi
+  IDX=$((IDX + 1))
+done
+
+# Generate key + self-signed certificate using the single config file
+openssl req -x509 -nodes -newkey rsa:2048 -keyout server.key -out server.crt -days 825 -sha256 -config "$CONF" -extensions v3_req
+
+# Clean up
+rm -f "$CONF"
+
+# Install to /etc/cert so services can reference them
+INSTALL_DIR=/etc/cert
+echo "Installing certs to $INSTALL_DIR (requires sudo if not root)..."
+if [ "$(id -u)" -eq 0 ]; then
+  mkdir -p "$INSTALL_DIR"
+  install -m 0644 server.crt "$INSTALL_DIR/server.crt"
+  install -m 0600 server.key "$INSTALL_DIR/server.key"
+else
+  if command -v sudo >/dev/null 2>&1; then
+    sudo mkdir -p "$INSTALL_DIR"
+    sudo install -m 0644 server.crt "$INSTALL_DIR/server.crt"
+    sudo install -m 0600 server.key "$INSTALL_DIR/server.key"
+  else
+    echo "sudo not available; skipping install to $INSTALL_DIR. Copy files manually if needed."
+  fi
+fi
+
+rm -f server.key server.crt
+
+echo $INSTALL_DIR/server.key
+echo $INSTALL_DIR/server.crt
