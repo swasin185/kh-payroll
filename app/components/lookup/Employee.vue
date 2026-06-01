@@ -66,7 +66,7 @@ const columns: TableColumn<Employee>[] = [
             return h(UAvatar, {
                 src: (emp as any).photoThumbUrl,
                 alt: emp.name || "",
-                size: "lg",
+                size: "md",
                 text: fallbackText,
                 lazy: true,
             })
