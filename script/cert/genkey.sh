@@ -78,7 +78,5 @@ else
   fi
 fi
 
-rm -f server.key server.crt
-
 echo $INSTALL_DIR/server.key
 echo $INSTALL_DIR/server.crt

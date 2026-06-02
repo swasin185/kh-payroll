@@ -104,13 +104,13 @@
         </UForm>
 
         <div
-            class="w-full lg:w-1/4 border border-gray-200 dark:border-gray-700 p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50 flex flex-col items-center shadow-sm">
-            <h3 class="text-sm font-semibold mb-3 text-gray-700 dark:text-gray-300">
-                รูปถ่ายพนักงาน
-            </h3>
-
+            class="w-full lg:w-1/4 border border-gray-200 dark:border-gray-700 p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50 flex flex-col items-center shadow-sm">
             <div
-                class="h-48 w-48 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center bg-white dark:bg-gray-900 overflow-hidden relative shadow-inner">
+                :class="[
+                    'h-48 w-48 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center bg-white dark:bg-gray-900 overflow-hidden relative shadow-inner',
+                    hasPhoto && 'cursor-pointer hover:opacity-80 transition-opacity',
+                ]"
+                @click="hasPhoto && openPhotoModal()">
                 <img v-if="hasPhoto" :src="photoUrl" class="object-cover h-full w-full" />
                 <div v-else class="text-center p-4">
                     <span class="text-xs text-gray-400 block font-medium">ไม่มีรูปถ่าย</span>
@@ -138,12 +138,23 @@
                     v-if="hasPhoto"
                     @click="deletePhoto"
                     class="text-xs bg-red-600 hover:bg-red-700 text-white font-medium rounded shadow p-2">
-                    ลบรูปภาพ
+                    ลบรูปถ่าย
                 </button>
             </div>
             <div class="mt-4 text-xs text-gray-400 text-center" v-else>
                 เลือกพนักงานก่อนอัปโหลดรูปภาพ
             </div>
+        </div>
+    </div>
+
+    <!-- Photo Modal -->
+    <div
+        v-if="isPhotoModalOpen"
+        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+        @click="closePhotoModal">
+        <div @click.stop>
+            <button @click="closePhotoModal">✕</button>
+            <img :src="photoUrl" class="w-full h-auto" />
         </div>
     </div>
 </template>
@@ -167,6 +178,7 @@ const fileSize = 250
 const photoSize = 600
 const hasPhoto = ref(false)
 const photoVersion = ref(0)
+const isPhotoModalOpen = ref(false)
 const photoUrl = computed(
     () =>
         `/api/employee/photo?comCode=${record.comCode}&empCode=${record.empCode}&t=${photoVersion.value}`,
@@ -283,6 +295,14 @@ async function onDelete() {
 }
 
 function onPrint() {}
+
+function openPhotoModal() {
+    isPhotoModalOpen.value = true
+}
+
+function closePhotoModal() {
+    isPhotoModalOpen.value = false
+}
 
 function newRecord() {
     let rec = EmployeeSchema.parse({})
