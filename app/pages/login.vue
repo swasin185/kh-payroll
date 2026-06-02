@@ -1,33 +1,49 @@
 <template>
-    <UForm :validate="validate" :state="state" class="space-y-4" @submit="login" @reset="logout">
-        <UFormField label="User ID" name="userid" class="w-40">
-            <UInput
-                v-model="state.userid"
-                placeholder="ID ผู้ใช้"
-                :disabled="loggedIn"
-                maxLength="16"
-            />
-        </UFormField>
-        <UFormField label="Password" name="password" class="w-46">
-            <UInput
-                v-model="state.password"
-                placeholder="รหัสผ่าน"
-                :disabled="loggedIn"
-                toggleMask
-                :type="showPwd ? 'text' : 'password'"
-                maxLength="16"
-            >
-                <UButton
-                    variant="link"
-                    size="sm"
-                    :icon="showPwd ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-                    @click="showPwd = !showPwd"
-                />
-            </UInput>
-        </UFormField>
-        <UButton v-if="!loggedIn" type="submit" color="primary" label="Login" />
-        <UButton v-else type="reset" color="secondary" label="Logout" />
-    </UForm>
+    <div class="flex items-start justify-center bg-gray-50 dark:bg-gray-900 p-4">
+        <div
+            class="max-w-xs border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg p-8 bg-white dark:bg-gray-800 mt-32">
+            <UForm
+                :validate="validate"
+                :state="state"
+                class="space-y-4"
+                @submit="login"
+                @reset="logout">
+                <UFormField label="User ID" name="userid">
+                    <UInput
+                        v-model="state.userid"
+                        placeholder="ID ผู้ใช้"
+                        :disabled="loggedIn"
+                        maxLength="16">
+                        <UButton variant="link" size="sm" icon="i-lucide-log-in" />
+                    </UInput>
+                </UFormField>
+                <UFormField label="Password" name="password">
+                    <UInput
+                        v-model="state.password"
+                        placeholder="รหัสผ่าน"
+                        :disabled="loggedIn"
+                        toggleMask
+                        :type="showPwd ? 'text' : 'password'"
+                        maxLength="16">
+                        <UButton
+                            variant="link"
+                            size="sm"
+                            :icon="showPwd ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                            @click="showPwd = !showPwd" />
+                    </UInput>
+                </UFormField>
+                <div class="flex gap-2 pt-2">
+                    <UButton
+                        v-if="!loggedIn"
+                        type="submit"
+                        color="primary"
+                        label="Login"
+                        class="flex-1" />
+                    <UButton v-else type="reset" color="secondary" label="Logout" class="flex-1" />
+                </div>
+            </UForm>
+        </div>
+    </div>
 </template>
 
 <script lang="ts" setup>
