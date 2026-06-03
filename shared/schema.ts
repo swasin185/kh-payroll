@@ -131,6 +131,9 @@ export const EmployeeSchema = z.object({
     address: z.string().max(100).nullable().default(null),
 
     phone: z.string().max(20).nullable().default(null),
+    extPhone: z.string().max(3).nullable().default(null),
+    lineId: z.string().max(50).nullable().default(null),
+    supplier: z.string().max(80).nullable().default(null),
     childAll: z.int().min(0).max(10).default(0),
     childEdu: z.int().min(0).max(10).default(0),
     isSpouse: BooleanAttr,

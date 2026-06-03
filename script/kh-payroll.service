@@ -18,7 +18,7 @@ Environment=NITRO_PORT=3000
 Environment=NITRO_HOST=127.0.0.1
 Environment=NODE_TLS_REJECT_UNAUTHORIZED=0
 # Include common paths where bun might be installed (e.g., ~/.bun/bin or /usr/local/bin)
-Environment=PATH=/usr/local/bin:/usr/bin:/bin:/home/ubuntu/.bun/bin
+Environment=PATH=/usr/local/bin:/usr/bin:/bin:/home/tom/.bun/bin
 
 [Install]
 WantedBy=multi-user.target

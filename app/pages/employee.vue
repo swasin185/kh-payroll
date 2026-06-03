@@ -19,7 +19,7 @@
             ref="form"
             :state="record"
             :schema="EmployeeSchema"
-            class="flex-1 grid grid-flow-col grid-rows-6 gap-y-2 gap-x-4 w-full"
+            class="flex-1 grid grid-flow-col grid-rows-7 gap-y-2 gap-x-4 w-full"
             :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update">
             <UFormField label="Employee Code" name="empCode">
                 <UInput type="number" v-model="record.empCode" disabled class="w-20" />
@@ -65,7 +65,7 @@
                 <USelect
                     type="text"
                     v-model="record.empType"
-                    :items="[null, 'ประจำ', 'ชั่วคราว', 'ฝึกงาน']"
+                    :items="[null, 'ประจำ', 'ชั่วคราว', 'พม่า', 'ฝึกงาน']"
                     class="w-30" />
             </UFormField>
             <UFormField label="ที่อยู่" name="address" class="w-80">
@@ -73,6 +73,15 @@
             </UFormField>
             <UFormField label="เบอร์โทรศัพท์" name="phone" class="w-40">
                 <UInput type="text" v-model="record.phone!" />
+            </UFormField>
+            <UFormField label="เบอร์โทรภายใน" name="extPhone" class="w-24">
+                <UInput type="text" v-model="record.extPhone!" />
+            </UFormField>
+            <UFormField label="Line ID / Social ID" name="lineId" class="w-45">
+                <UInput type="text" v-model="record.lineId!" />
+            </UFormField>
+            <UFormField label="บริษัทผู้จัดหา (Supplier)" name="supplier" class="w-56">
+                <UInput type="text" v-model="record.supplier!" />
             </UFormField>
             <UFormField label="จำนวนบุตรทั้งหมด" name="childAll">
                 <UInputNumber v-model="record.childAll" class="w-32" />
@@ -221,7 +230,7 @@ async function uploadPhoto(event: Event) {
         img.src = URL.createObjectURL(file)
         img.onload = () => {
             URL.revokeObjectURL(img.src)
-            resolve(img.width < photoSize && img.height < photoSize)
+            resolve(img.width <= photoSize && img.height <= photoSize)
         }
         img.onerror = () => resolve(false)
     })

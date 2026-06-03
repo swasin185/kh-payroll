@@ -8,13 +8,13 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 apt install nginx -y
-cp ../cert/cert.pem /etc/ssl/certs/
-cp ../cert/key.pem /etc/ssl/private/
+cp ../cert/server.crt /etc/ssl/certs/
+cp ../cert/server.key /etc/ssl/private/
 cp kh-payroll.conf /etc/nginx/sites-available/
 ln -sf /etc/nginx/sites-available/kh-payroll.conf /etc/nginx/sites-enabled/
 systemctl daemon-reload
 systemctl reload nginx
-iptables -I INPUT -p tcp --dport 80 -j ACCEPT
-iptables -I INPUT -p tcp --dport 443 -j ACCEPT
-iptables -I INPUT -p tcp --dport 3443 -j ACCEPT
-netfilter-persistent save
+#iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+#iptables -I INPUT -p tcp --dport 443 -j ACCEPT
+#iptables -I INPUT -p tcp --dport 8443 -j ACCEPT
+#netfilter-persistent save

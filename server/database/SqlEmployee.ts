@@ -91,10 +91,10 @@ export default {
             `INSERT IGNORE INTO employee (
                 comCode, empCode, taxId, prefix, name, surName, nickName,
                 birthDate, department, timeCode, beginDate, endDate, empType,
-                bankAccount, address, phone, childAll, childEdu, isSpouse,
+                bankAccount, address, phone, extPhone, lineId, supplier, childAll, childEdu, isSpouse,
                 isChildShare, isExcSocialIns, deductInsure, deductHome, deductElse,
                 scanCode
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
             Object.values(emp),
         )
         if (result.affectedRows === 1) return emp.empCode.toString()
@@ -131,6 +131,9 @@ export default {
                  bankAccount=?,
                  address=?,
                  phone=?,
+                 extPhone=?,
+                 lineId=?,
+                 supplier=?,
                  childAll=?,
                  childEdu=?,
                  isSpouse=?,
