@@ -10,6 +10,7 @@
                 @reset="logout">
                 <UFormField label="User ID" name="userid">
                     <UInput
+                        ref="useridInput"
                         v-model="state.userid"
                         placeholder="ID ผู้ใช้"
                         :disabled="loggedIn"
@@ -47,12 +48,42 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, reactive, onMounted, onActivated, nextTick } from 'vue'
 const { $waitFetch } = useNuxtApp()
 const { loggedIn, user, clear } = useUserSession()
 const showPwd = ref(false)
 const state = reactive({
     userid: user.value?.id,
     password: "",
+})
+
+// Template ref for the userid input (component or element)
+const useridInput = ref<any>(null)
+
+async function focusUserid() {
+    await nextTick()
+    try {
+        const compOrEl = useridInput.value
+        if (!compOrEl) return
+        // If it's a component with $el, query inside; otherwise assume it's element
+        const root = compOrEl.$el ?? compOrEl
+        const inputEl: HTMLInputElement | null = root?.querySelector ? root.querySelector('input') : null
+        if (inputEl && typeof inputEl.focus === 'function') {
+            inputEl.focus()
+            inputEl.select && inputEl.select()
+        } else if (root && typeof root.focus === 'function') {
+            root.focus()
+        }
+    } catch (e) {
+        // ignore
+    }
+}
+
+onMounted(() => {
+    focusUserid()
+})
+onActivated && onActivated(() => {
+    focusUserid()
 })
 
 import type { FormError } from "#ui/types"

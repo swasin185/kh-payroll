@@ -80,7 +80,7 @@
             <UFormField label="Line ID / Social ID" name="lineId" class="w-45">
                 <UInput type="text" v-model="record.lineId!" />
             </UFormField>
-            <UFormField label="บริษัทผู้จัดหา (Supplier)" name="supplier" class="w-56">
+            <UFormField label="บริษัท (Supplier)" name="supplier" class="w-56">
                 <UInput type="text" v-model="record.supplier!" />
             </UFormField>
             <UFormField label="จำนวนบุตรทั้งหมด" name="childAll">
@@ -120,11 +120,14 @@
                     hasPhoto && 'cursor-pointer hover:opacity-80 transition-opacity',
                 ]"
                 @click="hasPhoto && openPhotoModal()">
-                <img v-if="hasPhoto" :src="photoUrl" class="object-cover h-full w-full" />
+                <img
+                    v-if="hasPhoto"
+                    :src="getPhotoUrl(record.comCode, record.empCode, false)"
+                    class="object-cover h-full w-full" />
                 <div v-else class="text-center p-4">
                     <span class="text-xs text-gray-400 block font-medium">ไม่มีรูปถ่าย</span>
                     <span class="text-[10px] text-gray-400 block mt-1"
-                        >(ขนาด &lt; {{ photoSize }}x{{ photoSize }}, {{ fileSize }}KB)</span
+                        >(ขนาด {{ photoSize }}x{{ photoSize }}, {{ fileSize }}KB)</span
                     >
                 </div>
             </div>
@@ -163,7 +166,7 @@
         @click="closePhotoModal">
         <div @click.stop>
             <button @click="closePhotoModal">✕</button>
-            <img :src="photoUrl" class="w-full h-auto" />
+            <img :src="getPhotoUrl(record.comCode, record.empCode, false)" class="w-full h-auto" />
         </div>
     </div>
 </template>
@@ -171,6 +174,7 @@
 definePageMeta({ keepalive: true })
 
 import { EmployeeSchema, type Employee } from "~~/shared/schema"
+import { getPhotoUrl } from "~~/shared/utils"
 import { DBMODE } from "~~/shared/utils"
 
 const form = useTemplateRef("form")
@@ -186,12 +190,7 @@ const comCode = ref(user.value.comCode)
 const fileSize = 250
 const photoSize = 600
 const hasPhoto = ref(false)
-const photoVersion = ref(0)
 const isPhotoModalOpen = ref(false)
-const photoUrl = computed(
-    () =>
-        `/api/employee/photo?comCode=${record.comCode}&empCode=${record.empCode}&t=${photoVersion.value}`,
-)
 
 // Monitor changes to active employee to load their photo metadata
 watch(
@@ -203,7 +202,6 @@ watch(
                     query: { comCode: newCom, empCode: newEmp, metadata: "1" },
                 })
                 hasPhoto.value = !!metadata.hasPhoto
-                photoVersion.value++
             } catch {
                 hasPhoto.value = false
             }
@@ -220,8 +218,8 @@ async function uploadPhoto(event: Event) {
 
     const file = input.files[0]!
 
-    if (file.size >= fileSize * 1024) {
-        alert("ขนาดไฟล์ต้องน้อยกว่า " + fileSize + "KB")
+    if (file.size > fileSize * 1024) {
+        alert("ขนาดไฟล์ไม่เกิน " + fileSize + "KB")
         return
     }
 
@@ -236,7 +234,7 @@ async function uploadPhoto(event: Event) {
     })
 
     if (!isValidDimensions) {
-        alert("มิติต้องน้อยกว่า " + photoSize + "x" + photoSize + " พิกเซล")
+        alert("มิติไม่เกิน " + photoSize + "x" + photoSize + "px")
         return
     }
 
@@ -251,7 +249,6 @@ async function uploadPhoto(event: Event) {
             body: formData,
         })
         hasPhoto.value = true
-        photoVersion.value++
     } catch (err: any) {
         alert(err.statusMessage || "เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ")
     }
@@ -266,7 +263,6 @@ async function deletePhoto() {
             query: { comCode: record.comCode, empCode: record.empCode },
         })
         hasPhoto.value = false
-        photoVersion.value++
     } catch (err: any) {
         alert(err.statusMessage || "เกิดข้อผิดพลาดในการลบรูปภาพ")
     }

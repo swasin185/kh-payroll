@@ -1,6 +1,6 @@
 import SqlEmployeePhoto from "~~/server/database/SqlEmployeePhoto"
 
-export default authEventHandler(async (event) => {
+export default authEventHandler(async (event): Promise<any> => {
     const query = getQuery(event)
     const comCode = query.comCode?.toString()
     const empCode = Number.parseInt(query.empCode?.toString() ?? "0")
@@ -24,12 +24,12 @@ export default authEventHandler(async (event) => {
     // If the client requested a small thumbnail, try to serve the denormalized thumbnail
     if (query.thumb === "1" || query.thumb === "true") {
         const thumb = await SqlEmployeePhoto.selectPhotoThumb(comCode, empCode)
-        if (thumb) {
-            setHeader(event, "Content-Type", "image/webp")
-            setHeader(event, "Cache-Control", "private, max-age=3600")
-            return thumb
+        if (!thumb) {
+            throw createError({ statusCode: 404, statusMessage: "Thumbnails not found" })
         }
-        // fallthrough to fetch full photo if no thumbnail available
+        setHeader(event, "Content-Type", "image/webp")
+        setHeader(event, "Cache-Control", "private, max-age=3600")
+        return thumb
     }
 
     // Otherwise, return the raw binary photo data

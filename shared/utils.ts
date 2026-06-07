@@ -102,3 +102,10 @@ export const moneyOption = {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
 }
+
+// Generate photo URL for an employee
+export function getPhotoUrl(comCode: string, empCode: string | number, thumb = false) {
+    const c = encodeURIComponent(comCode)
+    const e = encodeURIComponent(String(empCode))
+    return `/api/employee/photo?comCode=${c}&empCode=${e}${thumb ? "&thumb=1" : ""}`
+}

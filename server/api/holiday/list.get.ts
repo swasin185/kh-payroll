@@ -1,6 +1,6 @@
 import SqlHoliday from "~~/server/database/SqlHoliday"
 
-export default authEventHandler(async (event) => {
+export default authEventHandler(async (event): Promise<any> => {
     const query = getQuery(event)
     return await SqlHoliday.list(
         query.comCode!.toString(),

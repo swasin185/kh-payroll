@@ -1,134 +1,29 @@
-USE payroll;
+UPDATE khemp
+SET `ชื่อ` = TRIM(REGEXP_REPLACE(`ชื่อ`, '^(นาย|นางสาว|นาง|น.ส.)', ''))
+WHERE `ชื่อ` REGEXP '^(นาย|นางสาว|นาง|น.ส.)';
 
-UPDATE employee SET nickName = 'จอย', phone = '080-346-5810', extPhone = '207', lineId = 'Joyky.41', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1998-09-29', beginDate = '2026-01-02', department = 'ขาย Online' WHERE comCode = '01' AND empCode = 132;
-UPDATE employee SET nickName = 'กัน', phone = '082-273-4478', extPhone = '207', lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1998-12-06', beginDate = '2022-03-14', department = 'ขาย Online' WHERE comCode = '03' AND empCode = 52;
-UPDATE employee SET nickName = 'ลูกศร', phone = '086-941-7400', extPhone = '204', lineId = 'looksorn1432', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1989-06-14', beginDate = '2024-11-26', department = 'ขาย Online' WHERE comCode = '01' AND empCode = 129;
-UPDATE employee SET nickName = 'หวาน', phone = '093-397-5748', extPhone = '204', lineId = 'siriphon_wan', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '2003-03-29', beginDate = '2026-02-02', department = 'ขาย Online' WHERE comCode = '01' AND empCode = 138;
-UPDATE employee SET nickName = 'อ๊อฟ', phone = '087-419-2788', extPhone = '220', lineId = null, supplier = 'บจก.เคบีคอมเมิร์ซ', birthDate = '1996-03-20', department = 'ขาย Online' WHERE comCode = '04' AND empCode = 17;
-UPDATE employee SET nickName = 'ต้น', phone = '081-560-7067', extPhone = '231', lineId = null, supplier = 'บจก.เคบีคอมเมิร์ซ', birthDate = '2001-08-13', department = 'ขาย Online' WHERE comCode = '03' AND empCode = 68;
-UPDATE employee SET nickName = 'บาส', phone = '063-329-1986', extPhone = '231', lineId = 'bas140343', supplier = 'บจก.เคบีคอมเมิร์ซ', birthDate = '2000-03-14', department = 'ขาย Online' WHERE comCode = '04' AND empCode = 23;
-UPDATE employee SET nickName = 'โฟน', phone = '093-791-2814', extPhone = '230', lineId = null, supplier = 'บจก.เคบีคอมเมิร์ซ', birthDate = '1997-12-18', department = 'ขาย Online' WHERE comCode = '04' AND empCode = 10;
-UPDATE employee SET nickName = 'กริช', phone = '084-843-7204', extPhone = '220', lineId = 'Kishinw', supplier = 'บจก.เคบีคอมเมิร์ซ', birthDate = '1999-07-05', department = 'ขาย Online' WHERE comCode = '04' AND empCode = 20;
-UPDATE employee SET nickName = 'แนน', phone = '080-770-1058', extPhone = '252', lineId = '080-770-1058', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1994-02-01', department = 'ขาย Online' WHERE comCode = '01' AND empCode = 127;
-UPDATE employee SET nickName = 'พง', phone = '062-718-1262', extPhone = '210', lineId = 'pantuwaree', supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1989-11-13', department = 'แคชเชียร์' WHERE comCode = '03' AND empCode = 54;
-UPDATE employee SET nickName = 'ต๋อม', phone = '065-816-5076', extPhone = '202', lineId = 'atomredbull', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1985-09-22', department = 'แคชเชียร์' WHERE comCode = '01' AND empCode = 118;
-UPDATE employee SET nickName = 'แป๋ว', phone = '081-538-3592', extPhone = '213', lineId = 'mapring56', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1982-08-16', department = 'แคชเชียร์' WHERE comCode = '01' AND empCode = 100;
-UPDATE employee SET nickName = 'โมจิ โม', phone = '091-482-2835', extPhone = '204', lineId = 'moji2434', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1991-07-24', department = 'แคชเชียร์' WHERE comCode = '01' AND empCode = 135;
-UPDATE employee SET nickName = 'นิ', phone = '089-645-4517', extPhone = '218', lineId = '0896454517', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1968-10-20', department = 'แคชเชียร์' WHERE comCode = '01' AND empCode = 61;
-UPDATE employee SET nickName = 'พิม', phone = '087-566-6599', extPhone = '212', lineId = 'pimpornhihi', supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1993-11-08', department = 'แคชเชียร์' WHERE comCode = '03' AND empCode = 65;
-UPDATE employee SET nickName = 'แตง', phone = '093-676-3032', extPhone = '241', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1992-02-27', department = 'แคชเชียร์' WHERE comCode = '01' AND empCode = 42;
-UPDATE employee SET nickName = 'แยม', phone = '093-660-7729', extPhone = '204', lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1997-07-14', department = 'แคชเชียร์' WHERE comCode = '03' AND empCode = 66;
-UPDATE employee SET nickName = 'นุ่น', phone = '098-645-4247', extPhone = '119', lineId = 'noon4341', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1991-07-26', department = 'จัดซื้อ' WHERE comCode = '01' AND empCode = 33;
-UPDATE employee SET nickName = 'นุ๊ก', phone = '095-085-6462', extPhone = '114', lineId = 'nooklyeiei.', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1997-05-01', department = 'จัดซื้อ' WHERE comCode = '03' AND empCode = 75;
-UPDATE employee SET nickName = 'แป๋ม', phone = '092-460-6250', extPhone = '120', lineId = 'paem.m12345paemmmmmm', supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '2004-06-12', department = 'จัดซื้อ' WHERE comCode = '03' AND empCode = 59;
-UPDATE employee SET nickName = 'มายด์', phone = '088-914-5147', extPhone = '116', lineId = '0889145147', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1988-03-18', department = 'จัดซื้อ' WHERE comCode = '01' AND empCode = 64;
-INSERT INTO employee (comCode, empCode, prefix, name, surName, nickName, birthDate, phone, extPhone, lineId, supplier, department, beginDate) VALUES ('03', 89, NULL, 'อรอนงค์', 'ห่อเพชร์', 'นัท', '1994-02-06', '094-593-9891', '118', '', 'บจก.กี่หิ้นเทรดดิ้ง', 'จัดซื้อ', NULL);
-UPDATE employee SET nickName = 'นา', phone = '098-070-0920', extPhone = '117', lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1992-01-29', department = 'จัดซื้อ' WHERE comCode = '03' AND empCode = 69;
-UPDATE employee SET nickName = 'ขวัญ', phone = '083-107-8688', extPhone = '115', lineId = 'Ongaun2', supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1974-04-19', department = 'จัดซื้อ' WHERE comCode = '03' AND empCode = 20;
-UPDATE employee SET nickName = 'อัศ', phone = '093-363-2969', extPhone = '102', lineId = 'aus1976', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1976-08-06', department = 'บัญชีและบุคคล' WHERE comCode = '01' AND empCode = 59;
-UPDATE employee SET nickName = 'มุก', phone = '082-260-5696', extPhone = '104', lineId = 'kwuntabona0957472616', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1987-08-10', department = 'บัญชีและบุคคล' WHERE comCode = '01' AND empCode = 131;
-UPDATE employee SET nickName = 'เนตร', phone = '061-246-9544', extPhone = '107', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1972-01-19', department = 'บัญชีและบุคคล' WHERE comCode = '01' AND empCode = 27;
-UPDATE employee SET nickName = 'แอน', phone = '095-419-2653', extPhone = '105', lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1984-06-19', department = 'บัญชีและบุคคล' WHERE comCode = '03' AND empCode = 42;
-UPDATE employee SET nickName = 'ทัย', phone = '062-894-9651', extPhone = '109', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1967-11-19', department = 'บัญชีและบุคคล' WHERE comCode = '01' AND empCode = 21;
-UPDATE employee SET nickName = 'ศิ', phone = '084-322-7761', extPhone = '106', lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1973-11-19', department = 'บัญชีและบุคคล' WHERE comCode = '03' AND empCode = 11;
-UPDATE employee SET nickName = 'วีณา', phone = '093-579-0979', extPhone = '108', lineId = 'nooweenaza', supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1995-02-24', department = 'บัญชีและบุคคล' WHERE comCode = '03' AND empCode = 70;
-UPDATE employee SET nickName = 'ใหญ่', phone = '099-182-7085', extPhone = '205', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1974-08-07', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 120;
-UPDATE employee SET nickName = 'วินท์', phone = '065-590-6236', extPhone = '214', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '2003-04-08', department = 'ฝ่ายขาย' WHERE comCode = '03' AND empCode = 51;
-UPDATE employee SET nickName = 'อ็อด', phone = '081-821-3265', extPhone = '255', lineId = 'Nipon_long', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1971-06-27', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 7;
-UPDATE employee SET nickName = 'มร', phone = '086-478-3550', extPhone = '244', lineId = '0864783550', supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1967-08-14', department = 'ฝ่ายขาย' WHERE comCode = '03' AND empCode = 28;
-UPDATE employee SET nickName = 'กิต', phone = '089-475-8927', extPhone = '205', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1972-06-25', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 34;
-INSERT INTO employee (comCode, empCode, prefix, name, surName, nickName, birthDate, phone, extPhone, lineId, supplier, department, beginDate) VALUES ('01', 185, NULL, 'HTETTHU', 'AUNG', 'ตู', '2002-02-10', '099-157-5186', '202', '', 'บจก.กี่หิ้นการไฟฟ้า', 'ฝ่ายขาย', NULL);
-INSERT INTO employee (comCode, empCode, prefix, name, surName, nickName, birthDate, phone, extPhone, lineId, supplier, department, beginDate) VALUES ('01', 186, NULL, 'MONKOKO', 'THET', 'โก', '1999-06-30', '095-065-9760', '202', '', 'บจก.กี่หิ้นการไฟฟ้า', 'ฝ่ายขาย', NULL);
-INSERT INTO employee (comCode, empCode, prefix, name, surName, nickName, birthDate, phone, extPhone, lineId, supplier, department, beginDate) VALUES ('01', 187, NULL, 'PyaeSone', 'Aung', 'พิซซ่า', '2006-03-10', '092-360-9448', '', '', 'บจก.กี่หิ้นการไฟฟ้า', 'ฝ่ายขาย', NULL);
-INSERT INTO employee (comCode, empCode, prefix, name, surName, nickName, birthDate, phone, extPhone, lineId, supplier, department, beginDate) VALUES ('01', 188, NULL, 'ZWESI', 'THU', 'SI', '2002-01-22', '092-243-6359', '281', '', 'บจก.กี่หิ้นการไฟฟ้า', 'ฝ่ายขาย', NULL);
-INSERT INTO employee (comCode, empCode, prefix, name, surName, nickName, birthDate, phone, extPhone, lineId, supplier, department, beginDate) VALUES ('01', 189, NULL, 'AungNaing', 'Soe', 'นาย', '2008-07-13', '061-089-9308', '282', '', 'บจก.กี่หิ้นการไฟฟ้า', 'ฝ่ายขาย', NULL);
-INSERT INTO employee (comCode, empCode, prefix, name, surName, nickName, birthDate, phone, extPhone, lineId, supplier, department, beginDate) VALUES ('04', 36, NULL, 'Win', 'Naing', 'ชาติ', '1992-01-23', '094-594-9730', '284', '0950727224', 'บริษัท เคบีคอมเมิร์ซ', 'ฝ่ายขาย', NULL);
-INSERT INTO employee (comCode, empCode, prefix, name, surName, nickName, birthDate, phone, extPhone, lineId, supplier, department, beginDate) VALUES ('04', 37, NULL, 'win', 'tin', 'ติน', '1995-04-01', '081-657-1917', '284', '0947182257', 'บริษัท เคบีคอมเมิร์ซ', 'ฝ่ายขาย', NULL);
-UPDATE employee SET nickName = 'แพร', phone = '084-447-9701', extPhone = '203', lineId = 'prae1232', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1989-01-12', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 53;
-UPDATE employee SET nickName = 'แพรว', phone = '089-970-6692', extPhone = '208', lineId = 'Praw1837', supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1994-11-18', department = 'ฝ่ายขาย' WHERE comCode = '03' AND empCode = 23;
-UPDATE employee SET nickName = 'กวาง', phone = '098-799-3298', extPhone = '242', lineId = 'Kwang070927', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1987-09-07', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 48;
-UPDATE employee SET nickName = 'กิ๊ฟ', phone = '098-877-5740', extPhone = '254', lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '2007-01-08', department = 'ฝ่ายขาย' WHERE comCode = '03' AND empCode = 79;
-UPDATE employee SET nickName = 'บิว', phone = '088-079-2899', extPhone = '254', lineId = 'bew28no', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1993-12-29', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 128;
-UPDATE employee SET nickName = 'ทิว', phone = '098-356-5056', extPhone = '280', lineId = '_thiw19', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '2005-12-09', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 145;
-UPDATE employee SET nickName = 'หยก', phone = '098-034-8932', extPhone = '280', lineId = '0980348932', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1983-09-22', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 146;
-UPDATE employee SET nickName = 'ฟาง', phone = '062-237-0613', extPhone = '211', lineId = 'fangindy_18', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1989-01-18', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 97;
-UPDATE employee SET nickName = 'ผึ้ง', phone = '083-101-5217', extPhone = '223', lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1984-08-15', department = 'ฝ่ายขาย' WHERE comCode = '03' AND empCode = 13;
-UPDATE employee SET nickName = 'ปุ้ย', phone = '095-982-6434', extPhone = '245', lineId = 'puy9995puy', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1984-09-03', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 147;
-UPDATE employee SET nickName = 'เเสตมป์', phone = '098-602-0508', extPhone = '240', lineId = 'stamecha03', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '2003-03-11', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 133;
-UPDATE employee SET nickName = 'ปู', phone = '087-123-7782', extPhone = '253', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1985-03-26', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 41;
-UPDATE employee SET nickName = 'ป๊อป', phone = '093-792-3384', extPhone = '282', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1991-01-02', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 56;
-UPDATE employee SET nickName = 'บี', phone = '095-092-1238', extPhone = '281', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1985-08-16', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 111;
-UPDATE employee SET nickName = 'เล็ก', phone = '089-472-5093', extPhone = '229', lineId = 'Lek120', supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1977-12-27', department = 'ฝ่ายขาย' WHERE comCode = '03' AND empCode = 15;
-UPDATE employee SET nickName = 'ทราย', phone = '062-784-8330', extPhone = '207', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1995-12-19', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 139;
-UPDATE employee SET nickName = 'จัน', phone = '089-469-7607', extPhone = '206', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1975-11-21', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 148;
-UPDATE employee SET nickName = 'อ๊อด', phone = '081-895-6241', extPhone = '209', lineId = 'Aod509', supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1966-07-06', department = 'ฝ่ายขาย' WHERE comCode = '03' AND empCode = 8;
-UPDATE employee SET nickName = 'นุช', phone = '083-482-1797', extPhone = '284', lineId = '0994843359', supplier = 'บริษัท เคบีคอมเมิร์ซ', birthDate = '1993-10-03', department = 'ฝ่ายขาย' WHERE comCode = '04' AND empCode = 33;
-UPDATE employee SET nickName = 'ชาย', phone = '-', extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้าภูเก็ต', birthDate = '1975-05-06', department = 'ฝ่ายขาย' WHERE comCode = '01' AND empCode = 149;
-UPDATE employee SET nickName = 'ริน', phone = '063-307-8637', extPhone = '270', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1990-09-13', department = 'ฝ่ายคลังสินค้า' WHERE comCode = '01' AND empCode = 150;
-UPDATE employee SET nickName = 'โม', phone = null, extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1998-11-16', department = 'ฝ่ายคลังสินค้า' WHERE comCode = '03' AND empCode = 80;
-UPDATE employee SET nickName = 'ทู', phone = null, extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1992-06-20', department = 'ฝ่ายคลังสินค้า' WHERE comCode = '03' AND empCode = 81;
-UPDATE employee SET nickName = 'อาม', phone = null, extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1976-01-17', department = 'ฝ่ายคลังสินค้า' WHERE comCode = '03' AND empCode = 82;
-UPDATE employee SET nickName = 'ต้อม', phone = '064-053-5670', extPhone = '270', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1988-12-22', department = 'ฝ่ายคลังสินค้า' WHERE comCode = '01' AND empCode = 83;
-UPDATE employee SET nickName = 'นนท์', phone = '098-028-1369', extPhone = '270', lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1996-01-10', department = 'ฝ่ายคลังสินค้า' WHERE comCode = '03' AND empCode = 55;
-UPDATE employee SET nickName = 'ทิน', phone = '086-945-6401', extPhone = '271', lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1966-10-07', department = 'ฝ่ายคลังสินค้า' WHERE comCode = '03' AND empCode = 25;
-UPDATE employee SET nickName = 'แพรวา', phone = '089-857-2602', extPhone = '276', lineId = '0898572602', supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1991-06-11', department = 'ฝ่ายคลังสินค้า' WHERE comCode = '03' AND empCode = 45;
-UPDATE employee SET nickName = 'อ็อด', phone = '099-312-8074', extPhone = '274', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1995-10-14', department = 'ฝ่ายคลังสินค้า' WHERE comCode = '03' AND empCode = 56;
-UPDATE employee SET nickName = 'เอ๊ะ', phone = '093-582-0216', extPhone = '275', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1979-05-26', department = 'ฝ่ายคลังสินค้า' WHERE comCode = '01' AND empCode = 82;
-UPDATE employee SET nickName = 'ปอนด์', phone = '088-821-7520', extPhone = '275', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1983-07-15', department = 'ฝ่ายคลังสินค้า' WHERE comCode = '01' AND empCode = 35;
-UPDATE employee SET nickName = 'ตาล', phone = '095-048-6342', extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1996-12-07', department = 'ฝ่ายคลังสินค้า' WHERE comCode = '01' AND empCode = 54;
-UPDATE employee SET nickName = 'โสด', phone = '098-083-1774', extPhone = '272', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1978-11-30', department = 'ฝ่ายคลังสินค้า' WHERE comCode = '01' AND empCode = 57;
-UPDATE employee SET nickName = 'กุ้ง', phone = '081-370-9418', extPhone = '277', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1974-03-29', department = 'ฝ่ายคลังสินค้า' WHERE comCode = '01' AND empCode = 23;
-UPDATE employee SET nickName = 'บุญมี', phone = '062-028-5193', extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = NULL, department = 'พนักงานแพ็คสินค้า' WHERE comCode = '03' AND empCode = 83;
-UPDATE employee SET nickName = 'กัลยา', phone = '062-026-3944', extPhone = null, lineId = 'kalyarmon', supplier = 'บจก.เคบีคอมเมิร์ซ', birthDate = '2002-05-10', department = 'พนักงานแพ็คสินค้า' WHERE comCode = '04' AND empCode = 34;
-UPDATE employee SET nickName = 'พิว', phone = '062-861-6003', extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '2000-06-15', department = 'พนักงานแพ็คสินค้า' WHERE comCode = '03' AND empCode = 84;
-UPDATE employee SET nickName = 'สวย', phone = '094-330-4426', extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '2001-04-30', department = 'พนักงานแพ็คสินค้า' WHERE comCode = '03' AND empCode = 85;
-UPDATE employee SET nickName = 'คิม', phone = '061-294-2667', extPhone = '225', lineId = 'kimoolkim', supplier = 'MITSUBISHI', birthDate = '2003-03-23', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 151;
-UPDATE employee SET nickName = 'นีนา', phone = '094-803-5925', extPhone = '240', lineId = '0878983823', supplier = 'OPPLE', birthDate = '1987-06-15', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 152;
-UPDATE employee SET nickName = 'บีม', phone = '099-232-0073', extPhone = '242', lineId = 'srpx05', supplier = 'บจก.สตาร์ไลท์ เซ็นทรัลเวิลด์', birthDate = '2005-10-15', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 153;
-UPDATE employee SET nickName = 'มายด์', phone = '095-248-7631', extPhone = '242', lineId = null, supplier = 'บุณธนาภัณฑ์ BEC', birthDate = '2000-12-12', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 154;
-UPDATE employee SET nickName = 'รัตน์', phone = '081-271-0353', extPhone = '283', lineId = '0812710353', supplier = 'บริษัท โรเบิร์ตบ๊อชจำกัด BOSCH', birthDate = '1978-09-14', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 114;
-UPDATE employee SET nickName = 'ยิด', phone = '089-291-4204', extPhone = '227', lineId = null, supplier = 'Carrier', birthDate = '1979-05-13', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 155;
-UPDATE employee SET nickName = 'ออย', phone = '085-906-6954', extPhone = '228', lineId = 'cheva-p24', supplier = 'Daikin', birthDate = '1981-10-05', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 156;
-UPDATE employee SET nickName = 'กร', phone = '083-648-2820', extPhone = '247', lineId = 'Kronzi', supplier = 'ธรรมสรณ์ จำกัด DOS', birthDate = '1993-03-13', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 157;
-UPDATE employee SET nickName = 'ตาล', phone = '099-308-1327', extPhone = '259', lineId = '0993081327', supplier = 'แสงชัยแอร์ควอลิตี้ FAGOR', birthDate = '1981-01-20', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 158;
-UPDATE employee SET nickName = 'พอส', phone = '064-040-6297', extPhone = '240', lineId = 'hacopot2003', supplier = 'HACO', birthDate = '2003-03-19', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 126;
-UPDATE employee SET nickName = 'เก๋', phone = '061-382-5599', extPhone = '245', lineId = 'Ka_111044', supplier = 'HI-TEK', birthDate = '2001-10-11', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 159;
-UPDATE employee SET nickName = 'ปอ', phone = '095-762-3292', extPhone = '245', lineId = null, supplier = 'HI-TEK', birthDate = '1985-11-22', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 160;
-UPDATE employee SET nickName = 'แพรว', phone = '063-871-6466', extPhone = '248', lineId = 'pp0638716466', supplier = 'HI-TEK', birthDate = '1991-11-26', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 134;
-UPDATE employee SET nickName = 'ริสา', phone = '093-582-6851', extPhone = '240', lineId = null, supplier = 'L&E', birthDate = '1994-10-21', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 161;
-UPDATE employee SET nickName = 'กฤษ', phone = '090-493-5020', extPhone = '246', lineId = null, supplier = 'บจก.ลีโอ ประเทศไทย LEO', birthDate = '1993-10-30', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 162;
-UPDATE employee SET nickName = 'แอร์', phone = '092-290-5769', extPhone = '224', lineId = '0922905769', supplier = 'LG อิเล็กทรอนิกส์', birthDate = '1991-04-03', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 163;
-UPDATE employee SET nickName = 'โจ้', phone = '094-384-3356', extPhone = '246', lineId = '094-384-3356', supplier = 'Lowala', birthDate = '1985-01-04', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 164;
-UPDATE employee SET nickName = 'เหน่ง', phone = '061-102-5828', extPhone = '247', lineId = 'Lavaphuket', supplier = 'MAZUMA', birthDate = '1985-08-04', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 165;
-UPDATE employee SET nickName = 'ผึ้ง', phone = '094-584-4989', extPhone = '247', lineId = '0945844989​', supplier = 'MAZUMA', birthDate = '1993-04-14', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 166;
-UPDATE employee SET nickName = 'อู๊ด', phone = '085-786-9069', extPhone = '259', lineId = '0857869069', supplier = 'PEN K MEX', birthDate = '1978-01-16', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 167;
-UPDATE employee SET nickName = 'พัน', phone = '089-729-4210', extPhone = '222', lineId = '0897294210', supplier = 'บ.ไมเดีย โปรดักส์ MIDEA', birthDate = '1975-12-13', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 168;
-UPDATE employee SET nickName = 'นัท', phone = '092-394-8848', extPhone = '225', lineId = '092-394-8848', supplier = 'MITSUBISHI', birthDate = '1989-02-23', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 169;
-UPDATE employee SET nickName = 'Bee(น้ำผึ้ง)', phone = '093-789-1939', extPhone = '251', lineId = 'ueng2201', supplier = 'MITSUBISHI', birthDate = '1992-09-08', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 170;
-UPDATE employee SET nickName = 'แพรว', phone = '084-305-5085', extPhone = '245', lineId = 'Kodchakon2531', supplier = 'เทราไบร้ท จำกัด NEO X', birthDate = '1988-12-26', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 171;
-UPDATE employee SET nickName = 'ทราย', phone = '083-992-4781', extPhone = '204', lineId = 'Tray_nattakan', supplier = 'บจก. ซิกนิฟาย(ฟิลิปส์)', birthDate = '1995-12-30', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 172;
-UPDATE employee SET nickName = 'ต้น', phone = '082-920-6641', extPhone = '249', lineId = '0829206641', supplier = 'Pumpkin', birthDate = '1977-12-16', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 173;
-UPDATE employee SET nickName = 'บัส', phone = '094-641-7657', extPhone = '226', lineId = '0946417657', supplier = 'SAMSUNG', birthDate = '1984-06-09', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 174;
-UPDATE employee SET nickName = 'เอม', phone = '062-065-2451', extPhone = '280', lineId = 'amma1991', supplier = 'บจก. เดอะทรีซอสซิ่งจำกัด Siemens', birthDate = '1991-02-02', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 175;
-UPDATE employee SET nickName = 'เล็ก', phone = '098-926-4763', extPhone = '240', lineId = null, supplier = 'บจก.ไลท์ติ้งเฟคทอรี่ จำกัด SL', birthDate = '1992-02-10', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 176;
-UPDATE employee SET nickName = 'สุ', phone = '065-163-2291', extPhone = '259', lineId = '0651632291', supplier = 'STIEBEL', birthDate = '1979-08-03', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 177;
-UPDATE employee SET nickName = 'ขาว', phone = '0843047051', extPhone = '259', lineId = '0843047051', supplier = 'STIEBEL', birthDate = '1968-04-18', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 178;
-UPDATE employee SET nickName = 'เฟริ์น', phone = '063-583-3547', extPhone = '259', lineId = '0929668457', supplier = 'บริษัท นพัช อินเตอร์ TURBORA', birthDate = '1996-03-31', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 179;
-UPDATE employee SET nickName = 'ออย', phone = '061-871-3934', extPhone = '259', lineId = 'Oilly1127', supplier = 'บริษัท นพัช อินเตอร์ TURBORA', birthDate = '1995-09-27', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 180;
-UPDATE employee SET nickName = 'หนึ่ง', phone = '095-190-4498', extPhone = '223', lineId = '0951904498', supplier = 'บ๊อชโฮมคอมฟอร์ท YORK HITACHI', birthDate = '1989-11-24', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 181;
-UPDATE employee SET nickName = 'ซีส', phone = '088-393-2093', extPhone = '246', lineId = 'ched', supplier = 'บริษัท สุระซินซาโน่ ZINSANO', birthDate = '1992-10-30', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 182;
-UPDATE employee SET nickName = 'โช', phone = '081-571-5945', extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1988-03-08', department = 'แม่บ้าน' WHERE comCode = '03' AND empCode = 86;
-UPDATE employee SET nickName = 'โม', phone = null, extPhone = null, lineId = null, supplier = 'บจก.เคบีคอมเมิร์ซ', birthDate = '2001-11-17', department = 'แม่บ้าน' WHERE comCode = '03' AND empCode = 80;
-UPDATE employee SET nickName = 'หวาน', phone = null, extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1983-09-20', department = 'แม่บ้าน' WHERE comCode = '03' AND empCode = 87;
-UPDATE employee SET nickName = 'อองซุย', phone = null, extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้าภูเก็ต', birthDate = '1972-08-13', department = 'แม่บ้าน' WHERE comCode = '01' AND empCode = 183;
-UPDATE employee SET nickName = 'โชค', phone = '084-898-5741', extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1980-12-15', department = 'ส่งสินค้า' WHERE comCode = '03' AND empCode = 18;
-UPDATE employee SET nickName = 'ฟีส', phone = '088-178-8379', extPhone = null, lineId = 'f.panuwat', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1994-12-28', department = 'ส่งสินค้า' WHERE comCode = '01' AND empCode = 84;
-UPDATE employee SET nickName = 'อิ๊ฟ', phone = '095-350-6403', extPhone = null, lineId = '0953506403', supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1997-02-12', department = 'ส่งสินค้า' WHERE comCode = '03' AND empCode = 67;
-UPDATE employee SET nickName = 'เลิศ', phone = '061-251-1838', extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1968-02-01', department = 'ส่งสินค้า' WHERE comCode = '03' AND empCode = 6;
-UPDATE employee SET nickName = 'ภู', phone = '081-285-7446', extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '2003-01-02', department = 'ส่งสินค้า' WHERE comCode = '03' AND empCode = 88;
-UPDATE employee SET nickName = 'เค', phone = '081-956-7931', extPhone = null, lineId = '0819567931', supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1982-04-27', department = 'ส่งสินค้า' WHERE comCode = '01' AND empCode = 112;
-UPDATE employee SET nickName = 'โก้', phone = '080-041-6295', extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1985-05-25', department = 'ส่งสินค้า' WHERE comCode = '01' AND empCode = 136;
-UPDATE employee SET nickName = 'มง', phone = '094-319-6896', extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นเทรดดิ้ง', birthDate = '1984-03-29', department = 'ส่งสินค้า' WHERE comCode = '03' AND empCode = 44;
-UPDATE employee SET nickName = 'แท็ก', phone = '093-583-1527', extPhone = null, lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1981-10-29', department = 'ส่งสินค้า' WHERE comCode = '01' AND empCode = 87;
-UPDATE employee SET nickName = 'คิม', phone = '0612942667', extPhone = '225', lineId = 'kimoolkim', supplier = 'บจก.มิตซูบิชิ อิเล็คทริค', birthDate = '2003-03-23', department = 'พนักงาน PC' WHERE comCode = '01' AND empCode = 151;
-UPDATE employee SET nickName = 'นุช', phone = '0882969198', extPhone = '113', lineId = null, supplier = 'บจก.กี่หิ้นการไฟฟ้า', birthDate = '1966-02-08', department = 'จัดซื้อ' WHERE comCode = '01' AND empCode = 22;
+update khemp k set k.`ชื่อ` = TRIM(k.`ชื่อ`), k.`นามสกุล` = trim(k.`นามสกุล` ) where k.`ชื่อ`  is not null;
+update khemp k set k.`วันเกิด` = null where k.`วันเกิด` = '- ';
+
+UPDATE employee AS e
+JOIN khemp AS k ON concat(e.name, e.surName) = concat(k.`ชื่อ`,k.`นามสกุล` )
+SET
+    e.nickName = k.`ชื่อเล่น`,
+    e.birthDate = STR_TO_DATE(k.`วันเกิด`, '%d/%m/%Y'),
+    e.phone = k.เบอร์โทรศัพท์,
+    e.extPhone = k.เบอร์หมายเลขภายใน,
+    e.lineId = k.`Line ID`,
+    e.department = k.`แผนก`,
+    e.supplier =  k.`แผนก (กรณีเลือก "อื่นๆ")`;
+
+select comCode, max(empCode) from payroll.employee group by comCode;
+
+-- insert into payroll.employee
+select k.`สถานะ`, k.`อายุ`, null, 'คุณ', k.`ชื่อ`, k.`นามสกุล`, k.`ชื่อเล่น`,  STR_TO_DATE(k.`วันเกิด`, '%d/%m/%Y') birth, k.`แผนก`,
+  null, null, null, 'ชั่วคราว', null, null,
+  k.`เบอร์โทรศัพท์`, k.`เบอร์หมายเลขภายใน`, k.`Line ID`,  k.`แผนก (กรณีเลือก "อื่นๆ")`,
+  0,0,0,0,0,0,0,0,null
+from khemp k
+left join employee e on concat(e.name, e.surName) = concat(k.`ชื่อ`,k.`นามสกุล` )
+where e.empCode is null
+order by k.`สถานะ`, birth;

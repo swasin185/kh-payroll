@@ -1,6 +1,6 @@
 import SqlEmployeePhoto from "~~/server/database/SqlEmployeePhoto"
 
-export default authEventHandler(async (event) => {
+export default authEventHandler(async (event): Promise<any> => {
     const formData = await readMultipartFormData(event)
     if (!formData) {
         throw createError({ statusCode: 400, statusMessage: "No data uploaded" })

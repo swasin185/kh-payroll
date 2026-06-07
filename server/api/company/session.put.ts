@@ -1,6 +1,6 @@
 import SqlCompany from "~~/server/database/SqlCompany"
 
-export default authEventHandler(async (event) => {
+export default authEventHandler(async (event): Promise<any> => {
     const query = getQuery(event)
     const com = query.comCode as string
     const session = await getUserSession(event)

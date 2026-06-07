@@ -32,6 +32,7 @@
 <script lang="ts" setup>
 import type { Employee } from "~~/shared/schema"
 import type { TableColumn, TableRow } from "@nuxt/ui"
+import { getPhotoUrl } from "~~/shared/utils"
 
 const UAvatar = resolveComponent("UAvatar")
 const { $waitFetch } = useNuxtApp()
@@ -64,7 +65,7 @@ const columns: TableColumn<Employee>[] = [
             const emp = row.original
             const fallbackText = emp.name ? emp.name.charAt(0) : "?"
             return h(UAvatar, {
-                src: (emp as any).photoThumbUrl,
+                src: getPhotoUrl(emp.comCode, emp.empCode, true),
                 alt: emp.name || "",
                 size: "md",
                 text: fallbackText,

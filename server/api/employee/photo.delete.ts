@@ -1,6 +1,6 @@
 import SqlEmployeePhoto from "~~/server/database/SqlEmployeePhoto"
 
-export default authEventHandler(async (event) => {
+export default authEventHandler(async (event): Promise<any> => {
     const query = getQuery(event)
     const comCode = query.comCode?.toString()
     const empCode = Number.parseInt(query.empCode?.toString() ?? "0")

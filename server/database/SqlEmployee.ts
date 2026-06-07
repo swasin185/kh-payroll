@@ -12,14 +12,7 @@ export default {
             [comCode, empCode],
         )
         if (result.length !== 1) return null
-        const row = result[0]!
-        const emp = EmployeeSchema.parse(row)
-        // Provide URLs to image endpoints instead of embedding blobs
-        const c = encodeURIComponent(row.comCode)
-        const e = encodeURIComponent(String(row.empCode))
-        ;(emp as any).photoUrl = `/api/employee/photo?comCode=${c}&empCode=${e}`
-        ;(emp as any).photoThumbUrl = `/api/employee/photo?comCode=${c}&empCode=${e}&thumb=1`
-        return emp
+        return EmployeeSchema.parse(result[0])
     },
 
     async lookup(comCode: string): Promise<LookupItem[]> {
@@ -60,15 +53,7 @@ export default {
         )
 
         return {
-            rows: rows.map((row) => {
-                const emp = EmployeeSchema.parse(row)
-                const c = encodeURIComponent(row.comCode)
-                const e = encodeURIComponent(String(row.empCode))
-                ;(emp as any).photoUrl = `/api/employee/photo?comCode=${c}&empCode=${e}`
-                ;(emp as any).photoThumbUrl =
-                    `/api/employee/photo?comCode=${c}&empCode=${e}&thumb=1`
-                return emp
-            }),
+            rows: rows.map((row) => EmployeeSchema.parse(row)),
             total,
         }
     },
@@ -148,5 +133,20 @@ export default {
             values,
         )
         return result.affectedRows === 1
+    },
+
+    async listActive(): Promise<(Employee & { comName: string })[]> {
+        const [rows] = await db.query<RowDataPacket[]>(
+            `SELECT e.*, c.comName FROM employee e
+             LEFT JOIN company c ON e.comCode = c.comCode
+             WHERE e.endDate IS NULL
+             ORDER BY e.comCode, e.name, e.surName`,
+        )
+
+        return rows.map((row) => {
+            const emp = EmployeeSchema.parse(row)
+            ;(emp as any).comName = row.comName || row.comCode
+            return emp as Employee & { comName: string }
+        })
     },
 }
