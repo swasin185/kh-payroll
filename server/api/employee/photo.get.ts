@@ -28,7 +28,7 @@ export default authEventHandler(async (event): Promise<any> => {
             throw createError({ statusCode: 404, statusMessage: "Thumbnails not found" })
         }
         setHeader(event, "Content-Type", "image/webp")
-        setHeader(event, "Cache-Control", "private, max-age=3600")
+        // setHeader(event, "Cache-Control", "private, max-age=3600")
         return thumb
     }
 
@@ -39,7 +39,6 @@ export default authEventHandler(async (event): Promise<any> => {
     }
 
     setHeader(event, "Content-Type", "image/jpeg")
-    // Add caching header so we don't fetch heavy photos repeatedly if they haven't changed
-    setHeader(event, "Cache-Control", "private, max-age=3600")
+    // setHeader(event, "Cache-Control", "private, max-age=3600")
     return photoData
 })

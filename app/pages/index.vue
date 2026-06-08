@@ -62,8 +62,13 @@
                     <div
                         v-for="emp in group.employees"
                         :key="`${emp.comCode}-${emp.empCode}`"
-                        class="flex h-20 w-60 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                        <!-- Photo -->
+                        :class="[
+                            'flex h-20 w-60 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden',
+                            user.value && emp.comCode === user.value.comCode
+                                ? 'cursor-pointer'
+                                : '',
+                        ]"
+                        @click="onCardClick(emp)">
                         <div
                             class="h-20 w-16 bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden border-r border-gray-200 dark:border-gray-700">
                             <img
@@ -101,7 +106,8 @@
 
 <script lang="ts" setup>
 import { ref, computed, reactive, onMounted } from "vue"
-import { getPhotoUrl } from "~~/shared/utils"
+import { useRouter } from "vue-router"
+import { getPhotoUrl, calculateAge } from "~~/shared/utils"
 
 interface Employee {
     comCode: string
@@ -124,6 +130,8 @@ interface EmployeeGroup {
 }
 
 const { $waitFetch } = useNuxtApp()
+const router = useRouter()
+const { user } = useUserSession()
 const loading = ref(true)
 const error = ref<string | null>(null)
 const allEmployees = ref<Employee[]>([])
@@ -149,19 +157,6 @@ async function fetchEmployees() {
     } finally {
         loading.value = false
     }
-}
-
-// Calculate age from birth date
-function calculateAge(birthDate?: string): number {
-    if (!birthDate) return 0
-    const today = new Date()
-    const birth = new Date(birthDate)
-    let age = today.getFullYear() - birth.getFullYear()
-    const monthDiff = today.getMonth() - birth.getMonth()
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-        age--
-    }
-    return age
 }
 
 // Filter and group employees
@@ -220,6 +215,11 @@ function debouncedSearch() {
     }, 500)
 }
 
+function onCardClick(emp: Employee) {
+    if (emp.comCode === user.value.comCode) {
+        router.push({ path: "/employee", query: { empCode: String(emp.empCode) } })
+    }
+}
 
 // Navigate to employee detail and pre-select
 function setSelectedEmployee(emp: Employee) {

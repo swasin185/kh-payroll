@@ -104,8 +104,29 @@ export const moneyOption = {
 }
 
 // Generate photo URL for an employee
-export function getPhotoUrl(comCode: string, empCode: string | number, thumb = false) {
+export function getPhotoUrl(
+    comCode: string,
+    empCode: string | number,
+    thumb = false,
+    t?: string | number,
+) {
     const c = encodeURIComponent(comCode)
     const e = encodeURIComponent(String(empCode))
-    return `/api/employee/photo?comCode=${c}&empCode=${e}${thumb ? "&thumb=1" : ""}`
+    const tb = thumb ? "&thumb=1" : ""
+    const tp = t !== undefined ? `&t=${encodeURIComponent(String(t))}` : ""
+    return `/api/employee/photo?comCode=${c}&empCode=${e}${tb}${tp}`
+}
+
+export function calculateAge(birthDate?: string | null): number {
+    if (!birthDate) return 0
+    const today = new Date()
+    const birth = new Date(birthDate)
+    let age = today.getFullYear() - birth.getFullYear()
+    if (
+        today.getMonth() < birth.getMonth() ||
+        (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())
+    ) {
+        age--
+    }
+    return age
 }

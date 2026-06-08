@@ -13,8 +13,6 @@
         :form="form!" />
 
     <div class="flex flex-col lg:flex-row gap-6 mt-1 items-start w-full">
-        <!-- Employee Photo Card -->
-        <!-- Employee Info Form -->
         <UForm
             ref="form"
             :state="record"
@@ -117,17 +115,17 @@
             <div
                 :class="[
                     'h-48 w-48 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center bg-white dark:bg-gray-900 overflow-hidden relative shadow-inner',
-                    hasPhoto && 'cursor-pointer hover:opacity-80 transition-opacity',
                 ]"
-                @click="hasPhoto && openPhotoModal()">
+                @click="openPhotoModal()">
                 <img
-                    v-if="hasPhoto"
-                    :src="getPhotoUrl(record.comCode, record.empCode, false)"
+                    v-if="photoUrl"
+                    :src="photoUrl"
+                    @error="onPhotoError"
                     class="object-cover h-full w-full" />
                 <div v-else class="text-center p-4">
                     <span class="text-xs text-gray-400 block font-medium">ไม่มีรูปถ่าย</span>
                     <span class="text-[10px] text-gray-400 block mt-1"
-                        >(ขนาด {{ photoSize }}x{{ photoSize }}, {{ fileSize }}KB)</span
+                        >(ขนาด {{ photoSize }}x{{ photoSize }}px, {{ fileSize }}KB)</span
                     >
                 </div>
             </div>
@@ -144,10 +142,10 @@
                 <label
                     for="employee-photo-file"
                     class="cursor-pointer text-xs bg-blue-600 hover:bg-blue-700 text-white font-medium rounded shadow p-2">
-                    {{ hasPhoto ? "เปลี่ยนรูป" : "อัปโหลดรูป" }}
+                    อัปโหลดรูป
                 </label>
                 <button
-                    v-if="hasPhoto"
+                    v-if="photoUrl"
                     @click="deletePhoto"
                     class="text-xs bg-red-600 hover:bg-red-700 text-white font-medium rounded shadow p-2">
                     ลบรูปถ่าย
@@ -156,6 +154,10 @@
             <div class="mt-4 text-xs text-gray-400 text-center" v-else>
                 เลือกพนักงานก่อนอัปโหลดรูปภาพ
             </div>
+            <div class="mt-4 text-xl text-center">
+                {{ record.nickName }} {{ calculateAge(record.birthDate) }}
+            </div>
+            <div class="mt-4 text-xl text-center">{{ record.name }} {{ record.surName }}</div>
         </div>
     </div>
 
@@ -166,51 +168,37 @@
         @click="closePhotoModal">
         <div @click.stop>
             <button @click="closePhotoModal">✕</button>
-            <img :src="getPhotoUrl(record.comCode, record.empCode, false)" class="w-full h-auto" />
+            <img
+                :src="photoUrl || getPhotoUrl(record.comCode, record.empCode, false, photoVersion)"
+                @error="onPhotoError"
+                class="w-full h-auto" />
         </div>
     </div>
 </template>
 <script lang="ts" setup>
 definePageMeta({ keepalive: true })
 
+import { ref, reactive, onMounted } from "vue"
+import { useRoute } from "vue-router"
 import { EmployeeSchema, type Employee } from "~~/shared/schema"
-import { getPhotoUrl } from "~~/shared/utils"
+import { getPhotoUrl, calculateAge } from "~~/shared/utils"
 import { DBMODE } from "~~/shared/utils"
 
 const form = useTemplateRef("form")
 const { $waitFetch } = useNuxtApp()
-const search: Ref<string> = ref("")
+const search = ref("")
 const mode = ref(DBMODE.Idle)
 const record = reactive<Employee>(EmployeeSchema.parse({}))
 
 const { user } = useUserSession()
 const comCode = ref(user.value.comCode)
+const route = useRoute()
 
-// Photo handling state & derived properties
 const fileSize = 250
 const photoSize = 600
-const hasPhoto = ref(false)
 const isPhotoModalOpen = ref(false)
-
-// Monitor changes to active employee to load their photo metadata
-watch(
-    () => [record.comCode, record.empCode],
-    async ([newCom, newEmp]) => {
-        if (newCom && newEmp) {
-            try {
-                const metadata: any = await $fetch(`/api/employee/photo`, {
-                    query: { comCode: newCom, empCode: newEmp, metadata: "1" },
-                })
-                hasPhoto.value = !!metadata.hasPhoto
-            } catch {
-                hasPhoto.value = false
-            }
-        } else {
-            hasPhoto.value = false
-        }
-    },
-    { immediate: true },
-)
+const photoUrl = ref<string>("")
+const photoVersion = ref<number>(0)
 
 async function uploadPhoto(event: Event) {
     const input = event.target as HTMLInputElement
@@ -248,7 +236,8 @@ async function uploadPhoto(event: Event) {
             method: "POST",
             body: formData,
         })
-        hasPhoto.value = true
+        photoVersion.value++
+        photoUrl.value = getPhotoUrl(record.comCode, record.empCode, false, photoVersion.value)
     } catch (err: any) {
         alert(err.statusMessage || "เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ")
     }
@@ -262,7 +251,8 @@ async function deletePhoto() {
             method: "DELETE",
             query: { comCode: record.comCode, empCode: record.empCode },
         })
-        hasPhoto.value = false
+        photoVersion.value = 0
+        photoUrl.value = ""
     } catch (err: any) {
         alert(err.statusMessage || "เกิดข้อผิดพลาดในการลบรูปภาพ")
     }
@@ -276,6 +266,7 @@ async function onSelect() {
             query: { comCode: comCode.value, empCode: search.value },
         }),
     )
+    photoUrl.value = getPhotoUrl(record.comCode, record.empCode, false, photoVersion.value)
 }
 
 async function onInsert() {
@@ -309,10 +300,28 @@ function closePhotoModal() {
     isPhotoModalOpen.value = false
 }
 
+function onPhotoError() {
+    // If image fails to load (404), clear stored URL and mark no photo
+    photoUrl.value = ""
+    photoVersion.value = 0
+}
+
 function newRecord() {
     let rec = EmployeeSchema.parse({})
     rec.comCode = user.value.comCode
     Object.assign(record, rec)
-    hasPhoto.value = false
 }
+
+onMounted(async () => {
+    // Prefer 'emmCode' then 'empCode' query param
+    const q = route.query?.emmCode ?? route.query?.empCode
+    if (q) {
+        try {
+            search.value = String(q)
+            await onSelect()
+        } catch (e) {
+            // ignore
+        }
+    }
+})
 </script>
