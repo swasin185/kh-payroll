@@ -10,23 +10,27 @@
             <div
                 class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                 <UInput
-                    v-model="filters.name"
+                    v-model="searchInputs.name"
                     placeholder="Search name..."
                     icon="i-lucide-search"
                     @update:model-value="debouncedSearch" />
                 <UInput
-                    v-model="filters.surname"
+                    v-model="searchInputs.surname"
                     placeholder="Search surname..."
                     icon="i-lucide-search"
                     @update:model-value="debouncedSearch" />
                 <UInput
-                    v-model="filters.nickName"
+                    v-model="searchInputs.nickName"
                     placeholder="Search nickname..."
                     icon="i-lucide-search"
                     @update:model-value="debouncedSearch" />
-                <UInput v-model.number="filters.age" type="number" placeholder="Search age..." />
                 <UInput
-                    v-model="filters.department"
+                    v-model.number="searchInputs.age"
+                    type="number"
+                    placeholder="Search age..."
+                    @update:model-value="debouncedSearch" />
+                <UInput
+                    v-model="searchInputs.department"
                     placeholder="Search department..."
                     icon="i-lucide-search"
                     @update:model-value="debouncedSearch" />
@@ -57,20 +61,19 @@
                     {{ group.comName }}
                 </h2>
 
-                <!-- Employee Cards Grid -->
                 <div class="flex flex-wrap gap-3">
                     <div
                         v-for="emp in group.employees"
                         :key="`${emp.comCode}-${emp.empCode}`"
                         :class="[
-                            'flex h-20 w-60 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden',
+                            'flex h-18 w-60 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden',
                             user.value && emp.comCode === user.value.comCode
                                 ? 'cursor-pointer'
                                 : '',
                         ]"
                         @click="onCardClick(emp)">
                         <div
-                            class="h-20 w-16 bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden border-r border-gray-200 dark:border-gray-700">
+                            class="h-18 w-16 bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden border-r border-gray-200 dark:border-gray-700">
                             <img
                                 v-if="emp.hasPhoto"
                                 :src="getPhotoUrl(emp.comCode, emp.empCode, true)"
@@ -81,8 +84,7 @@
                             </div>
                         </div>
 
-                        <!-- Info -->
-                        <div class="flex-1 p-2 flex flex-col justify-center overflow-hidden">
+                        <div class="flex-1 p-1 flex flex-col justify-center overflow-hidden">
                             <h3
                                 class="text-xs font-semibold text-gray-900 dark:text-white truncate">
                                 {{ emp.prefix || "" }} {{ emp.name }} {{ emp.surName }}
@@ -123,12 +125,6 @@ interface Employee {
     hasPhoto?: boolean
 }
 
-interface EmployeeGroup {
-    comCode: string
-    comName: string
-    employees: Employee[]
-}
-
 const { $waitFetch } = useNuxtApp()
 const router = useRouter()
 const { user } = useUserSession()
@@ -137,6 +133,14 @@ const error = ref<string | null>(null)
 const allEmployees = ref<Employee[]>([])
 
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
+
+const searchInputs = reactive({
+    name: "",
+    surname: "",
+    nickName: "",
+    age: null as number | null,
+    department: "",
+})
 
 const filters = reactive({
     name: "",
@@ -161,14 +165,14 @@ async function fetchEmployees() {
 
 // Filter and group employees
 const groupedEmployees = computed(() => {
-    const minLength = 3
+    const minLength = 2
 
-    // If any text filter is present but shorter than minLength, return empty results
     const hasMeaningFilter =
         filters.name.length >= minLength ||
         filters.surname.length >= minLength ||
         filters.nickName.length >= minLength ||
-        filters.department.length >= minLength
+        filters.department.length >= minLength ||
+        filters.age !== null
 
     let filtered = hasMeaningFilter
         ? allEmployees.value.filter((emp) => {
@@ -211,8 +215,12 @@ const groupedEmployees = computed(() => {
 function debouncedSearch() {
     if (searchTimeout) clearTimeout(searchTimeout)
     searchTimeout = setTimeout(() => {
-        // no-op; computed property will react to filters
-    }, 500)
+        filters.name = searchInputs.name
+        filters.surname = searchInputs.surname
+        filters.nickName = searchInputs.nickName
+        filters.age = searchInputs.age
+        filters.department = searchInputs.department
+    }, 1000)
 }
 
 function onCardClick(emp: Employee) {
