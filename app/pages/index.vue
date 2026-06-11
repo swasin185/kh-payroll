@@ -1,10 +1,18 @@
 <template>
     <div class="w-full p-6">
-        <!-- Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
-                Employee Directory
-            </h1>
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                    Employee Directory
+                </h1>
+                <UButton
+                    icon="i-lucide-file-text"
+                    color="primary"
+                    variant="solid"
+                    label="Active Employees Report"
+                    to="/api/report/active-employees"
+                    target="_blank" />
+            </div>
 
             <!-- Search Filters -->
             <div
