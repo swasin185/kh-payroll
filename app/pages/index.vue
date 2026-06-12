@@ -2,16 +2,8 @@
     <div class="w-full p-6">
         <div class="mb-8">
             <div class="flex justify-between items-center mb-4">
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-                    Employee Directory
-                </h1>
-                <UButton
-                    icon="i-lucide-file-text"
-                    color="primary"
-                    variant="solid"
-                    label="Active Employees Report"
-                    to="/api/report/active-employees"
-                    target="_blank" />
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Employee Directory</h1>
+                <A01 />
             </div>
 
             <!-- Search Filters -->
@@ -117,6 +109,7 @@
 <script lang="ts" setup>
 import { ref, computed, reactive, onMounted } from "vue"
 import { useRouter } from "vue-router"
+import A01 from "~/components/report/A01.vue"
 import { getPhotoUrl, calculateAge } from "~~/shared/utils"
 
 interface Employee {
