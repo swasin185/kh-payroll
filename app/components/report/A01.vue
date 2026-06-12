@@ -1,7 +1,7 @@
 <!-- components/EmployeeReport.vue -->
 <template>
     <div>
-        <UButton @click="generateReport" :disabled="loading"> Download Employee Report </UButton>
+        <UButton @click="generateReport"> Download Employee Report </UButton>
     </div>
 </template>
 
@@ -21,8 +21,6 @@ pdfMake.fonts = {
 }
 
 const generateReport = async () => {
-    loading.value = true
-
     try {
         // Fetch employee data
         const { data: employees } = await useFetch("/api/employee/active")
