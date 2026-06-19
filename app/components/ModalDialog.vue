@@ -3,8 +3,7 @@
         v-model:open="state.show"
         :title="state.title"
         :description="state.message"
-        :class="state.lookupName ? 'max-w-full md:max-w-[1000px] h-[750px]' : ''"
-    >
+        :class="state.lookupName ? 'max-w-full md:max-w-250 h-200' : ''">
         <template #body v-if="state.lookupName || state.isPrompt">
             <component
                 v-if="state.lookupName"
@@ -12,8 +11,7 @@
                 :key="state.lookupName"
                 v-model:lookupKey="state.lookupCode"
                 @dblclick="onConfirm"
-                @keydown.enter="onConfirm"
-            />
+                @keydown.enter="onConfirm" />
             <UInput ref="prompt" v-if="state.isPrompt" v-model="state.lookupCode" />
         </template>
         <template #footer>
@@ -22,8 +20,7 @@
                     color="warning"
                     class="p-2 font-bold"
                     @click="onConfirm"
-                    label="&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;"
-                />
+                    label="&nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;" />
                 <UButton class="p-2" @click="onCancel" label="&nbsp;Cancel&nbsp;" />
             </div>
         </template>

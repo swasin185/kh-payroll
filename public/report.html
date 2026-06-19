@@ -1,40 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>KxReport</title>
-        <style>
-            body {
-                background: black url("./img/tesseract.gif") center no-repeat;
-                height: 100vh;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .timer {
-                font: bold 2em monospace;
-                color: white;
-                padding-bottom: 120px;
-            }
-        </style>
+        <title>Report Viewer</title>
     </head>
 
-    <body>
-        <div class="timer" id="timer"></div>
+    <body
+        style="
+            background: black url(./img/tesseract.gif) center no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        ">
+        <div id="timer" style="font: bold 2em monospace; color: white; padding-bottom: 120px" />
     </body>
 
     <script>
         let mm = 0
         let ss = 0
         const timer = document.getElementById("timer")
-        setInterval(() => {
+        var i = setInterval(() => {
             if (++ss == 60) {
                 mm++
                 ss = 0
             }
-            timer.textContent = (mm > 9 ? mm : "0" + mm) + ":" + (ss > 9 ? ss : "0" + ss)
+            if (document.contains(timer))
+                timer.textContent = (mm > 9 ? mm : "0" + mm) + ":" + (ss > 9 ? ss : "0" + ss)
+            else {
+                console.log("clear " + i)
+                clearInterval(i)
+            }
         }, 1000)
     </script>
 </html>

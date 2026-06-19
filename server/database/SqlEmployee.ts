@@ -140,7 +140,7 @@ export default {
             `SELECT e.*, c.comName FROM employee e
              LEFT JOIN company c ON e.comCode = c.comCode
              WHERE e.endDate IS NULL
-             ORDER BY e.comCode, e.name, e.surName`,
+             ORDER BY e.comCode, e.empCode`,
         )
 
         return rows.map((row) => {

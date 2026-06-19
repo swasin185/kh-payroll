@@ -1,5 +1,5 @@
 <template>
-    <div class="flex space-x-2 border-b-1 pb-2 mb-2">
+    <div class="flex space-x-2 border-b pb-2 mb-2">
         <DBLookup
             ref="lookup"
             v-model:lookupKey="searchKey"

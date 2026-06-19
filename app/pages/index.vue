@@ -3,10 +3,8 @@
         <div class="mb-8">
             <div class="flex justify-between items-center mb-4">
                 <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Employee Directory</h1>
-                <A01 />
             </div>
 
-            <!-- Search Filters -->
             <div
                 class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                 <UInput
@@ -109,8 +107,8 @@
 <script lang="ts" setup>
 import { ref, computed, reactive, onMounted } from "vue"
 import { useRouter } from "vue-router"
-import A01 from "~/components/report/A01.vue"
 import { getPhotoUrl, calculateAge } from "~~/shared/utils"
+// import ReportBox from "~/components/ReportBox.vue"
 
 interface Employee {
     comCode: string
