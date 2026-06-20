@@ -74,6 +74,7 @@
                             class="h-18 w-16 bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden border-r border-gray-200 dark:border-gray-700">
                             <img
                                 v-if="emp.hasPhoto"
+                                loading="lazy"
                                 :src="getPhotoUrl(emp.comCode, emp.empCode, true)"
                                 alt="Employee photo"
                                 class="w-16 h-16 object-cover rounded-sm" />
