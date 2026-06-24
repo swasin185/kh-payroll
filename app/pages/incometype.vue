@@ -9,22 +9,19 @@
         :onUpdate="onUpdate"
         :onDelete="onDelete"
         :onPrint="onPrint"
-        :form="form!"
-    />
+        :form="form!" />
     <UForm
         ref="form"
         :state="record"
         :schema="IncomeTypeSchema"
         class="grid grid-flow-col grid-rows-5 gap-y-2"
-        :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
-    >
+        :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update">
         <UFormField label="Inc Code" name="inCode">
             <UInput
                 type="text"
                 v-model="record.inCode"
                 :disabled="mode !== DBMODE.Insert"
-                class="w-30"
-            />
+                class="w-30" />
         </UFormField>
         <UFormField label="ชื่อเงินได้/หัก" name="inName">
             <UInput type="text" v-model="record.inName" class="w-54" />
@@ -46,8 +43,7 @@
                 v-model="record.initPercent"
                 :step="0.01"
                 :formatOptions="{ style: 'decimal' }"
-                class="w-32"
-            />
+                class="w-32" />
         </UFormField>
     </UForm>
 </template>

@@ -25,6 +25,15 @@ const BooleanAttr = z.coerce.boolean().optional().default(false)
 
 const EmployeeAttr = z.int().min(0).max(9999).default(0)
 
+const YearAttr = z.int().min(1900).max(2200).default(new Date().getFullYear()).optional()
+
+const MonthAttr = z
+    .int()
+    .min(1)
+    .max(12)
+    .default(new Date().getMonth() + 1)
+    .optional()
+
 const TIME_HH_MM_REGEX = /^(?:[01]\d|2[0-3]):[0-5]\d$/
 
 const ScanTimeAttr = z
@@ -32,12 +41,9 @@ const ScanTimeAttr = z
     .max(5)
     .nullable()
     .default(null)
-    .refine(
-        (val) => (val === null) || TIME_HH_MM_REGEX.test(val),
-        {
-            message: "Invalid time hh:mm",
-        },
-    )
+    .refine((val) => val === null || TIME_HH_MM_REGEX.test(val), {
+        message: "Invalid time hh:mm",
+    })
 
 const ScanDateAttr = z.string().max(10).nullable().default(null)
 
@@ -50,13 +56,8 @@ export const CompanySchema = z.object({
     email1: z.email().max(30).nullable().default(null),
     email2: z.email().max(30).nullable().default(null),
     email3: z.email().max(30).nullable().default(null),
-    yrPayroll: z.int().min(1900).max(2200).default(new Date().getFullYear()).optional(),
-    mnPayroll: z
-        .int()
-        .min(0)
-        .max(13)
-        .default(new Date().getMonth() + 1)
-        .optional(),
+    yrPayroll: YearAttr,
+    mnPayroll: MonthAttr,
 })
 export type Company = z.infer<typeof CompanySchema>
 
@@ -101,7 +102,7 @@ export const LogsSchema = z.object({
 export type Logs = z.infer<typeof LogsSchema>
 
 export const IncomeTypeSchema = z.object({
-    inCode: z.string().min(2).max(2),
+    inCode: z.string().min(2).max(2).default("00"),
     inName: z.string().max(30).optional(),
     inType: z.int().min(-1).max(1).optional().default(1),
     isTax: BooleanAttr.default(true),
@@ -110,6 +111,15 @@ export const IncomeTypeSchema = z.object({
     initPercent: PercentAttr,
 })
 export type IncomeType = z.infer<typeof IncomeTypeSchema>
+
+export const SalarySchema = z.object({
+    comCode: ComCodeAttr,
+    empCode: EmployeeAttr,
+    inCode: z.string().min(2).max(2).optional(),
+    value: MoneyAttr,
+    duration: z.int().default(-1).optional(),
+})
+export type Salary = z.infer<typeof SalarySchema>
 
 export const EmployeeSchema = z.object({
     comCode: ComCodeAttr,
@@ -138,7 +148,6 @@ export const EmployeeSchema = z.object({
     childEdu: z.int().min(0).max(10).default(0),
     isSpouse: BooleanAttr,
     isChildShare: BooleanAttr,
-
     isExcSocialIns: BooleanAttr,
     deductInsure: MoneyAttr,
     deductHome: MoneyAttr,
@@ -207,4 +216,3 @@ export const EmployeePhotoSchema = z.object({
     uploadedAt: TimeAttr,
 })
 export type EmployeePhoto = z.infer<typeof EmployeePhotoSchema>
-

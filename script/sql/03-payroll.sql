@@ -107,8 +107,6 @@ create table salary (
     inCode        varchar(2),
     value         decimal(9,2) comment "จำนวนเงิน",
     duration      tinyint unsigned default 1 comment "จำนวนงวดที่จ่าย",
-    yrBegin       year default 0 comment "ปีเริ่มจ่าย",
-    moBegin       tinyint unsigned default 0 comment "เดือนเริ่มจ่าย",
     foreign key (comCode, empCode) references employee(comCode, empCode),
     foreign key (inCode) references incometype(inCode),
     primary key (comCode, empCode, inCode)

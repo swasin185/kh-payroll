@@ -9,15 +9,13 @@
         :onUpdate="onUpdate"
         :onDelete="onDelete"
         :onPrint="onPrint"
-        :form="form!"
-    />
+        :form="form!" />
     <UForm
         ref="form"
         :state="record"
         :schema="UsersSchema"
         class="grid grid-flow-col grid-rows-5 gap-y-2"
-        :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update"
-    >
+        :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update">
         <UFormField label="User ID" name="id">
             <UInput v-model="record.id" :disabled="mode !== DBMODE.Insert" class="w-30" />
         </UFormField>
@@ -32,16 +30,14 @@
                 v-model="record.level"
                 :disabled="!isAdmin"
                 :items="LEVEL_ITEMS"
-                class="w-36"
-            />
+                class="w-36" />
         </UFormField>
         <UFormField label="ROLE" name="role">
             <DBLookup
                 v-model:lookupKey="record.role"
                 name="role"
                 :disabled="!isAdmin"
-                class="w-55"
-            />
+                class="w-55" />
         </UFormField>
         <UFormField label="Company" name="comCode">
             <DBLookup v-model:lookupKey="record.comCode" name="company" class="w-70" />
