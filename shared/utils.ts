@@ -94,8 +94,10 @@ export function formatDate(date: Date): string {
     return date.toLocaleDateString("sv-SE")
 }
 
-export function formatMoney(value: number): string {
-    return value.toLocaleString("en-US", moneyOption)
+export function formatMoney(value: number | string | null | undefined): string {
+    if (value === null || value === undefined || value === "") return "0.00"
+    const num = Number(value)
+    return num.toLocaleString("en-US", moneyOption)
 }
 
 export const moneyOption = {
@@ -103,15 +105,18 @@ export const moneyOption = {
     maximumFractionDigits: 2,
 }
 
-// Generate photo URL for an employee
 export function getPhotoUrl(
     comCode: string,
     empCode: string | number,
     thumb = false,
     t?: string | number,
-) {
+) : string {
     const c = encodeURIComponent(comCode)
+    if (!c) 
+        return ""
     const e = encodeURIComponent(String(empCode))
+    if (!e)
+        return ""
     const tb = thumb ? "&thumb=1" : ""
     const tp = t !== undefined ? `&t=${encodeURIComponent(String(t))}` : ""
     return `/api/employee/photo?comCode=${c}&empCode=${e}${tb}${tp}`

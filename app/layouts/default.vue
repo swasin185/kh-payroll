@@ -1,7 +1,7 @@
 <template>
     <UHeader mode="drawer">
         <template #title>
-            <UButton @click="onSelectCom" :disabled="!user?.comName">
+            <UButton @click="onSelectCom" :disabled="!user?.comName" class="text-xl">
                 [{{ user?.yrPayroll || year }}]
                 <UIcon name="i-lucide-calendar-days" class="size-5" />
                 [{{ user?.mnPayroll || month }}]
@@ -25,11 +25,7 @@
     <UProgress v-else v-model="fullProgress" :max="fullProgress" size="2xs" />
     <UMain class="flex justify-center">
         <!-- show only if screen is desktop size -->
-        <MainMenu
-            :version="version"
-            :menu="menuState"
-            class="hidden lg:flex w-[300px] h-[800px]"
-        />
+        <MainMenu :version="version" :menu="menuState" class="hidden lg:flex w-[300px] h-[800px]" />
         <UCard class="w-[1200px] h-[800px] overflow-auto">
             <NuxtPage />
         </UCard>

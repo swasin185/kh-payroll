@@ -51,7 +51,7 @@
 definePageMeta({ keepalive: true })
 
 import { SalarySchema, type Salary, type IncomeType } from "~~/shared/schema"
-import { DBMODE } from "~~/shared/utils"
+import { DBMODE, formatMoney } from "~~/shared/utils"
 
 const form = useTemplateRef("form")
 const { $waitFetch } = useNuxtApp()
@@ -89,6 +89,7 @@ const columns = [
         accessorKey: "value",
         header: "Amount",
         class: "w-32",
+        cell: (data: any) => formatMoney(data.getValue() as number),
         meta: {
             class: {
                 th: "text-right justify-end", // Aligns the header <th> text and its flex container

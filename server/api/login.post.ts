@@ -1,6 +1,7 @@
 import SqlUsers from "~~/server/database/SqlUsers"
 import SqlCompany from "~~/server/database/SqlCompany"
 import { renewSession } from "~~/server/utils/sessions"
+import SqlLogs from "~~/server/database/SqlLogs"
 
 export default eventHandler(async (event) => {
     const body = await readBody(event)
@@ -16,7 +17,18 @@ export default eventHandler(async (event) => {
     try {
         if (await SqlUsers.authPasswd(userId, password)) {
             const authUser = await SqlUsers.select(userId)
-            if (!authUser) return false
+            if (!authUser) {
+                await SqlLogs.insert({
+                    logTime: null,
+                    logType: "login",
+                    userId: userId,
+                    program: "login",
+                    tableName: "users",
+                    changed: "no user",
+                    comCode: null,
+                })
+                return false
+            }
             const company = await SqlCompany.select(authUser.comCode!)
             await setUserSession(event, {
                 user: {
@@ -31,8 +43,28 @@ export default eventHandler(async (event) => {
             })
             const sess = await getUserSession(event)
             await renewSession(sess.id, authUser.id)
+
+            await SqlLogs.insert({
+                logTime: null,
+                logType: "login",
+                userId: authUser.id,
+                program: "login",
+                tableName: "users",
+                changed: "success",
+                comCode: authUser.comCode || "01",
+            })
             return true
-        } 
+        } else {
+            await SqlLogs.insert({
+                logTime: null,
+                logType: "login",
+                userId: userId,
+                program: "login",
+                tableName: "users",
+                changed: "invalid password",
+                comCode: null,
+            })
+        }
         return false
     } catch (error) {
         throw createError(error as Error)

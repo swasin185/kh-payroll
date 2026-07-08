@@ -6,10 +6,12 @@ const db = getDB()
 
 export default {
     async insert(logs: Logs): Promise<boolean> {
+        const values = Object.values(logs)
+        values.shift()
         const [result] = await db.execute<ResultSetHeader>(
-            `INSERT IGNORE INTO logs (logTime, logType, userId, program, tableName, changed, comCode)
-             VALUES (?,?,?,?,?,?,?)`,
-            Object.values(logs),
+            `INSERT IGNORE INTO logs (logType, userId, program, tableName, changed, comCode)
+             VALUES (?,?,?,?,?,?)`,
+            values,
         )
         return result.affectedRows === 1
     },

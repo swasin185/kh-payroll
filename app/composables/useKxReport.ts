@@ -4,7 +4,7 @@ const kxreport = "/kxreport"
 const apiBlob = `${kxreport}/openPDF`
 const apiFile = `${kxreport}/filePDF`
 
-async function preview(params: ReportParameter, saveFile: string = "") {
+async function openPDF(params: ReportParameter, saveFile: string = "") {
     const win = window.open("report.html", kxreport, "width=800,height=800,toolbar=no,menubar=no")
     params.app = "kh-payroll"
     params.db = "payroll"
@@ -32,5 +32,5 @@ async function preview(params: ReportParameter, saveFile: string = "") {
 }
 
 export default function useKxReport() {
-    return preview
+    return openPDF
 }

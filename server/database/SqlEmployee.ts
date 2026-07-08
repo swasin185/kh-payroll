@@ -48,7 +48,7 @@ export default {
         const total = countResult!.total as number
 
         const [rows] = await db.query<RowDataPacket[]>(
-            `SELECT * FROM employee ${whereClause} ORDER BY empCode LIMIT ? OFFSET ?`,
+            `SELECT * FROM employee ${whereClause} ORDER BY endDate is not null, empType, department, empCode  LIMIT ? OFFSET ?`,
             [...params, limit, offset],
         )
 

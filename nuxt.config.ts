@@ -22,6 +22,11 @@ export default defineNuxtConfig({
         },
     },
     nitro: {
+        esbuild: {
+            options: {
+                target: "esnext",
+            },
+        },
         storage: {
             sessions: {
                 driver: process.env.REDIS_URL ? "redis" : "memory",

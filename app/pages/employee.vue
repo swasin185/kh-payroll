@@ -161,15 +161,14 @@
         </div>
     </div>
 
-    <!-- Photo Modal -->
     <div
-        v-if="isPhotoModalOpen"
+        v-if="isPhotoModalOpen && photoUrl"
         class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
         @click="closePhotoModal">
         <div @click.stop>
             <button @click="closePhotoModal">✕</button>
             <img
-                :src="photoUrl || getPhotoUrl(record.comCode, record.empCode, false, photoVersion)"
+                :src="photoUrl"
                 @error="onPhotoError"
                 class="w-full h-auto" />
         </div>
@@ -183,6 +182,7 @@ import { useRoute } from "vue-router"
 import { EmployeeSchema, type Employee } from "~~/shared/schema"
 import { getPhotoUrl, calculateAge } from "~~/shared/utils"
 import { DBMODE } from "~~/shared/utils"
+import type { ReportParameter } from "~~/shared/types"
 
 const form = useTemplateRef("form")
 const { $waitFetch } = useNuxtApp()
@@ -290,7 +290,12 @@ async function onDelete() {
     })
 }
 
-function onPrint() {}
+async function onPrint() {
+    const openPDF = useReport()
+    await openPDF({
+        report: "A02",
+    })
+}
 
 function openPhotoModal() {
     isPhotoModalOpen.value = true

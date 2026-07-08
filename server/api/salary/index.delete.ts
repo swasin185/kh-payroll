@@ -1,7 +1,7 @@
 import { SqlSalary } from "~~/server/database/SqlSalary"
 import { z } from "zod"
 
-export default authEventHandler(async (event) => {
+export default authEventHandler(async (event): Promise<any> => {
     const query = await getValidatedQuery(
         event,
         z.object({
@@ -12,15 +12,9 @@ export default authEventHandler(async (event) => {
             inCode: z.string(),
         }).parse,
     )
-    
-    const result = await SqlSalary.delete(
-        query.yr,
-        query.mn,
-        query.comCode,
-        query.empCode,
-        query.inCode,
-    )
-    
+
+    const result = await SqlSalary.delete(query.comCode, query.empCode, query.inCode)
+
     if (!result) {
         throw createError({ statusCode: 404, statusMessage: "Record not found" })
     }

@@ -1,0 +1,30 @@
+import { ServerReport } from "./ServerReport"
+import A02 from "./A02"
+import A03 from "./A03"
+
+class ReportRegistry extends Map {
+    constructor() {
+        super()
+        super.set("A02", new A02())
+        super.set("A03", new A03())
+        console.log("ReportRegistry initialized")
+    }
+
+    get(key: string): ServerReport {
+        return super.get(key) as ServerReport
+    }
+
+    getAll(): { id: string; name: string; description: string }[] {
+        const reports: { id: string; name: string; description: string }[] = []
+        for (const [id, report] of this.entries()) {
+            reports.push({
+                id,
+                name: (report as ServerReport).getName(),
+                description: (report as ServerReport).getDescription(),
+            })
+        }
+        return reports
+    }
+}
+
+export default new ReportRegistry()
