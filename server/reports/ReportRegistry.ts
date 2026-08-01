@@ -1,10 +1,12 @@
 import { ServerReport } from "./ServerReport"
+import A01 from "./A01"
 import A02 from "./A02"
 import A03 from "./A03"
 
 class ReportRegistry extends Map {
     constructor() {
         super()
+        super.set("A01", new A01())
         super.set("A02", new A02())
         super.set("A03", new A03())
         console.log("ReportRegistry initialized")

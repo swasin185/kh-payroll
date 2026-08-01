@@ -17,7 +17,7 @@ describe("Permission", () => {
             testUser,
             permissionsFromMenu(testUser, testCompany, menu),
         )
-        expect(result).toBe(true)
+        expect(result).eq(true)
         const permission = await SqlPermission.select(testCompany, testUser)
         expect(permission.length).toBeGreaterThan(1)
     })

@@ -1,16 +1,91 @@
 import { ServerReport } from "./ServerReport"
+import { formatMoney } from "~~/shared/utils"
 
 export default class A03 extends ServerReport {
-    override name = "Company Employee Summary"
-    override description = "Summary report showing total employee count for the company."
+    override name = "Current Salary Report"
+    override description = "Shows current salary details for employees in the company."
     override query = `
-      SELECT *
-      FROM employee
-      WHERE comCode=?
-      ORDER BY empType, department, empCode`
+      SELECT e.*, s.inCode, s.value as salaryValue, s.duration, i.inName as incomeName
+      FROM employee e
+      INNER JOIN salary s ON e.comCode = s.comCode AND e.empCode = s.empCode
+      LEFT JOIN incometype i ON s.inCode = i.inCode
+      WHERE e.comCode=?
+      ORDER BY e.empType, e.department, e.empCode, s.inCode`
+
+    public override getParams(): string[] {
+        return ["comCode"]
+    }
+
+    private buildSalaryTable(records: any[]) {
+        return {
+            table: {
+                headerRows: 1,
+                widths: ["auto", "*", "auto"],
+                body: [
+                    [
+                        { text: "#", style: "tableHeader", alignment: "right" },
+                        { text: "รายการ", style: "tableHeader" },
+                        { text: "จำนวน", style: "tableHeader", alignment: "right" }
+                    ],
+                    ...records.map((record: any, index: number) => [
+                        index + 1,
+                        record.incomeName || "-",
+                        {
+                            text: record.salaryValue !== null ? formatMoney(record.salaryValue) : "-",
+                            alignment: "right",
+                        }
+                    ]),
+                ],
+            },
+        }
+    }
 
     protected override define(): void {
+        const grouped = Object.groupBy(this.data, (r: any) => r.empCode)
+        const entries = Object.entries(grouped)
+
         const content: any[] = []
+
+        entries.forEach(([empCode, records]) => {
+            const emp = records![0]
+            const totalSalary = records!.reduce((sum: number, r: any) => sum + (Number(r.salaryValue) || 0), 0)
+            content.push({
+                columns: [
+                    {
+                        text: `พนักงาน: ${emp.prefix || ""} ${emp.name} ${emp.surName || ""} (${empCode})`,
+                        style: "subheader",
+                    },
+                    {
+                        text: `เงินเดือนรวม: ${formatMoney(totalSalary)}`,
+                        style: "subheader",
+                        alignment: "right",
+                    },
+                ],
+            })
+            content.push(this.buildSalaryTable(records!))
+            content.push({
+                canvas: [
+                    {
+                        type: "line",
+                        x1: 0,
+                        y1: 5,
+                        x2: 555,
+                        y2: 5,
+                        lineWidth: 1,
+                        lineColor: "#b0b0b0",
+                    },
+                ],
+                margin: [0, 5, 0, 10],
+            })
+        })
+
+        const uniqueEmployees = new Set(this.data.map((r: any) => r.empCode))
+        content.push({
+            text: `Total: ${uniqueEmployees.size} employees`,
+            bold: true,
+            margin: [0, 10, 0, 0],
+        })
+
         this.docDefinition = { content }
     }
 }

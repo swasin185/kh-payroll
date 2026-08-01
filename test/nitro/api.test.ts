@@ -38,7 +38,7 @@ describe("API endpoints", () => {
                 "x-test-user": "vitest", // bypass authEventHandler()
             },
         })
-        expect(res).toBe(true)
+        expect(res).eq(testUser.id)
     })
 
     it("GET /api/users", async () => {

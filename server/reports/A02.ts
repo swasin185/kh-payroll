@@ -1,5 +1,4 @@
 import { ServerReport } from "./ServerReport"
-import DateStr from "~~/shared/DateStr"
 import { calculateAge } from "~~/shared/utils"
 
 export default class A02 extends ServerReport {
@@ -19,18 +18,22 @@ export default class A02 extends ServerReport {
         return {
             table: {
                 headerRows: 1,
-                widths: ["auto", "*", "auto", "auto", "auto", "auto"],
+                widths: ["auto", "auto", "auto", "*", "auto", "auto", "auto", "auto"],
                 body: [
                     [
+                        { text: "#", style: "tableHeader", alignment: "right" },
                         { text: "Code", style: "tableHeader", alignment: "right" },
-                        { text: "Full Name", style: "tableHeader" },
-                        { text: "Emp Type", style: "tableHeader" },
-                        { text: "Time Code", style: "tableHeader", alignment: "right" },
-                        { text: "Age", style: "tableHeader", alignment: "right" },
-                        { text: "Employed Range", style: "tableHeader" },
+                        { text: "ชื่อเล่น", style: "tableHeader" },
+                        { text: "ชื่อจริง", style: "tableHeader" },
+                        { text: "ประเภท", style: "tableHeader" },
+                        { text: "เวลางาน", style: "tableHeader", alignment: "right" },
+                        { text: "อายุ", style: "tableHeader", alignment: "right" },
+                        { text: "อายุงาน", style: "tableHeader", alignment: "right" },
                     ],
-                    ...records.map((record: any) => [
+                    ...records.map((record: any, index: number) => [
+                        index + 1,
                         { text: `${record.empCode}`, alignment: "right" },
+                        record.nickName || "-",
                         `${record.prefix || ""} ${record.name} ${record.surName}`,
                         record.empType || "-",
                         {
@@ -42,9 +45,8 @@ export default class A02 extends ServerReport {
                             alignment: "right",
                         },
                         {
-                            text: record.beginDate
-                                ? `${new DateStr(record.beginDate).localeDate} - ${record.endDate ? new DateStr(record.endDate).localeDate : "Present"}`
-                                : "-",
+                            text: record.beginDate ? `${calculateAge(record.beginDate)}` : "-",
+                            alignment: "right",
                         },
                     ]),
                 ],
@@ -59,11 +61,11 @@ export default class A02 extends ServerReport {
         const content: any[] = []
 
         entries.forEach(([department, records], index) => {
-            if (index > 0) {
-                content.push({ text: "", pageBreak: "before" })
-            }
+            // if (index > 0) {
+            //     content.push({ text: "", pageBreak: "before" })
+            // }
             content.push({
-                text: `Department: ${department}  (${records!.length} employees)`,
+                text: ` แผนก: ${department}  (${records!.length} employees)`,
                 style: "subheader",
             })
             content.push(this.buildGroupTable(records!))
@@ -79,7 +81,7 @@ export default class A02 extends ServerReport {
                         lineColor: "#b0b0b0",
                     },
                 ],
-                margin: [0, 5, 0, 0],
+                margin: [0, 5, 0, 10],
             })
         })
 

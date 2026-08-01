@@ -293,7 +293,7 @@ async function onDelete() {
 async function onPrint() {
     const openPDF = useReport()
     await openPDF({
-        report: "A02",
+        report: "A03",
     })
 }
 

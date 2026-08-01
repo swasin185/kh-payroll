@@ -24,7 +24,7 @@ export abstract class ServerReport {
     }
 
     public getDescription() : string {
-        return this.name
+        return this.description
     }
 
     public getParams() : string[] {
@@ -116,7 +116,18 @@ export abstract class ServerReport {
             ...this.docDefinition.options,
 
             header: (currentPage: any, pageCount: any) => {
-                return { text: this.constructor.name, style: "footerText", alignment: "left" }
+                const now = new Date().toLocaleString('th-TH', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+                return { 
+                    text: `${this.constructor.name} - ${now}`, 
+                    style: "footerText", 
+                    alignment: "left" 
+                }
             },
 
             content: [

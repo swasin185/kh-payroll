@@ -18,7 +18,7 @@ describe("Payroll MariaDB", () => {
 
     it("insert() returns true for new user", async () => {
         const result = await SqlUsers.insert(testUser)
-        expect(result).toBe(true)
+        expect(result).eq(testUser.id)
     })
 
     it("select() returns the user by ID", async () => {

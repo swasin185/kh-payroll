@@ -13,25 +13,27 @@
     },
     "dependencies": {
         "@nuxt/test-utils": "4.0.3",
-        "@nuxt/ui": "^4.9.0",
+        "@nuxt/ui": "^4.10.0",
         "crypto-js": "^4.2.0",
-        "mysql2": "^3.22.5",
-        "nuxt": "^4.4.8",
+        "mysql2": "^3.23.2",
+        "nuxt": "^4.5.1",
         "nuxt-auth-utils": "0.5.29",
         "pdfmake": "^0.3.11",
         "sharp": "^0.35.3",
         "typescript": "^6.0.3",
-        "vue": "^3.5.39",
-        "vue-router": "^5.1.0",
+        "vue": "^3.5.40",
+        "vue-router": "^5.2.0",
         "zod": "^4.4.3"
     },
     "devDependencies": {
+        "@nuxt/icon": "^2.4.1",
         "@types/crypto-js": "^4.2.2",
-        "@types/node": "^25.9.4",
+        "@types/node": "^25.9.5",
         "@types/pdfmake": "^0.3.3",
-        "prettier": "^3.9.4",
+        "magic-string": "^1.1.0",
+        "prettier": "^3.9.6",
         "prettier-plugin-sql": "^0.20.0",
-        "tailwindcss": "^4.3.2",
-        "vitest": "^4.1.9"
+        "tailwindcss": "^4.3.3",
+        "vitest": "^4.1.10"
     }
 }
