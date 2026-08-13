@@ -1,31 +1,32 @@
-import { ServerReport } from "./ServerReport"
 import { formatMoney } from "~~/shared/utils"
+import { ServerReport } from "./ServerReport"
 
 export default class A03 extends ServerReport {
     override name = "Current Salary Report"
-    override description = "Shows current salary details for employees in the company."
+    override description = "Shows current salary details for all employees in the company."
     override query = `
       SELECT e.*, s.inCode, s.value as salaryValue, s.duration, i.inName as incomeName
       FROM employee e
-      INNER JOIN salary s ON e.comCode = s.comCode AND e.empCode = s.empCode
+      LEFT JOIN salary s ON e.comCode = s.comCode AND e.empCode = s.empCode
       LEFT JOIN incometype i ON s.inCode = i.inCode
       WHERE e.comCode=?
       ORDER BY e.empType, e.department, e.empCode, s.inCode`
 
-    public override getParams(): string[] {
-        return ["comCode"]
+    public override getParams(): Record<string, string> {
+        return { comCode: "" }
     }
 
     private buildSalaryTable(records: any[]) {
         return {
             table: {
                 headerRows: 1,
-                widths: ["auto", "*", "auto"],
+                widths: ["auto", "*", "auto", "auto"],
                 body: [
                     [
                         { text: "#", style: "tableHeader", alignment: "right" },
                         { text: "รายการ", style: "tableHeader" },
-                        { text: "จำนวน", style: "tableHeader", alignment: "right" }
+                        { text: "จำนวน", style: "tableHeader", alignment: "right" },
+                        { text: "ระยะเวลา", style: "tableHeader", alignment: "right" },
                     ],
                     ...records.map((record: any, index: number) => [
                         index + 1,
@@ -33,7 +34,11 @@ export default class A03 extends ServerReport {
                         {
                             text: record.salaryValue !== null ? formatMoney(record.salaryValue) : "-",
                             alignment: "right",
-                        }
+                        },
+                        {
+                            text: record.duration !== null && record.duration !== 0 ? `${record.duration}` : "-",
+                            alignment: "right",
+                        },
                     ]),
                 ],
             },
@@ -50,17 +55,8 @@ export default class A03 extends ServerReport {
             const emp = records![0]
             const totalSalary = records!.reduce((sum: number, r: any) => sum + (Number(r.salaryValue) || 0), 0)
             content.push({
-                columns: [
-                    {
-                        text: `พนักงาน: ${emp.prefix || ""} ${emp.name} ${emp.surName || ""} (${empCode})`,
-                        style: "subheader",
-                    },
-                    {
-                        text: `เงินเดือนรวม: ${formatMoney(totalSalary)}`,
-                        style: "subheader",
-                        alignment: "right",
-                    },
-                ],
+                text: `พนักงาน: ${emp.prefix || ""} ${emp.name} ${emp.surName || ""} (${empCode}) - เงินเดือนรวม: ${totalSalary.toLocaleString()}`,
+                style: "subheader",
             })
             content.push(this.buildSalaryTable(records!))
             content.push({

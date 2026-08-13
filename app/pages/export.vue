@@ -1,5 +1,5 @@
 <template>
-    <ReportBox :items="reports"> </ReportBox>
+    <ReportBox report="A01,A02,A03" />
 </template>
 
 <script lang="ts" setup>

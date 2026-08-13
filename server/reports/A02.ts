@@ -10,8 +10,8 @@ export default class A02 extends ServerReport {
       WHERE comCode=?
       ORDER BY empType, department, empCode`
 
-    public override getParams(): string[] {
-        return ["comCode"]
+    public override getParams(): Record<string, string> {
+        return { comCode: "01" }
     }
 
     private buildGroupTable(records: any[]) {

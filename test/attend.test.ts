@@ -462,7 +462,7 @@ describe("Payroll MariaDB", () => {
     }
 
     async function tearDownData(scanCode: string) {
-        await db.execute("DELETE FROM holiday WHERE comCode=? AND day=?", [
+        await db.execute("DELETE FROM holiday WHERE comCode=? AND day>=?", [
             testComCode,
             "2100-01-01",
         ])
@@ -490,7 +490,7 @@ describe("Payroll MariaDB", () => {
     })
 
     afterAll(async () => {
-        // if (scanCode) await tearDownData(scanCode)
+        await tearDownData(scanCode)
     })
 
     for (const s of scenarios) {

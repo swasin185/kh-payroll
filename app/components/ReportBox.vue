@@ -1,7 +1,7 @@
 <template>
     <div class="space-y-4 p-4">
         <!-- Report Selector -->
-        <URadioGroup v-model="selected" color="primary" variant="table" :items="props.items" />
+        <URadioGroup v-model="selected" color="primary" variant="table" :items="items" />
         <!-- Report Parameters -->
         <div class="grid grid-cols-2 gap-4">
             <DateInput v-model="params.startDate" label="Start Date" />
@@ -19,39 +19,79 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ items: any[]; report?: string }>()
 
-const selected = ref(props.report || (props.items.length > 0 ? props.items[0].value : ""))
+import { ref, onMounted } from "vue"
+const { $waitFetch } = useNuxtApp()
 
-const params = reactive({
-    startDate: "",
-    endDate: "",
-    fromId: "",
-    toId: "",
+const props = defineProps<{
+    report: string
+    startDate?: string
+    endDate?: string
+    fromId?: string
+    toId?: string
+}>()
+
+const items = ref<any[]>([])
+
+onMounted(async () => {
+    const rawReports = await $waitFetch<any[]>("/api/report?report=" + props.report)
+    if (rawReports) {
+        const list = Array.isArray(rawReports) ? rawReports : [rawReports]
+        items.value = list.map((rep) => ({
+            value: rep.id,
+            label: rep.name,
+            description: '[' + rep.id + '] ' + rep.description,
+            params: rep.params
+        }))
+    }
+    console.log(items.value)
 })
 
-function getReport() {
-    return props.items.find((item) => item.value === selected.value)
-}
+const selected = ref<string>("")
 
-function applyParams() {
-    const report = getReport()
-    report.params = { ...params }
-    return report
-}
+const params = reactive({
+    startDate: props.startDate || "",
+    endDate: props.endDate || "",
+    fromId: props.fromId || "",
+    toId: props.toId || "",
+})
+
+const openPDF = useReport()
 
 async function onPreview() {
-    const report = applyParams()
-    await report.previewPdf()
+    const report =
+        await openPDF({
+            report: selected.value,
+            ...params,
+        })
 }
 
 async function onSave() {
-    const report = applyParams()
-    await report.downloadPdf()
+    await openPDF({
+        report: selected.value,
+        saveFile: selected.value,
+        ...params,
+    })
 }
 
 async function onExportTSV() {
-    const report = applyParams()
-    await report.downloadTsv()
+    const tsvBlob = await $waitFetch<Blob>("/api/report/tsv", {
+        method: "POST",
+        body: {
+            report: selected.value,
+            saveFile: selected.value,
+            ...params,
+        },
+    })
+    if (tsvBlob) {
+        const url = URL.createObjectURL(tsvBlob)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = `${selected.value}.tsv`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+    }
 }
 </script>

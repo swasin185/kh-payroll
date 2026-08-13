@@ -2,7 +2,7 @@ import { ServerReport } from "./ServerReport"
 import { formatMoney } from "~~/shared/utils"
 
 export default class A01 extends ServerReport {
-    override name = "Monthly Salary Bank Transfer Report"
+    override name = "Salary Bank Transfer"
     override description = "Monthly payroll summary for bank transfer — lists only employees with a bank account, showing each income line and total transfer amount."
     override query = `
       SELECT
@@ -14,21 +14,19 @@ export default class A01 extends ServerReport {
         e.empType,
         e.bankAccount,
         p.inCode,
-        p.value      AS salaryValue,
-        i.inName     AS incomeName,
+        p.value AS salaryValue,
+        i.inName AS incomeName,
         i.inType
       FROM employee e
       INNER JOIN payroll p ON e.comCode = p.comCode AND e.empCode = p.empCode
-                           AND p.yr = ? AND p.mn = ?
+                           AND p.yr = ? AND p.mo = ?
       LEFT JOIN incometype i ON p.inCode = i.inCode
       WHERE e.comCode = ?
-        AND e.bankAccount IS NOT NULL
-        AND e.bankAccount <> ''
-        AND e.endDate IS NULL
-      ORDER BY e.department, e.empCode, p.inCode`
+        AND LENGTH(e.bankAccount) = 13
+      ORDER BY e.empCode, p.inCode`
 
-    public override getParams(): string[] {
-        return ["yr", "mn", "comCode"]
+    public override getParams(): Record<string, string> {
+        return { yr: "", mo: "", comCode: "" }
     }
 
     private buildPayrollTable(records: any[]) {

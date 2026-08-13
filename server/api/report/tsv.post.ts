@@ -1,7 +1,13 @@
 import reportRegistry from "~~/server/reports/ReportRegistry"
 
 export default authEventHandler(async (event): Promise<any> => {
-    const params: Record<string, string> = await readBody(event)
+    const params: Record<string, any> = await readBody(event)
+    const session = await getUserSession(event)
+    const user = session.user as any
+    params.comCode = params.comCode || user?.comCode
+    params.comName = params.comName || user?.comName
+    params.yr = params.yr || String(user?.yrPayroll ?? "")
+    params.mn = params.mn || String(user?.mnPayroll ?? "")
     const report = reportRegistry.get(params.report as string)
     if (!report) throw createError({ statusCode: 404, statusMessage: "Report not found" })
     const buffer = await report.generateTsv(params)

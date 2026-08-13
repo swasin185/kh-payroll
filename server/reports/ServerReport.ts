@@ -11,6 +11,7 @@ pdfmake.addFonts({
     },
 })
 const db = getDB()
+
 export abstract class ServerReport {
     protected abstract name: string
     protected abstract query: string
@@ -19,16 +20,23 @@ export abstract class ServerReport {
     protected params: Record<string, string> = {}
     protected data: any[] = []
 
-    public getName() : string {
+    public getName(): string {
         return this.name
     }
 
-    public getDescription() : string {
+    public getDescription(): string {
         return this.description
     }
 
-    public getParams() : string[] {
-        return ["comCode"]
+    public getParams(): Record<string, string> {
+        return this.params
+    }
+
+    protected mapQueryParams(inputParams: Record<string, string>): Array<string | undefined> {
+        this.params = inputParams
+        const paramKeys = Object.keys(this.getParams())
+        const queryParams = paramKeys.map((key) => this.params[key])
+        return queryParams
     }
 
     protected BASE_PAGE_CONFIG = {
@@ -64,23 +72,15 @@ export abstract class ServerReport {
 
     protected abstract define(): void
 
-    
-    private valueParams(): any[] {
-        const paramNames = this.getParams()
-        return paramNames.map(name => this.params[name])
-    }
-
-    private async executeQuery(params: Record<string, string>) {
-        this.params = params
-        ;[this.data] = await db.query<RowDataPacket[]>(this.query, this.valueParams())
+    private async executeQuery(inputParams: Record<string, string>) {
+        [this.data] = await db.query<RowDataPacket[]>(this.query, this.mapQueryParams(inputParams))
     }
 
     private applyDefaultTableLayout(nodes: any[]): void {
         for (const node of nodes) {
             if (node && typeof node === "object") {
-                if (node.table && !node.layout) {
+                if (node.table && !node.layout)
                     node.layout = this.DEFAULT_TABLE_LAYOUT
-                }
                 if (Array.isArray(node.content)) this.applyDefaultTableLayout(node.content)
                 if (Array.isArray(node.stack)) this.applyDefaultTableLayout(node.stack)
                 if (Array.isArray(node.columns)) this.applyDefaultTableLayout(node.columns)
@@ -123,10 +123,10 @@ export abstract class ServerReport {
                     hour: '2-digit',
                     minute: '2-digit'
                 })
-                return { 
-                    text: `${this.constructor.name} - ${now}`, 
-                    style: "footerText", 
-                    alignment: "left" 
+                return {
+                    text: `${this.constructor.name} - ${now}`,
+                    style: "footerText",
+                    alignment: "left"
                 }
             },
 
