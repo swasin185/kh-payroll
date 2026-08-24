@@ -26,7 +26,7 @@ export default class A03 extends ServerReport {
                         { text: "#", style: "tableHeader", alignment: "right" },
                         { text: "รายการ", style: "tableHeader" },
                         { text: "จำนวน", style: "tableHeader", alignment: "right" },
-                        { text: "ระยะเวลา", style: "tableHeader", alignment: "right" },
+                        { text: "ระยะ", style: "tableHeader", alignment: "right" },
                     ],
                     ...records.map((record: any, index: number) => [
                         index + 1,

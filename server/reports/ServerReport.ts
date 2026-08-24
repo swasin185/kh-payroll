@@ -20,6 +20,11 @@ export abstract class ServerReport {
     protected params: Record<string, string> = {}
     protected data: any[] = []
 
+    protected printedAt = new Date().toLocaleString("th-TH", {
+        year: "numeric", month: "2-digit", day: "2-digit",
+        hour: "2-digit", minute: "2-digit",
+    })
+
     public getName(): string {
         return this.name
     }
@@ -42,14 +47,14 @@ export abstract class ServerReport {
     protected BASE_PAGE_CONFIG = {
         pageSize: "A4",
         pageOrientation: "portrait",
-        pageMargins: [20, 20, 20, 20], // [left, top, right, bottom]
+        pageMargins: [30, 20, 30, 20], // [left, top, right, bottom]
         defaultStyle: { fontSize: 10 },
     }
 
     protected GLOBAL_STYLES = {
         header: { fontSize: 14, bold: false, margin: [0, 0, 0, 5] },
         subheader: { fontSize: 12, margin: [0, 0, 0, 5] },
-        tableHeader: { bold: false, fontSize: 12, fillColor: "#ffffff" },
+        tableHeader: { bold: false, fontSize: 10, fillColor: "#ffffff" },
         footerText: { fontSize: 8, alignment: "center", color: "#888888", margin: [20, 5, 20, 5] },
     }
 
@@ -90,6 +95,7 @@ export abstract class ServerReport {
 
     public async generateTsv(params: Record<string, string>): Promise<string> {
         await this.executeQuery(params)
+        if (!this.data || this.data.length === 0) return "No Data!"
         const keys = Object.keys(this.data[0]!)
         const dataRows = this.data.map((record) => {
             return keys.map((key) => {
@@ -97,14 +103,8 @@ export abstract class ServerReport {
                 return rawValue === null || rawValue === undefined ? "" : rawValue
             })
         })
-        const tsvContent = dataRows.map((row) => {
-            return row
-                .map((val) => {
-                    return String(val)
-                })
-                .join("\t")
-        })
-        return tsvContent.toString()
+        const allRows = [keys, ...dataRows]
+        return allRows.map((row) => row.map((val) => String(val)).join("\t")).join("\n")
     }
 
     public async generatePdf(params: Record<string, string>): Promise<any> {
@@ -115,27 +115,9 @@ export abstract class ServerReport {
             ...this.BASE_PAGE_CONFIG,
             ...this.docDefinition.options,
 
-            header: (currentPage: any, pageCount: any) => {
-                const now = new Date().toLocaleString('th-TH', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                })
-                return {
-                    text: `${this.constructor.name} - ${now}`,
-                    style: "footerText",
-                    alignment: "left"
-                }
-            },
-
             content: [
-                {
-                    text: this.name,
-                    style: "header",
-                    alignment: "center",
-                },
+                { text: this.constructor.name + " - " + this.printedAt, alignment: "left", fontSize: 8, color: "#888888", width: "*" },
+                { text: this.name, style: "header", alignment: "center", width: "*" },
                 {
                     text: this.params.comName,
                     style: "subheader",

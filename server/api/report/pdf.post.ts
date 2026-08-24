@@ -7,12 +7,12 @@ export default authEventHandler(async (event): Promise<any> => {
     params.comCode = params.comCode || user?.comCode
     params.comName = params.comName || user?.comName
     params.yr = params.yr || String(user?.yrPayroll ?? "")
-    params.mo = params.mo || String(user?.moPayroll ?? "")
+    params.mo = params.mo || String(user?.mnPayroll ?? "")
     const report = reportRegistry.get(params.report as string)
     if (!report) throw createError({ statusCode: 404, statusMessage: "Report not found" })
     const buffer = await report.generatePdf(params)
     setHeader(event, "Content-Type", "application/pdf")
     setHeader(event, "Content-Disposition", `attachment; filename="${params.saveFile}.pdf"`)
-    setHeader(event, "Content-Length", buffer.length)
+    setHeader(event, "Content-Length", Buffer.byteLength(buffer))
     return buffer
 })

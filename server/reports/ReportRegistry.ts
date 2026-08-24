@@ -2,6 +2,7 @@ import { ServerReport } from "./ServerReport"
 import A01 from "./A01"
 import A02 from "./A02"
 import A03 from "./A03"
+import A04 from "./A04"
 
 class ReportRegistry extends Map {
     constructor() {
@@ -9,6 +10,7 @@ class ReportRegistry extends Map {
         super.set("A01", new A01())
         super.set("A02", new A02())
         super.set("A03", new A03())
+        super.set("A04", new A04())
         console.log("ReportRegistry initialized")
     }
 
