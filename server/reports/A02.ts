@@ -1,94 +1,81 @@
+import { formatMoney } from "../../shared/utils"
 import { ServerReport } from "./ServerReport"
-import { calculateAge } from "~~/shared/utils"
 
-export default class A02 extends ServerReport {
-    override name = "Company Employee Report"
-    override description = "Lists all employees grouped by department with details including code, name, type, time code, age, and employment range."
+export default class A01 extends ServerReport {
+    override name = "Salary Bank Transfer"
+    override description = "Monthly payroll summary for bank transfer — lists only employees with a bank account, showing each income line and total transfer amount."
     override query = `
-      SELECT *
-      FROM employee
-      WHERE comCode=?
-      ORDER BY empType, department, empCode`
+      SELECT
+        ROW_NUMBER() over (ORDER BY e.bankAccount) AS No,
+        e.empCode,
+        e.prefix,
+        e.name,
+        e.surName,
+        e.bankAccount,
+        SUM(p.value) AS totalValue,
+        SUM(if(p.inCode='43', p.value, 0)) AS feeValue
+      FROM employee e
+      INNER JOIN payroll p ON e.comCode = p.comCode AND e.empCode = p.empCode
+                           AND p.yr = ? AND p.mo = ?
+      WHERE e.comCode = ?
+        AND LENGTH(e.bankAccount) = 13
+      GROUP BY e.empCode, e.bankAccount
+      ORDER BY e.bankAccount`
 
     public override getParams(): Record<string, string> {
-        return { comCode: "01" }
-    }
-
-    private buildGroupTable(records: any[]) {
-        return {
-            table: {
-                headerRows: 1,
-                widths: ["auto", "auto", "auto", "*", "auto", "auto", "auto", "auto"],
-                body: [
-                    [
-                        { text: "#", style: "tableHeader", alignment: "right" },
-                        { text: "Code", style: "tableHeader", alignment: "right" },
-                        { text: "ชื่อเล่น", style: "tableHeader" },
-                        { text: "ชื่อจริง", style: "tableHeader" },
-                        { text: "ประเภท", style: "tableHeader" },
-                        { text: "เวลางาน", style: "tableHeader", alignment: "right" },
-                        { text: "อายุ", style: "tableHeader", alignment: "right" },
-                        { text: "อายุงาน", style: "tableHeader", alignment: "right" },
-                    ],
-                    ...records.map((record: any, index: number) => [
-                        index + 1,
-                        { text: `${record.empCode}`, alignment: "right" },
-                        record.nickName || "-",
-                        `${record.prefix || ""} ${record.name} ${record.surName}`,
-                        record.empType || "-",
-                        {
-                            text: record.timeCode !== null ? `${record.timeCode}` : "-",
-                            alignment: "right",
-                        },
-                        {
-                            text: record.birthDate ? `${calculateAge(record.birthDate)}` : "-",
-                            alignment: "right",
-                        },
-                        {
-                            text: record.beginDate ? `${calculateAge(record.beginDate)}` : "-",
-                            alignment: "right",
-                        },
-                    ]),
-                ],
-            },
-        }
+        return { yr: "", mo: "", comCode: "" }
     }
 
     protected override define(): void {
-        const grouped = Object.groupBy(this.data, (r: any) => r.department || "N/A")
-        const entries = Object.entries(grouped)
-
         const content: any[] = []
+        let grandTotal = 0
 
-        entries.forEach(([department, records], index) => {
-            // if (index > 0) {
-            //     content.push({ text: "", pageBreak: "before" })
-            // }
-            content.push({
-                text: ` แผนก: ${department}  (${records!.length} employees)`,
-                style: "subheader",
-            })
-            content.push(this.buildGroupTable(records!))
-            content.push({
-                canvas: [
-                    {
-                        type: "line",
-                        x1: 0,
-                        y1: 5,
-                        x2: 555,
-                        y2: 5,
-                        lineWidth: 1,
-                        lineColor: "#b0b0b0",
-                    },
-                ],
-                margin: [0, 5, 0, 10],
-            })
+        const summaryRows: any[] = this.data.map((row: any, index: number) => {
+            grandTotal += Number(row.totalValue)
+            return [
+                { text: row.No, alignment: "right" },
+                { text: row.empCode },
+                `${row.prefix || ""} ${row.name} ${row.surName || ""}`.trim(),
+                row.bankAccount || "-",
+                { text: formatMoney(row.totalValue), alignment: "right" },
+                { text: formatMoney(row.feeValue), alignment: "right" },
+            ]
         })
 
         content.push({
-            text: `Total: ${this.data.length} employees`,
-            bold: true,
-            margin: [0, 10, 0, 0],
+            text: "รายการโอนเงิน ประจำงวด " + this.params.mo + "/" + this.params.yr,
+            style: "subheader",
+            margin: [0, 0, 0, 4],
+        })
+        content.push({
+            table: {
+                headerRows: 1,
+                widths: ["auto", "auto", "*", "*", "auto", "auto"],
+                body: [
+                    [
+                        { text: "ลำดับ", style: "tableHeader", alignment: "right" },
+                        { text: "รหัส", style: "tableHeader" },
+                        { text: "ชื่อ-สกุล", style: "tableHeader" },
+                        { text: "เลขบัญชี", style: "tableHeader" },
+                        { text: "ยอดโอน", style: "tableHeader", alignment: "right" },
+                        { text: "ค่าธรรมเนียม", style: "tableHeader", alignment: "right" },
+                    ],
+                    ...summaryRows,
+                ],
+            },
+            margin: [0, 0, 0, 15],
+        })
+
+        content.push({
+            canvas: [{ type: "line", x1: 0, y1: 0, x2: 555, y2: 0, lineWidth: 1.5, lineColor: "#888888" }],
+            margin: [0, 0, 0, 10],
+        })
+
+        content.push({
+            columns: [
+                { text: `ยอดรวม: ${formatMoney(grandTotal)}`, alignment: "right" },
+            ],
+            margin: [0, 6, 0, 0],
         })
 
         this.docDefinition = { content }

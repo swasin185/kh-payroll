@@ -2,6 +2,8 @@ import { getDB } from "../database/pool"
 import { RowDataPacket } from "mysql2/promise"
 import { resolve } from "node:path"
 import pdfmake from "pdfmake"
+import { formatDateTime } from "~~/shared/utils"
+
 pdfmake.addFonts({
     Roboto: {
         normal: resolve(process.cwd(), "public/fonts/Sarabun-Thin.ttf"),
@@ -19,11 +21,12 @@ export abstract class ServerReport {
     protected docDefinition: any
     protected params: Record<string, string> = {}
     protected data: any[] = []
+    protected printedAt = formatDateTime(new Date())
 
-    protected printedAt = new Date().toLocaleString("th-TH", {
-        year: "numeric", month: "2-digit", day: "2-digit",
-        hour: "2-digit", minute: "2-digit",
-    })
+    // protected printedAt = new Date().toLocaleString("en-US", {
+    //     year: "numeric", month: "2-digit", day: "2-digit",
+    //     hour: "2-digit", minute: "2-digit",
+    // })
 
     public getName(): string {
         return this.name
@@ -116,7 +119,7 @@ export abstract class ServerReport {
             ...this.docDefinition.options,
 
             content: [
-                { text: this.constructor.name + " - " + this.printedAt, alignment: "left", fontSize: 8, color: "#888888", width: "*" },
+                { text: `[${this.constructor.name}]  ${this.printedAt}`, alignment: "left", fontSize: 8, color: "#888888", width: "*" },
                 { text: this.name, style: "header", alignment: "center", width: "*" },
                 {
                     text: this.params.comName,

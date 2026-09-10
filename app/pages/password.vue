@@ -82,7 +82,7 @@ const state = reactive<ChangePasswordData>({
     confirmPassword: "",
 })
 
-import CryptoJS from "crypto-js"
+import md5 from "blueimp-md5"
 import { LEVELS } from "~~/shared/utils"
 
 async function changePassword(): Promise<void> {
@@ -91,8 +91,8 @@ async function changePassword(): Promise<void> {
         method: "PUT",
         body: {
             id: chgUser.value,
-            pwd: CryptoJS.MD5(state.currentPassword).toString(),
-            newPwd: CryptoJS.MD5(state.newPassword).toString(),
+            pwd: md5(state.currentPassword),
+            newPwd: md5(state.newPassword),
         },
     })
 

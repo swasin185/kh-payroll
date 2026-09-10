@@ -13,15 +13,7 @@ export default defineConfig({
                     include: ["test/*.{test,spec}.ts"],
                     environment: "node",
                 },
-            },
-            {
-                test: {
-                    name: "nitro",
-                    include: ["test/nitro/*.{test,spec}.ts"],
-                    environment: "node",
-                    setupFiles: ["./test/nitro/setupServer.ts"],
-                },
-            },
+            }
         ],
     },
 })

@@ -1,9 +1,9 @@
 import { ServerReport } from "./ServerReport"
-import { formatMoney } from "~~/shared/utils"
+import { formatMoney } from "../../shared/utils"
 
 export default class A04 extends ServerReport {
-    override name = "Employee Salary Slip"
-    override description = "Monthly payroll slip for employee salary. Cut off paper line for each employee"
+    override name = "สลิปจ่ายเงินเดือน"
+    override description = "สลิปจ่ายเงินเดือน ประจำงวด สำหรับตัด แจกจ่ายพนักงาน"
     override query = `
       SELECT
         e.empCode,
@@ -28,6 +28,7 @@ export default class A04 extends ServerReport {
     }
 
     protected override define(): void {
+        // Group by employee to print slips
         const grouped = Object.groupBy(this.data, (r: any) => r.empCode)
         const content: any[] = []
 
@@ -43,10 +44,31 @@ export default class A04 extends ServerReport {
                 margin: [0, 0, 4, 8],
             }
         )
-        Object.entries(grouped).forEach(([empCode, records], idx) => {
+
+        // Maps to accumulate department summary totals
+        const deptSummary = new Map<string, { totalIncome: number; totalDeduct: number; netPay: number; empCount: number }>()
+        let grandTotalIncome = 0
+        let grandTotalDeduct = 0
+        let grandNetPay = 0
+        let grandEmpCount = 0
+
+        // Object.entries(grouped) order preserves the sorted order from the query because modern JS preserves string keys insertion/iteration order (especially when sorted by department and empCode first in query)
+        // However, to ensure correct department grouping and sorting of the slips, let's process the groups in order of appearance in this.data:
+        const processedEmps = new Set<string>()
+        const orderedEmpCodes: string[] = []
+        for (const row of this.data) {
+            if (!processedEmps.has(row.empCode)) {
+                processedEmps.add(row.empCode)
+                orderedEmpCodes.push(row.empCode)
+            }
+        }
+
+        orderedEmpCodes.forEach((empCode, idx) => {
+            const records = grouped[empCode]
             if (!records || records.length === 0) return
             const emp = records[0]
             const fullName = `${emp.prefix || ""} ${emp.name} ${emp.surName || ""}`.trim()
+            const department = emp.department || "No Department"
 
             const incomeItems = records.filter((r: any) => Number(r.inType) === 1)
             const deductItems = records.filter((r: any) => Number(r.inType) === -1)
@@ -54,6 +76,22 @@ export default class A04 extends ServerReport {
             const totalIncome = incomeItems.reduce((sum: number, r: any) => sum + Number(r.value || 0), 0)
             const totalDeduct = deductItems.reduce((sum: number, r: any) => sum + Number(r.value || 0), 0)
             const netPay = totalIncome - totalDeduct
+
+            // Accumulate department-level totals
+            if (!deptSummary.has(department)) {
+                deptSummary.set(department, { totalIncome: 0, totalDeduct: 0, netPay: 0, empCount: 0 })
+            }
+            const deptAccum = deptSummary.get(department)!
+            deptAccum.totalIncome += totalIncome
+            deptAccum.totalDeduct += totalDeduct
+            deptAccum.netPay += netPay
+            deptAccum.empCount += 1
+
+            // Accumulate grand totals
+            grandTotalIncome += totalIncome
+            grandTotalDeduct += totalDeduct
+            grandNetPay += netPay
+            grandEmpCount += 1
 
             const slip: any[] = []
 
@@ -66,7 +104,7 @@ export default class A04 extends ServerReport {
 
             slip.push({
                 columns: [
-                    { text: this.params.comName, width: "*" },
+                    { text: `${this.params.comName} แผนก: ${department}`, width: "*" },
                     { text: `ใบจ่ายเงินเดือน ${this.params.yr}/${this.params.mo}`, width: "*" },
                     { text: `รหัส: ${empCode}  ${fullName}`, width: "*" },
                     {
@@ -158,6 +196,52 @@ export default class A04 extends ServerReport {
                 stack: slip,
                 unbreakable: true,
             })
+        })
+
+        // --- Final Summary Page ---
+        const summaryRows: any[][] = []
+        deptSummary.forEach((accum, dept) => {
+            summaryRows.push([
+                { text: dept },
+                { text: accum.empCount, alignment: "right" },
+                { text: formatMoney(accum.totalIncome), alignment: "right" },
+                { text: formatMoney(accum.totalDeduct), alignment: "right" },
+                { text: formatMoney(accum.netPay), alignment: "right" },
+            ])
+        })
+
+        // Add Grand Total row
+        summaryRows.push([
+            { text: "รวมทั้งหมด", bold: true },
+            { text: grandEmpCount, alignment: "right", bold: true },
+            { text: formatMoney(grandTotalIncome), alignment: "right", bold: true },
+            { text: formatMoney(grandTotalDeduct), alignment: "right", bold: true },
+            { text: formatMoney(grandNetPay), alignment: "right", bold: true },
+        ])
+
+        content.push({
+            pageBreak: "before",
+            stack: [
+                { text: "สรุปยอดจ่ายเงินเดือนจำแนกตามแผนก (Payroll Summary by Department)", style: "header", margin: [0, 0, 0, 10] },
+                { text: `${this.params.comName} ประจำงวด: ${this.params.yr}/${this.params.mo}   พิมพ์: ${this.printedAt}`, fontSize: 10, margin: [0, 0, 0, 15] },
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: ["*", "auto", "auto", "auto", "auto"],
+                        body: [
+                            [
+                                { text: "แผนก\n(Department)", style: "tableHeader" },
+                                { text: "จำนวนพนักงาน\n(Employees)", style: "tableHeader", alignment: "right" },
+                                { text: "รวมรายได้\n(Total Income)", style: "tableHeader", alignment: "right" },
+                                { text: "รวมรายหัก\n(Total Deductions)", style: "tableHeader", alignment: "right" },
+                                { text: "เงินได้สุทธิ\n(Net Pay)", style: "tableHeader", alignment: "right" },
+                            ],
+                            ...summaryRows,
+                        ],
+                    },
+                },
+            ],
+            unbreakable: true,
         })
 
         this.docDefinition = { content }

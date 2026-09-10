@@ -94,14 +94,14 @@ const validate = (state: any): FormError[] => {
     return errors
 }
 
-import CryptoJS from "crypto-js"
+import md5 from "blueimp-md5"
 
 async function login() {
     const loginOk = await $waitFetch("/api/login", {
         method: "POST",
         body: {
             id: state.userid,
-            pwd: CryptoJS.MD5(state.password).toString(),
+            pwd: md5(state.password),
         },
     })
     if (loginOk) location.replace("/")

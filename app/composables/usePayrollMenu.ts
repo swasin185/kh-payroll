@@ -115,6 +115,12 @@ const mainMenu: NavigationMenuItem[] = [
                 icon: "i-lucide-file-bar-chart",
                 disabled: true,
             },
+            { 
+                label: "รายการเงินได้/เงินหัก ประจำปี",
+                to: "/yearincome",
+                icon: "i-lucide-file-text",
+                disabled: true,
+            },
         ],
     },
 ]

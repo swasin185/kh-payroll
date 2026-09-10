@@ -100,9 +100,20 @@ export function formatMoney(value: number | string | null | undefined): string {
     return num.toLocaleString("en-US", moneyOption)
 }
 
+export function formatMoney0(value: number | string | null | undefined): string {
+    if (value === null || value === undefined || value === "") return ""
+    const num = Number(value)
+    return num.toLocaleString("en-US", moneyOption0)
+}
+
 export const moneyOption = {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
+}
+
+export const moneyOption0 = {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
 }
 
 export function getPhotoUrl(
@@ -110,9 +121,9 @@ export function getPhotoUrl(
     empCode: string | number,
     thumb = false,
     t?: string | number,
-) : string {
+): string {
     const c = encodeURIComponent(comCode)
-    if (!c) 
+    if (!c)
         return ""
     const e = encodeURIComponent(String(empCode))
     if (!e)

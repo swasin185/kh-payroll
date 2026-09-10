@@ -48,11 +48,4 @@ export default defineNuxtConfig({
                 : (process.env.KXREPORT_HTTPS ?? mockReportApi),
         },
     },
-    vite: {
-        optimizeDeps: {
-            include: [
-                "crypto-js", // CJS
-            ],
-        },
-    },
 })

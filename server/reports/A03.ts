@@ -1,4 +1,4 @@
-import { formatMoney } from "~~/shared/utils"
+import { formatMoney } from "../../shared/utils"
 import { ServerReport } from "./ServerReport"
 
 export default class A03 extends ServerReport {
