@@ -29,7 +29,7 @@
         class="flex gap-x-2 mb-4"
         :disabled="(mode !== DBMODE.Insert && mode !== DBMODE.Update) || !record.empCode">
         <UFormField label="Income Type" name="inCode">
-            <DBLookup v-model:lookupKey="record.inCode" name="incometype" class="w-70" />
+            <DBLookup v-model:lookupKey="record.inCode" name="regularincometype" class="w-70" />
         </UFormField>
         <UFormField label="Amount" name="value">
             <MoneyInput v-model="record.value" class="text-right" />
@@ -45,6 +45,11 @@
         :data="incomes"
         :columns="columns"
         class="w-120 h-60" />
+
+    <div class="w-120 flex justify-between items-center border-t border-(--ui-border) px-4 py-2 text-sm font-semibold">
+        <span class="text-(--ui-text-muted)">Total</span>
+        <span class="font-mono">{{ formatMoney(total) }}</span>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -71,6 +76,8 @@ const record = reactive<Salary>(
 const table = useTemplateRef("table")
 const rowSelection: Ref<any> = ref({})
 const incomes = reactive<Salary[]>([])
+const total = computed(() => incomes.reduce((sum, row) => sum + Number(row.value ?? 0), 0))
+
 
 import type { TableRow } from "#ui/types"
 
@@ -138,7 +145,11 @@ async function onDelete() {
     })
 }
 
-function onPrint() {}
+async function onPrint() {
+    await useReport()({
+        report: "A03",
+    })
+}
 
 function onSelectRow(e: Event, row: TableRow<Salary>) {
     if (!rowSelection.value[row.index]) rowSelection.value = { [row.index]: true }

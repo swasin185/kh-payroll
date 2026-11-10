@@ -109,6 +109,7 @@ export const IncomeTypeSchema = z.object({
     isReset: BooleanAttr.default(true),
     initLimit: MoneyAttr,
     initPercent: PercentAttr,
+    isBonus: BooleanAttr.default(false),
 })
 export type IncomeType = z.infer<typeof IncomeTypeSchema>
 

@@ -8,7 +8,7 @@ const db = getDB()
 export default {
     async select(inCode: string): Promise<IncomeType | null> {
         const [result] = await db.query<RowDataPacket[]>(
-            `SELECT inCode, inName, inType, isTax, isReset, initLimit, initPercent
+            `SELECT inCode, inName, inType, isTax, isReset, initLimit, initPercent, isBonus
              FROM incometype WHERE inCode=?
              LIMIT 1`,
             [inCode],
@@ -26,10 +26,30 @@ export default {
         return result as LookupItem[]
     },
 
+    async lookupRegular(): Promise<LookupItem[]> {
+        const [result] = await db.query(
+            `SELECT inCode AS id, inName AS label
+             FROM incometype
+             WHERE isBonus = 0
+             ORDER BY inCode`,
+        )
+        return result as LookupItem[]
+    },
+
+    async lookupBonus(): Promise<LookupItem[]> {
+        const [result] = await db.query(
+            `SELECT inCode AS id, inName AS label
+             FROM incometype
+             WHERE isBonus = 1
+             ORDER BY inCode`,
+        )
+        return result as LookupItem[]
+    },
+
     async insert(inc: IncomeType): Promise<string | null> {
         const [result] = await db.execute(
-            `INSERT IGNORE INTO incometype (inCode, inName, inType, isTax, isReset, initLimit, initPercent)
-             VALUES (?,?,?,?,?,?,?)`,
+            `INSERT IGNORE INTO incometype (inCode, inName, inType, isTax, isReset, initLimit, initPercent  , isBonus)
+             VALUES (?,?,?,?,?,?,?,?)`,
             Object.values(inc),
         )
         if ((result as ResultSetHeader).affectedRows === 1) return inc.inCode.toString()
@@ -50,7 +70,7 @@ export default {
         values.push(inc.inCode)
 
         const [result] = await db.execute<ResultSetHeader>(
-            `UPDATE incometype SET inName=?, inType=?, isTax=?, isReset=?, initLimit=?, initPercent=? WHERE inCode=?`,
+            `UPDATE incometype SET inName=?, inType=?, isTax=?, isReset=?, initLimit=?, initPercent=?, isBonus=? WHERE inCode=?`,
             values,
         )
         return result.affectedRows === 1

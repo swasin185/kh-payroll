@@ -2,7 +2,7 @@ import { formatMoney } from "../../shared/utils"
 import { ServerReport } from "./ServerReport"
 
 export default class A01 extends ServerReport {
-    override name = "Salary Bank Transfer"
+    override name = "บัญชีโอนเงินเดือนเข้าธนาคาร"
     override description = "Monthly payroll summary for bank transfer — lists only employees with a bank account, showing each income line and total transfer amount."
     override query = `
       SELECT
@@ -16,14 +16,15 @@ export default class A01 extends ServerReport {
         SUM(if(p.inCode='43', p.value, 0)) AS feeValue
       FROM employee e
       INNER JOIN payroll p ON e.comCode = p.comCode AND e.empCode = p.empCode
-                           AND p.yr = ? AND p.mo = ?
+                           AND p.inCode NOT IN (13, 50, 51)
+                           AND p.yr = ? AND p.mn = ?
       WHERE e.comCode = ?
         AND LENGTH(e.bankAccount) = 13
       GROUP BY e.empCode, e.bankAccount
       ORDER BY e.bankAccount`
 
     public override getParams(): Record<string, string> {
-        return { yr: "", mo: "", comCode: "" }
+        return { yr: "", mn: "", comCode: "" }
     }
 
     protected override define(): void {
@@ -43,7 +44,7 @@ export default class A01 extends ServerReport {
         })
 
         content.push({
-            text: "รายการโอนเงิน ประจำงวด " + this.params.mo + "/" + this.params.yr,
+            text: "รายการโอนเงิน ประจำงวด " + this.params.mn + "/" + this.params.yr,
             style: "subheader",
             margin: [0, 0, 0, 4],
         })

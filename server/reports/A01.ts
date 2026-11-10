@@ -2,7 +2,7 @@ import { ServerReport } from "./ServerReport"
 import { calculateAge } from "../../shared/utils"
 
 export default class A02 extends ServerReport {
-    override name = "Company Employee Report"
+    override name = "รายชื่อพนักงาน"
     override description = "Lists all employees grouped by department with details including code, name, type, time code, age, and employment range."
     override query = `
       SELECT *

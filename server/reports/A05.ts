@@ -10,13 +10,13 @@ export default class A05 extends ServerReport {
         p.inCode,
         i.inName,
         i.inType,
-        p.mo,
+        p.mn,
         SUM(p.value) AS totalValue
       FROM payroll p
       INNER JOIN incometype i ON p.inCode = i.inCode
       WHERE p.comCode = ? AND p.yr = ?
-      GROUP BY p.inCode, p.mo
-      ORDER BY p.inCode, p.mo`
+      GROUP BY p.inCode, p.mn
+      ORDER BY p.inCode, p.mn`
 
     public override getParams(): Record<string, string> {
         return { comCode: "", yr: "" }
@@ -33,9 +33,8 @@ export default class A05 extends ServerReport {
             inCodeGroups[row.inCode]!.push(row)
         }
 
-        // Initialize monthly summary structures (months 1-12)
-        const months = Array.from({ length: 12 }, (_, i) => i + 1)
-        const monthTotals = Array(12).fill(0)
+        const months = Array.from({ length: 13 }, (_, i) => i + 1)
+        const monthTotals = Array(13).fill(0)
         let grandTotal = 0
 
         const tableBody: any[][] = []
@@ -61,7 +60,7 @@ export default class A05 extends ServerReport {
             const monthMap: Record<number, number> = {}
             for (let j = 0; j < records.length; j++) {
                 const rec = records[j]!
-                monthMap[Number(rec.mo)] = Number(rec.totalValue || 0)
+                monthMap[Number(rec.mn)] = Number(rec.totalValue || 0)
             }
 
             let rowSum = 0
@@ -103,7 +102,7 @@ export default class A05 extends ServerReport {
             {
                 table: {
                     headerRows: 1,
-                    widths: ["*", ...Array(12).fill("auto"), "auto"],
+                    widths: ["*", ...Array(13).fill("auto"), "auto"],
                     body: tableBody,
                 },
             },

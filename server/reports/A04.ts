@@ -18,13 +18,13 @@ export default class A04 extends ServerReport {
         p.value
       FROM employee e
       INNER JOIN payroll p ON e.comCode = p.comCode AND e.empCode = p.empCode
-                           AND p.yr = ? AND p.mo = ?
-      INNER JOIN incometype i ON p.inCode = i.inCode
+                           AND p.yr = ? AND p.mn = ?
+      INNER JOIN incometype i ON p.inCode = i.inCode and not i.isBonus
       WHERE e.comCode = ?
       ORDER BY e.department, e.empCode, p.inCode`
 
     public override getParams(): Record<string, string> {
-        return { yr: "", mo: "", comCode: "" }
+        return { yr: "", mn: "", comCode: "" }
     }
 
     protected override define(): void {
@@ -105,7 +105,7 @@ export default class A04 extends ServerReport {
             slip.push({
                 columns: [
                     { text: `${this.params.comName} แผนก: ${department}`, width: "*" },
-                    { text: `ใบจ่ายเงินเดือน ${this.params.yr}/${this.params.mo}`, width: "*" },
+                    { text: `ใบจ่ายเงินเดือน ${this.params.yr}/${this.params.mn}`, width: "*" },
                     { text: `รหัส: ${empCode}  ${fullName}`, width: "*" },
                     {
                         text: `เงินได้สุทธิ:  ${formatMoney(netPay)}`,
@@ -223,7 +223,7 @@ export default class A04 extends ServerReport {
             pageBreak: "before",
             stack: [
                 { text: "สรุปยอดจ่ายเงินเดือนจำแนกตามแผนก (Payroll Summary by Department)", style: "header", margin: [0, 0, 0, 10] },
-                { text: `${this.params.comName} ประจำงวด: ${this.params.yr}/${this.params.mo}   พิมพ์: ${this.printedAt}`, fontSize: 10, margin: [0, 0, 0, 15] },
+                { text: `${this.params.comName} ประจำงวด: ${this.params.yr}/${this.params.mn}   พิมพ์: ${this.printedAt}`, fontSize: 10, margin: [0, 0, 0, 15] },
                 {
                     table: {
                         headerRows: 1,

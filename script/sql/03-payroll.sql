@@ -81,6 +81,7 @@ create table incometype (
     isReset        boolean default true comment "reset เป็นศูนย์ ในเดือนต่อไป",
     initLimit      decimal(9,2) default 0 comment "มูลค่าจำกัด ไม่เกิน",
     initPercent    decimal(4,2) default 0 comment "มูลค่าคิดเป็นเปอร์เซ็นฐานเงินเดือน",
+    isBonus        boolean default false comment "เป็นเงินงวดโบนัสหรือไม่",
     primary key (inCode)
 ) comment = "ประเภทเงินได้ เงินหัก";
 
@@ -115,14 +116,14 @@ create table salary (
 drop table if exists payroll;
 create table payroll (
     yr            year comment "ปี",
-    mo            tinyint unsigned comment "เดือน",
+    mn            tinyint unsigned comment "เดือน",
     comCode       varchar(2),
     empCode       smallint unsigned,
     inCode        varchar(2),
     value         decimal(9,2) default 0 comment "จำนวนเงิน",
     foreign key (comCode, empCode) references employee(comCode, empCode),
     foreign key (inCode) references incometype(inCode),
-    primary key (yr, mo, comCode, empCode, inCode)
+    primary key (yr, mn, comCode, empCode, inCode)
 ) comment = "รายการจ่ายเงินเดือนในแต่ละเดือน";
 
 drop table if exists holiday;

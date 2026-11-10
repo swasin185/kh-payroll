@@ -16,6 +16,8 @@ export default authEventHandler(async (event): Promise<LookupItem[]> => {
     else if (name === "user") result = await SqlUsers.lookup()
     else if (name === "role") result = await SqlUsers.lookup()
     else if (name === "incometype") result = await SqlIncomeType.lookup()
+    else if (name === "regularincometype") result = await SqlIncomeType.lookupRegular()
+    else if (name === "bonustype") result = await SqlIncomeType.lookupBonus()
     else if (name === "timetype") result = await SqlTimeType.lookup()
     else if (name === "employee") {
         const sess = await getUserSession(event)

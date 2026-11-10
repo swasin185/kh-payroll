@@ -10,7 +10,8 @@ bun run build
 
 echo "=== 3. Copying build output to /var/www/kh-payroll ==="
 sudo mkdir -p /var/www/kh-payroll
-sudo cp -r .output/* /var/www/kh-payroll/
+sudo rm -R /var/www/kh-payroll
+sudo cp -r .output /var/www/kh-payroll
 sudo cp .env.example /var/www/kh-payroll/.env
 sudo chown -R root:root /var/www/kh-payroll
 

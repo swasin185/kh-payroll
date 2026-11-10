@@ -16,11 +16,11 @@ export default authEventHandler(async (event): Promise<any> => {
     const comCode = body.comCode || user?.comCode
     const comName = body.comName || user?.comName || ""
     const yr = Number(body.yr || user?.yrPayroll)
-    const mo = Number(body.mo || user?.mnPayroll)
+    const mn = Number(body.mn || user?.mnPayroll)
     const dt = Number(body.dt || new Date().getDate())
 
-    if (!comCode || !yr || !mo) {
-        throw createError({ statusCode: 400, statusMessage: "Missing comCode, yr, or mo" })
+    if (!comCode || !yr || !mn) {
+        throw createError({ statusCode: 400, statusMessage: "Missing comCode, yr, or mn" })
     }
 
     // Query payroll data (same joins as A04: employee + payroll + incometype)
@@ -37,12 +37,12 @@ export default authEventHandler(async (event): Promise<any> => {
             p.value
         FROM employee e
         INNER JOIN payroll p ON e.comCode = p.comCode AND e.empCode = p.empCode
-                             AND p.yr = ? AND p.mo = ?
+                             AND p.yr = ? AND p.mn = ?
         INNER JOIN incometype i ON p.inCode = i.inCode
         WHERE e.comCode = ?
           AND LENGTH(e.bankAccount) = 13
         ORDER BY e.empCode, p.inCode`,
-        [yr, mo, comCode],
+        [yr, mn, comCode],
     )
 
     // Aggregate per employee (sum all income/deduction lines)
@@ -58,8 +58,8 @@ export default authEventHandler(async (event): Promise<any> => {
     const employees = [...empMap.values()]
 
     // Generate HPCT bank-transfer text
-    const text = generateBankText(yr, mo, dt, comCode, comName, employees)
-    const fileName = `${yr}-${String(mo).padStart(2, "0")}-${comCode}.txt`
+    const text = generateBankText(yr, mn, dt, comCode, comName, employees)
+    const fileName = `${yr}-${String(mn).padStart(2, "0")}-${comCode}.txt`
 
     setHeader(event, "Content-Type", "text/plain; charset=utf-8")
     setHeader(event, "Content-Disposition", `attachment; filename="${fileName}"`)

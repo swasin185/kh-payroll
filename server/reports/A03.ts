@@ -2,13 +2,13 @@ import { formatMoney } from "../../shared/utils"
 import { ServerReport } from "./ServerReport"
 
 export default class A03 extends ServerReport {
-    override name = "Current Salary Report"
+    override name = "รายการเงินเดือนพนักงาน"
     override description = "Shows current salary details for all employees in the company."
     override query = `
       SELECT e.*, s.inCode, s.value as salaryValue, s.duration, i.inName as incomeName
       FROM employee e
       LEFT JOIN salary s ON e.comCode = s.comCode AND e.empCode = s.empCode
-      LEFT JOIN incometype i ON s.inCode = i.inCode
+      LEFT JOIN incometype i ON s.inCode = i.inCode and not i.isBonus
       WHERE e.comCode=?
       ORDER BY e.empType, e.department, e.empCode, s.inCode`
 
@@ -26,7 +26,7 @@ export default class A03 extends ServerReport {
                         { text: "#", style: "tableHeader", alignment: "right" },
                         { text: "รายการ", style: "tableHeader" },
                         { text: "จำนวน", style: "tableHeader", alignment: "right" },
-                        { text: "ระยะ", style: "tableHeader", alignment: "right" },
+                        { text: "งวด", style: "tableHeader", alignment: "right" },
                     ],
                     ...records.map((record: any, index: number) => [
                         index + 1,

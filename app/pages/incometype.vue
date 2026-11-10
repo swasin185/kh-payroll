@@ -1,27 +1,11 @@
 <template>
-    <ToolbarData
-        lookupName="incometype"
-        v-model:searchKey="search"
-        v-model:mode="mode"
-        :newRecord="() => Object.assign(record, IncomeTypeSchema.parse({}))"
-        :onSelect="onSelect"
-        :onInsert="onInsert"
-        :onUpdate="onUpdate"
-        :onDelete="onDelete"
-        :onPrint="onPrint"
-        :form="form!" />
-    <UForm
-        ref="form"
-        :state="record"
-        :schema="IncomeTypeSchema"
-        class="grid grid-flow-col grid-rows-5 gap-y-2"
+    <ToolbarData lookupName="incometype" v-model:searchKey="search" v-model:mode="mode"
+        :newRecord="() => Object.assign(record, IncomeTypeSchema.parse({}))" :onSelect="onSelect" :onInsert="onInsert"
+        :onUpdate="onUpdate" :onDelete="onDelete" :onPrint="onPrint" :form="form!" />
+    <UForm ref="form" :state="record" :schema="IncomeTypeSchema" class="grid grid-flow-col grid-rows-5 gap-y-2"
         :disabled="mode !== DBMODE.Insert && mode !== DBMODE.Update">
         <UFormField label="Inc Code" name="inCode">
-            <UInput
-                type="text"
-                v-model="record.inCode"
-                :disabled="mode !== DBMODE.Insert"
-                class="w-30" />
+            <UInput type="text" v-model="record.inCode" :disabled="mode !== DBMODE.Insert" class="w-30" />
         </UFormField>
         <UFormField label="ชื่อเงินได้/หัก" name="inName">
             <UInput type="text" v-model="record.inName" class="w-54" />
@@ -39,11 +23,11 @@
             <MoneyInput v-model="record.initLimit" />
         </UFormField>
         <UFormField label="มูลค่าเปอร์เซ็น" name="initPercent">
-            <UInputNumber
-                v-model="record.initPercent"
-                :step="0.01"
-                :formatOptions="{ style: 'decimal' }"
+            <UInputNumber v-model="record.initPercent" :step="0.01" :formatOptions="{ style: 'decimal' }"
                 class="w-32" />
+        </UFormField>
+        <UFormField label="โบนัส" name="isBonus">
+            <USwitch v-model="record.isBonus" class="w-30" />
         </UFormField>
     </UForm>
 </template>
@@ -90,5 +74,5 @@ async function onDelete() {
     })
 }
 
-function onPrint() {}
+function onPrint() { }
 </script>

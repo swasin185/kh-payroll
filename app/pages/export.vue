@@ -1,5 +1,8 @@
 <template>
     <div class="space-y-4 p-4">
+        <ReportBox report="A02 A03" />
+    </div>
+    <div class="space-y-4 p-4">
         <div class="p-4 border-t border-gray-200 dark:border-gray-800 flex items-center space-x-4">
             <span class="text-sm font-medium">Export to Bank (HPCT):</span>
             <UButton @click="onExportBank" icon="i-lucide-download">Export Bank Text File</UButton>

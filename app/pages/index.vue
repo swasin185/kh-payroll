@@ -7,43 +7,25 @@
 
             <div
                 class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                <UInput
-                    v-model="searchInputs.name"
-                    placeholder="Search name..."
-                    icon="i-lucide-search"
+                <UInput v-model="searchInputs.name" placeholder="Search name..." icon="i-lucide-search"
                     @update:model-value="debouncedSearch" />
-                <UInput
-                    v-model="searchInputs.surname"
-                    placeholder="Search surname..."
-                    icon="i-lucide-search"
+                <UInput v-model="searchInputs.surname" placeholder="Search surname..." icon="i-lucide-search"
                     @update:model-value="debouncedSearch" />
-                <UInput
-                    v-model="searchInputs.nickName"
-                    placeholder="Search nickname..."
-                    icon="i-lucide-search"
+                <UInput v-model="searchInputs.nickName" placeholder="Search nickname..." icon="i-lucide-search"
                     @update:model-value="debouncedSearch" />
-                <UInput
-                    v-model.number="searchInputs.age"
-                    type="number"
-                    placeholder="Search age..."
+                <UInput v-model.number="searchInputs.age" type="number" placeholder="Search age..."
                     @update:model-value="debouncedSearch" />
-                <UInput
-                    v-model="searchInputs.department"
-                    placeholder="Search department..."
-                    icon="i-lucide-search"
+                <UInput v-model="searchInputs.department" placeholder="Search department..." icon="i-lucide-search"
                     @update:model-value="debouncedSearch" />
             </div>
         </div>
 
         <!-- Loading & Error States -->
         <div v-if="loading" class="text-center py-12">
-            <UIcon
-                name="i-lucide-loader"
-                class="inline-block animate-spin text-4xl text-blue-600" />
+            <UIcon name="i-lucide-loader" class="inline-block animate-spin text-4xl text-blue-600" />
             <p class="mt-4 text-gray-600 dark:text-gray-400">Loading employees...</p>
         </div>
-        <div
-            v-else-if="error"
+        <div v-else-if="error"
             class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-700 dark:text-red-400">
             {{ error }}
         </div>
@@ -60,37 +42,26 @@
                 </h2>
 
                 <div class="flex flex-wrap gap-3">
-                    <div
-                        v-for="emp in group.employees"
-                        :key="`${emp.comCode}-${emp.empCode}`"
-                        :class="[
-                            'flex h-18 w-60 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden',
-                            user.value && emp.comCode === user.value.comCode
-                                ? 'cursor-pointer'
-                                : '',
-                        ]"
-                        @click="onCardClick(emp)">
+                    <div v-for="emp in group.employees" :key="`${emp.comCode}-${emp.empCode}`" :class="[
+                        'flex h-18 w-60 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden',
+                        user.value && emp.comCode === user.value.comCode
+                            ? 'cursor-pointer'
+                            : '',
+                    ]" @click="onCardClick(emp)">
                         <div
-                            class="h-18 w-16 bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden border-r border-gray-200 dark:border-gray-700">
-                            <img
-                                v-if="emp.hasPhoto"
-                                loading="lazy"
-                                :src="getPhotoUrl(emp.comCode, emp.empCode, true)"
-                                alt="Employee photo"
-                                class="w-16 h-16 object-cover rounded-sm" />
+                            class="h-18 w-18 bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden border-r border-gray-200 dark:border-gray-700">
+                            <img v-if="emp.hasPhoto" loading="lazy" :src="getPhotoUrl(emp.comCode, emp.empCode, true)"
+                                alt="Employee photo" class="w-16 h-16 object-cover rounded-sm" />
                             <div v-else class="text-gray-300 dark:text-gray-600">
                                 <UIcon name="i-lucide-user" class="inline-block text-2xl" />
                             </div>
                         </div>
 
                         <div class="flex-1 p-1 flex flex-col justify-center overflow-hidden">
-                            <h3
-                                class="text-xs font-semibold text-gray-900 dark:text-white truncate">
+                            <h3 class="text-xs font-semibold text-gray-900 dark:text-white truncate">
                                 {{ emp.prefix || "" }} {{ emp.name }} {{ emp.surName }}
                             </h3>
-                            <p
-                                v-if="emp.nickName"
-                                class="text-xs text-gray-600 dark:text-gray-400 truncate">
+                            <p v-if="emp.nickName" class="text-xs text-gray-600 dark:text-gray-400 truncate">
                                 "{{ emp.nickName }}"
                             </p>
                             <div class="text-xs text-gray-500 dark:text-gray-400 space-y-0">
@@ -176,18 +147,18 @@ const groupedEmployees = computed(() => {
 
     let filtered = hasMeaningFilter
         ? allEmployees.value.filter((emp) => {
-              const nameMatch = emp.name.toLowerCase().includes(filters.name.toLowerCase())
-              const surnameMatch = emp.surName.toLowerCase().includes(filters.surname.toLowerCase())
-              const nickMatch =
-                  !filters.nickName ||
-                  (emp.nickName?.toLowerCase().includes(filters.nickName.toLowerCase()) ?? false)
-              const ageMatch = !filters.age || calculateAge(emp.birthDate) === filters.age
-              const deptMatch =
-                  !filters.department ||
-                  (emp.department?.toLowerCase().includes(filters.department.toLowerCase()) ?? true)
+            const nameMatch = emp.name.toLowerCase().includes(filters.name.toLowerCase())
+            const surnameMatch = emp.surName.toLowerCase().includes(filters.surname.toLowerCase())
+            const nickMatch =
+                !filters.nickName ||
+                (emp.nickName?.toLowerCase().includes(filters.nickName.toLowerCase()) ?? false)
+            const ageMatch = !filters.age || calculateAge(emp.birthDate) === filters.age
+            const deptMatch =
+                !filters.department ||
+                (emp.department?.toLowerCase().includes(filters.department.toLowerCase()) ?? true)
 
-              return nameMatch && surnameMatch && nickMatch && ageMatch && deptMatch
-          })
+            return nameMatch && surnameMatch && nickMatch && ageMatch && deptMatch
+        })
         : allEmployees.value
 
     // Group by company code

@@ -7,7 +7,7 @@ export default authEventHandler(async (event): Promise<any> => {
     params.comCode = params.comCode || user?.comCode
     params.comName = params.comName || user?.comName
     params.yr = String(user?.yrPayroll ?? "")
-    params.mo = String(user?.mnPayroll ?? "")
+    params.mn = String(user?.mnPayroll ?? "")
     const report = reportRegistry.get(params.report as string)
     if (!report) throw createError({ statusCode: 404, statusMessage: "Report not found" })
     const buffer = await report.generateTsv(params)

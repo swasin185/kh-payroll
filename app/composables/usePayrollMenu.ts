@@ -105,13 +105,13 @@ const mainMenu: NavigationMenuItem[] = [
         children: [
             {
                 label: "ใบรับรองเงินเดือน",
-                to: "/attend",
+                to: "/salarycert",
                 icon: "i-lucide-file-text",
                 disabled: true,
             },
             {
                 label: "ใบรับรองภาษี",
-                to: "/salary",
+                to: "/taxdeclare",
                 icon: "i-lucide-file-bar-chart",
                 disabled: true,
             },
